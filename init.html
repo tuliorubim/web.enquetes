@@ -1,0 +1,184 @@
+<script language="javascript">
+function validateForm (form, conditions) {
+	valid = true;
+	$("#erro").remove();
+	for (i = 0; form.elements[i]; i++) {
+		var nan = false;
+		f = form.elements[i];
+		key = form.elements[i].name;
+		f2 = $("[name='"+key+"']");
+		c = conditions[key];
+		types1 = ["text", "textarea", "password", "select-one"];
+		notRegExp = ["dd/mm/yyyy", "hh:mm"];
+		if (c != null) {
+			if (types1.indexOf(f.type) != -1 && notRegExp.indexOf(c) == -1) {
+				if ((typeof c == "number" && f.value.length < c)) {
+					message = "<div style='color: #FF0000;' id='erro'>O campo ";
+					if ($("label[for='"+key+"']").html() != null) 
+						message += $("label[for='"+key+"']").html();
+					else message += f2.attr("placeholder");	
+					message += " requer no m&iacute;nimo "+c+" caracteres v&aacute;lidos.</div>";	
+					f2.before(message);
+					valid = false;
+					f.focus(); 
+					break;
+				} else if (typeof c == "string") {
+					switch (c) {
+						case 'url' : 
+							c = '^(https?:\\/\\/)?(w{2,3}\\d\\.)?(([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+([a-z]{2,})(\\.[a-z]{2})?(\\/[-a-z\\d%_.~+]*)*(\\?[a-z\\d%_.;&~+=-]*)?(\\#[-a-z\\d_]*)?$'; 
+							f.value = f.value.toLowerCase();
+						break;
+						case 'email' : 
+							c = '^([a-z\\d]([a-z\\d-_.]*[a-z\\d])*)@(([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}(\\.[a-z]{2})?$';
+							f.value = f.value.toLowerCase();
+						break;
+						case 'number' :
+							comma_pos = f.value.indexOf(',');
+							if (comma_pos !== -1) {
+								f.value = substitui (f.value, '.', comma_pos, 1);
+							}
+							nan = isNaN(f.value);
+						break;
+					}
+					try {
+						if (c !== 'number')
+							var regExp = new RegExp(c);
+					} catch (e) {alert(e.message);}	
+					if (f.value.search(regExp) == -1 || nan) {
+						$("#erro").remove();
+						message = "<div style='color: #FF0000;' id='erro'>Forne&ccedil;a um ";
+						if ($("label[for='"+key+"']").html() != null) 
+							message += $("label[for='"+key+"']").html();
+						else message += f2.attr("placeholder");	
+						message += " v&aacute;lido.</div>";	
+						f2.before(message);
+						valid = false;
+						f.focus(); 
+						break;
+					}	
+				}
+			} else if (f.type === "radio" && f.value == null) {
+				f2.before("<div style='color: #FF0000;' id='erro'>Escolha uma op&ccedil;&atilde;o em "+$("label[for='"+key+"']").html()+".</div>");
+				valid = false;
+				f.focus();
+				break;
+			} else if (f.type === "checkbox" && f.checked == !c) {
+				f2.before("<div style='color: #FF0000;' id='erro'>Voc&ecirc; deve "+$("label[for='"+key+"']").html()+".</div>");
+				valid = false;
+				f.focus();
+				break;
+			} else if (c == "dd/mm/yyyy") {
+				date = f.value;
+				var DMY = new Array;
+				var regExp = new RegExp("^(0[1-9]|[12][0-9]|3[01])\\/(0[1-9]|1[012])\\/[12][0-9]{3}$");
+				DMY = date.split('/');
+				error = false;
+				months30 = ['04', '06', '09', '11'];
+				if (date.search(regExp) == -1){
+					error = true;
+				} else if ($.inArray(DMY[1], months30) && (DMY[0] > 30))
+					error = true;
+				else if (DMY[1] == 2) {
+					if ((DMY[0] > 28) && ((DMY[2]%4) != 0))
+						error = true;
+					if ((DMY[0] > 29)&& ((DMY[2]%4) == 0))
+						error = true;
+				}
+				if (error) {
+					message = "<div style='color: #FF0000;' id='erro'>Forne&ccedil; uma data v&aacute;lida para ";
+					if ($("label[for='"+key+"']").html() != null) 
+						message += $("label[for='"+key+"']").html();
+					else message += f2.attr("placeholder");	
+					message += ".</div>";	
+					f2.before(message);
+					valid = false;
+					f.focus();
+					break;
+				}
+			} else if (c == "hh:mm") {
+				var time = f.value;
+				var regExp = new RegExp("^([01][0-9]|2[0-3]):([0-5][0-9])$")
+				if (time.search(regExp) == -1 || time.length != 5) {
+					message = "<div style='color: #FF0000;' id='erro'>Forne&ccedil; uma hora v&aacute;lida para ";
+					if ($("label[for='"+key+"']").html() != null) 
+						message += $("label[for='"+key+"']").html();
+					else message += f2.attr("placeholder");	
+					message += ".</div>";	
+					f2.before(message);
+					valid = false;
+					f.focus();
+					break;
+				}
+			}
+		} /*else if (types1.indexOf(f.type) != -1  && (f.value.indexOf("'") != -1 || f.value.indexOf("--") != -1)) {
+			message = "<div style='color: #FF0000;' id='erro'>O campo ";
+			if ($("label[for='"+key+"']").html() != null) 
+				message += $("label[for='"+key+"']").html();
+			else message += f2.attr("placeholder");	
+			message += " cont&eacute;m caracteres inv&aacute;lidos, como aspas simples (').</div>";	
+			f2.before(message);
+			valid = false;
+			f.focus(); 
+			break;
+		}*/
+	}
+	return valid;
+}
+function Ajax(val) {
+	$("input[name='butpres']").val(val);
+	res = true;
+	isAjax = true;
+	color = '';
+	for (i = 0; i < 5; i++) {
+		eval("isAjax = (typeof Ajax"+i+" === 'function');");
+		if (isAjax) {
+			eval ("color = Ajax"+i+"(val)"); 
+			if (color == 'red') 
+				res = false;
+		} else break;
+	}
+	if (val == "Delete" && res) document.form.reset();
+}
+$(document).ready(function () {
+	$("input").click(function () {
+		var ajaxActions = ['Select', 'Save', 'Delete'];
+		var val = $(this).val();
+		if ($.inArray(val, ajaxActions) != -1) { 
+			Ajax(val);
+		} else if (val == "New") {
+			document.form.reset();
+		}
+	});
+});
+var r1 = 0;
+var r2 = 0;
+var Rr1 = [];
+var Rr2 = [];
+var K = [];
+var Keys = [];
+var f1 = [];
+var f2 = [];
+var f3 = [];
+var t1 = [];
+var t2 = [];
+var t3 = [];
+var l2 = [];
+var l3 = [];
+var inputsT1 = [];
+var inputsT2 = [];
+var inputsT3 = [];
+var adds1 = [];
+var adds2 = [];
+var ml2 = [];
+var p2 = [];
+var ml3 = [];
+var args = [];
+var n = [];
+var sql = [];
+var table = [];
+var table2 = [];
+var table3 = [];
+var indT1 = [];
+var at2 = [];
+var ReadOnly = [];
+</script>

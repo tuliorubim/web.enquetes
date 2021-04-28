@@ -1,0 +1,518 @@
+<script language="javascript">
+// JavaScript Document
+var atuals = new Array();
+var i = 0;
+var desf = false;
+var ajax = null; //variável de comunicação por Ajax.
+var j = 1; //ponteiro que aponta para o id da primeira foto da sequencia de 5 que é mostrada à direita.
+var mais = true; //Define se é possível avançar mais grupos de 5 fotos que são exibidos à direita, caso seja false, a seta para baixo é desabilidata. 
+var menos = false;//Define se é possível voltar mais grupos de 5 fotos que são exibidos à direita, caso seja false, a seta para cima é desabilidata.
+
+
+//FUNÇÕES GERAIS
+
+
+
+function Insere (s, subS, indice){
+	if (indice == 0)
+	  s = subS + s;
+	else if ((indice > 0) && (indice < s.length))
+	  s = s.substring(0, indice) + subS + s.substring(indice);
+	else if (indice == s.length)
+	  s = s + subS;
+	return s;
+}
+
+function Apaga($s, $indice, $contador){
+	if ($s!=""){
+		if (($s.length == $contador) &&($indice == 0))
+			$s = "";
+		else if (($indice > 0) && ($indice < $s.length-$contador))
+			$s = $s.substring(0, $indice)+$s.substring($indice+$contador);
+		else if ($indice == 0)
+			$s = $s.substring($contador);
+		else if ($indice == $s.length-$contador)
+			$s = $s.substring(0, $indice);
+	}
+	return $s;
+}
+function substitui (s, subS, i, cont) {
+	s = Apaga(s, i, cont);
+	s = Insere(s, subS, i);
+	return s;
+}
+
+function encode(s) {
+	for (var i = 0; i < s.length; i++) {
+		switch (s.charAt(i)) {
+			case 'á':   
+				s = substitui(s, '$a', i, 1);
+			break;
+			case 'â':   
+				s = substitui(s, '$b', i, 1);
+			break;
+			case 'ã':   
+				s = substitui(s, '$c', i, 1);
+			break;
+			case 'à':   
+				s = substitui(s, '$d', i, 1);
+			break;
+			case 'é':   
+				s = substitui(s, '$e', i, 1);
+			break;
+			case 'ê':   
+				s = substitui(s, '$f', i, 1);
+			break;
+			case 'í':   
+				s = substitui(s, '$i', i, 1);
+			break;
+			case 'ó':   
+				s = substitui(s, '$o', i, 1);
+			break;
+			case 'ô':   
+				s = substitui(s, '$p', i, 1);
+			break;
+			case 'õ':   
+				s = substitui(s, '$q', i, 1);
+			break;
+			case 'ú':   
+				s = substitui(s, '$u', i, 1);
+			break;
+			case 'ç':   
+				s = substitui(s, '$t', i, 1);
+			break;
+		}
+	}
+	return s;
+}
+function decode($s) {
+	for (var $i = 0; $i < $s.length; $i++) {
+		if ($s.charAt($i) == '$') {
+			switch ($s.charAt($i+1)) {
+				case 'a':   
+					$s = substitui($s, 'á', $i, 2);
+				break;
+				case 'b':   
+					$s = substitui($s, 'â', $i, 2);
+				break;
+				case 'c':   
+					$s = substitui($s, 'ã', $i, 2);
+				break;
+				case 'd':   
+					$s = substitui($s, 'à', $i, 2);
+				break;
+				case 'e':   
+					$s = substitui($s, 'é', $i, 2);
+				break;
+				case 'f':   
+					$s = substitui($s, 'ê', $i, 2);
+				break;
+				case 'i':   
+					$s = substitui($s, 'í', $i, 2);
+				break;
+				case 'o':   
+					$s = substitui($s, 'ó', $i, 2);
+				break;
+				case 'p':   
+					$s = substitui($s, 'ô', $i, 2);
+				break;
+				case 'q':   
+					$s = substitui($s, 'õ', $i, 2);
+				break;
+				case 'u':   
+					$s = substitui($s, 'ú', $i, 2);
+				break;
+				case 't':   
+					$s = substitui($s, 'ç', $i, 2);
+				break;
+			}
+		}	
+	}
+	return $s;
+}
+
+
+
+//FUNCÕES PARA TEXTAREAS
+
+
+  
+  function insertAtCursor(myField, myValue) {
+	//IE support
+	if (document.selection) {
+		myField.focus();
+		sel = document.selection.createRange();
+		sel.text = myValue;
+	}
+	//MOZILLA/NETSCAPE support
+	else if (myField.selectionStart || myField.selectionStart == '0') {
+		var startPos = myField.selectionStart;
+		var endPos = myField.selectionEnd;
+		myField.value = myField.value.substring(0, startPos) + myValue + myField.value.substring(endPos, myField.value.length);
+	} else {
+		myField.value += myValue;
+	}
+  }
+  function GuardarAtualizacoes(e, tA){
+	var unicode=e.keyCode? e.keyCode : e.charCode
+	//alert(e.keyCode);
+	if (unicode == 32){
+	  atuals[i] = tA.value;
+	  i++;
+	}
+	if (unicode==113){
+		insertAtCursor(tA, '\t');
+	}
+	desf = false;
+  }
+  function GuardarAtualizacoes2(tA){
+	atuals[i] = tA.value;
+	i++;
+	desf = false;
+  }
+  function GuardarAtualizacoes3(tA){
+	if (tA.value[tA.value.length-1] != ' '){
+	  atuals[i] = tA.value;
+	  i++;
+	  desf = false;
+	}  
+  }
+  function Desfazer(tA){
+	if (i > 0){
+	  if (!desf) {
+		i--;
+	  }
+	  desf = true;
+	  i--;
+	  tA.value = atuals[i];
+	}  
+  }
+  function Refazer(tA){
+	if (atuals[i+1] != null){
+	  i++;
+	  tA.value = atuals[i];
+	}  
+  }
+  function Tag(abertura, fechamento, myField){
+	//myField = document.formEmail.mensagem;
+	if (document.selection) {
+	  //alert('bla');
+	  myField.focus();
+	  selectedText = document.selection;
+	  newRange = selectedText.createRange();
+	  x = newRange.text;
+	  //alert('bla'+x);
+	} else {
+	  var startPos = myField.selectionStart;
+	  var endPos = myField.selectionEnd+abertura.length;
+	  s = myField.value;
+	  s = Insere(s, abertura, startPos);
+	  s = Insere(s, fechamento, endPos);
+	  myField.value = s;
+	} 
+  }
+  
+  
+  
+  //FUNÇOES DE CHECAGEM DE PLUGINS NO NAVEGADOR EM USO
+  
+  
+  
+  function MM_checkPlugin(plgIn) { //v4.0
+	var ok=true; 
+	document.MM_returnValue = false;
+	with (navigator) if (appName.indexOf('Microsoft')!=-1 && (plugins && plugins.length)) {
+	  //ok=(plugins && plugins[plgIn]);
+	} else if (appName.indexOf('Microsoft')==-1 && appVersion.indexOf('3.1')==-1) { //not Netscape or Win3.1
+	  if (plgIn.indexOf("Flash")!=-1){ 
+		if (plugins && plugins.length)
+		  ok=(plugins && plugins[plgIn]);
+		else if (window.MM_flash!=null)
+		  ok = window.MM_flash;  
+	  //else if (plgIn.indexOf("Director")!=-1 && window.MM_dir!=null) ok=window.MM_dir;
+	  }
+	  else ok=false; 
+	  //alert(""+(appName.indexOf('Microsoft')!=-1));
+	} 
+	//alert(""+window.document.getElementById('estiloMSC').getPixel(x, y));
+	if (!ok) {
+	  window.document.getElementById('estiloMSC').innerHTML = "<img src='ImagensMSCollortec/Cabecalho.JPG'/>";
+	  alert('Para visualizar esse site corretamente, é preciso instalar o plugin do '+plgIn+' no seu computador.');
+	}
+	//alert("asds ry fasdf");
+  }
+
+
+
+//FUNÇÕES PARA FORMULÁRIOS
+
+
+ 
+function ValidaGravacao(){
+  document.form.butPres.value = "Save";
+  document.form.submit();
+  
+}
+function ValidateExclusion(code){
+  s = code.value;
+  if (s != null && s != '' && s != 0) {
+	  if (confirm('This command will permanently erase this record along with everything associated with it, such as photos, for example. Are you sure you want to delete it?')){
+		  window.document.form.butPres.value = "Delete";
+		  document.form.submit();
+	  }	
+  }
+  else alert ("É preciso selecionar um evento antes de excluí-lo.");
+}
+function Selec(campo){
+  s = campo.value;
+  if (s != null && s != ""){
+	window.document.form.butPres.value = "Select";
+	document.form.submit();
+  }	
+  else alert ("Digite o nome de um registro, ou qualquer parte dele, para selecioná-lo.");
+}
+function Novo() {
+	window.document.form.butPres.value = "New";
+	document.form.submit();
+}
+
+
+
+//FUNÇÕES PARA EXIBIÇÃO DE SLIDES
+
+function MostraUm(id) {
+	i = 2;
+	//alert("fdp");
+	while (document.getElementById(id+i) != null) {
+		document.getElementById(id+i).style.display = 'none';
+		i++;
+	}
+}
+
+/*
+A função MudaCor é responsável por mudar a cor das setas que movem as fotos, conforme elas estejam habilitadas ou não. 
+*/
+
+function MudaCor(){
+	if (j <= 0) {
+		document.all('volta').style.backgroundImage = "url(MenosOff.JPG)";
+	} else if (j <= document.getElementById('slNum').innerHTML) {
+		document.all('volta').style.backgroundImage = "url(MenosOn.JPG)";
+		document.all('vai').style.backgroundImage = "url(MaisOn.JPG)";
+	} else {
+		document.all('volta').style.backgroundImage = "url(MaisOff.JPG)";
+	}
+}
+
+/*
+SlideMais incrementa em 5 o ponteiro j, e extrai da tabela oculta escrita em php, que contem todas as fotos, a próxima sequência de 5 fotos. Em sequência essas fotos são escritas à direita.
+*/
+
+function SlideMais(id) {
+	//alert(document.getElementById(id+j).style.opacity);
+	/*while (document.getElementById(id+j).style.opacity > 0) {
+		document.getElementById(id+j).style.opacity -= 0.01;
+	}*/
+	document.getElementById(id+j).style.display = 'none';
+	//document.getElementById(id+j).style.opacity = 1;
+	if (j == 1) {
+		document.getElementById('volta').innerHTML = "<img src='Fotos/esquerda.jpg' onClick=\"SlideMenos('"+id+"')\"/>"; 
+	}
+	j++;
+	//alert(document.getElementById(id+j));
+	//document.getElementById(id+j).style.opacity = 0;
+	document.getElementById(id+j).style.display = '';
+	/*while (document.getElementById(id+j).style.opacity < 1) {
+		document.getElementById(id+j).style.opacity += 0.001;
+	}*/
+	if (document.getElementById(id+(j+1)) == null) {
+		document.getElementById('vai').innerHTML = '<img src="Fotos/direitaDesabled.jpg"/>'; 
+	} 
+}
+
+/*
+SlideMenos decresce em 5 o ponteiro j, e extrai da tabela oculta escrita em php, que contem todas as fotos, a sequência anterior de 5 fotos. Em sequência essas fotos são escritas à direita.
+*/
+
+function SlideMenos(id) {
+	//alert(id);
+	document.getElementById(id+j).style.display = 'none';
+	if (document.getElementById(id+(j+1)) == null) {
+		document.getElementById('vai').innerHTML = "<img src='Fotos/direita.jpg' onClick=\"SlideMais('"+id+"')\"/>"; 
+	}
+	j--;
+	document.getElementById(id+j).style.display = '';
+	if (j == 1) {
+		document.getElementById('volta').innerHTML = '<img src="Fotos/esquerdaDesabled.jpg"/>'; 
+	} 
+}
+	
+//FUNÇÕES PARA AJAX
+
+//Ajax cria o objeto ajax.
+
+function Ajax() {
+	try {
+		ajax = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	catch(e) {
+		try {
+			ajax = new ActiveXObject("Msxml2.XMLHTTP");
+		}
+		catch(ex) {
+			try {
+				ajax = new XMLHttpRequest();
+			}
+			catch(exc) {
+				alert("Esse browser não tem recursos para uso do Ajax");
+				ajax = null;
+			}
+		}
+	}
+}
+function Transf(cod, u, m) {
+		if(ajax) {
+			m = encode(m);
+			var url = "talk.php?cod="+cod+"&u="+u+"&m="+m;
+			//window.open(url);
+			ajax.open("GET", url, true);
+			ajax.send(null);
+			document.getElementById('mensagem').value = '';
+		} 
+	}
+	function Transferir(arquivo, dados){
+		if (ajax) {
+		 	var url = arquivo+'?';
+			for (var i = 1; dados[$i-1] != null; i++) {
+			 	url += "p"+i+"="+encode(dados[$i-1]);
+			}
+			ajax.open("GET", url, true);
+			ajax.send(null);
+		}
+	}
+	function Transf2(e, cod, u, m){
+		var unicode=e.keyCode? e.keyCode : e.charCode;
+		//alert('wrht');
+		if (unicode == 13) Transf(cod, u, m);
+	}
+	
+	var t = null;
+	
+				
+	function Resposta (arquivo, dados, idReceptor, depois, id) {	 
+		if(ajax) {
+			//var zeit = new Date(); 
+			//var ms = (zeit.getHours() * 24 * 60 * 1000) + (zeit.getMinutes() * 60 * 1000) + (zeit.getSeconds() * 1000) + zeit.getMilliseconds();
+			var url = arquivo+'?';
+			for (var i = 1; dados[i-1] != null; i++) {
+			 	url += "p"+i+"="+encode(dados[i-1]);
+				if (dados[i] != null) url += '&';
+			}
+			ajax.open("GET", url, true);
+			ajax.onreadystatechange = function() {
+				if(ajax.readyState == 4 ) {
+					if (ajax.responseXML) {
+						obj = ajax.responseXML;
+						data = '';
+						for (var i = 1; obj.getElementsByTagName("result"+i)[0]; i++) {
+							s = obj.getElementsByTagName("result"+i)[0].firstChild.nodeValue;
+							if (id[i-1] == null) {
+								data += "<div>" + s + "</div>";
+							} else {
+								//data += "<div id='"+id[i-1]+"'>" + s + "</div>";
+								idn = id[i-1];
+								document.getElementById(idn).innerHTML = s;
+							}
+						}
+						if (data != '') {
+							r = document.getElementById(idReceptor).innerHTML;
+							if (depois == null) 
+								r = data + "<br>";
+							else if (depois == true)
+								r += data + "<br>";
+							else r = data + "<br>" + r;
+							document.getElementById(idReceptor).innerHTML = r;
+						}
+					}
+				}
+			}
+			ajax.send(null);
+		}
+	}
+	
+	function Resposta2 (e, arquivo, dados, idReceptor, elemento, depois){
+		var unicode=e.keyCode? e.keyCode : e.charCode;
+		//alert('wrht');
+		if (unicode == 13) Resposta(arquivo, dados, idReceptor, elemento, depois);
+	}
+	
+	function Get(cod) {
+		if(ajax) {
+			var zeit = new Date(); 
+			var ms = (zeit.getHours() * 24 * 60 * 1000) + (zeit.getMinutes() * 60 * 1000) + (zeit.getSeconds() * 1000) + zeit.getMilliseconds();
+			var url = "falas.txt?x="+ms;
+			ajax.open("GET", url, true);
+			ajax.onreadystatechange = function() {
+				if(ajax.readyState == 4 ) {
+					if(ajax.responseText) {
+						var obj = ajax.responseText;
+						obj = obj.substring(obj.indexOf(cod));
+						var i = 0;
+						var j = 0;
+						var s = obj;
+						var k = s.indexOf(':');
+						while (k != -1) {
+							s = s.substring(k+1);
+							k = s.indexOf(':');
+							i++;
+						}
+						s = document.getElementById('talk').value;
+						k = s.indexOf(':');
+						while (k != -1) {
+							s = s.substring(k+1);
+							k = s.indexOf(':');
+							j++;
+						}
+						if (i > j) {
+							document.getElementById('talk').value = decode(obj);
+							var textareaelem = document.getElementById('talk');
+							textareaelem.scrollTop = textareaelem.scrollHeight;
+							document.getElementById('sound').src= "C:\\WINDOWS\\Media\\ding.wav";
+							piscaTitulo();
+						}	
+					}
+				}
+			}
+			ajax.send(null); 
+			setTimeout("Get('"+cod+"')", 1000);
+		} 
+	}
+	function logoff() {
+		if (ajax) {
+			var url = 'logoff.php?e='+document.chat.e.value;
+			try{
+				ajax.open("GET", url, true);
+				var w = window.open(url);
+			}catch(e){
+				alert(e.description);
+			}
+			window.location.href = "http://www.webrain.com.br/acesso.php";
+			w.close();
+		}
+	}
+	
+	
+	function piscaTitulo(){
+		if (t) {
+			clearTimeout(t);
+		}
+		if (document.title == 'chat') {
+			document.title = '';
+		} else document.title = 'chat';
+		t = setTimeout("piscaTitulo()", 500);
+	}
+	function stopTitleBlink() {
+		clearTimeout(t);
+		document.title = 'chat';
+	}	
+</script>
