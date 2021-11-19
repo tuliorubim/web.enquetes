@@ -10,6 +10,7 @@ trait Dados_webenquetes {
 	public static $formTabela8;
 	public static $formTabela9;
 	public static $formTabela10;
+	public static $formTabela11;
 	public function setFormTabela1() {
 		$variaveis = array("idCategoria", "categoria");
 		$labels = array("", "Categoria: ");
@@ -149,7 +150,7 @@ trait Dados_webenquetes {
 		$maxlengths = array();
 		$properties = array();
 		$tabela = "conteudo_image";
-		self::$formTabela10 = array($variaveis, $tipos, $labels, $inputs, $enderecos, $tabela, $maxlengths, $properties);
+		self::$formTabela11 = array($variaveis, $tipos, $labels, $inputs, $enderecos, $tabela, $maxlengths, $properties);
 	}
 }
 ?>

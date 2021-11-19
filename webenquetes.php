@@ -114,6 +114,11 @@ class Webenquetes extends AdminFunctions {
 		echo "<script language='javascript'>$('#status').html('<font color=red>$status</font>');</script>";
 	}
 	public function create_content($is_poll=false) {
+		global $status;
+		$POST = $_POST;
+		$idSession = $this->idSession;
+		$dateformat = $this->dateformat;
+		$timeformat = $this->timeformat;
 		if ($this->logged_in) {
 			if ($is_poll) {
 				$variaveis = array("idEnquete", "cd_categoria", "cd_usuario", "enquete", "dt_criacao");
