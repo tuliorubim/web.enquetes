@@ -334,7 +334,7 @@ class Webenquetes extends AdminFunctions {
 		if ($idc !== NULL) {
 			$sql .= " and cd_categoria = $idc";
 		} elseif (is_string($pc)) {
-			echo $this->procura ($pc, array('divulgar.php', 'no_seu_site.php'), array('enquete.php?ide=', 'resultados_parciais.php?ide='), array("select e.idEnquete, e.enquete, p.pergunta, r.resposta from enquete e inner join pergunta p on e.idEnquete = p.cd_enquete inner join resposta r on p.idPergunta = r.cd_pergunta", "select cd_enquete, comentario from comentario"));
+			echo $this->procura ($pc, array('divulgar.php', 'no_seu_site.php'), array('enquete.php?ide=', 'resultados_parciais.php?ide='), array("select e.idEnquete, e.enquete, e.introducao, p.pergunta, r.resposta from enquete e inner join pergunta p on e.idEnquete = p.cd_enquete inner join resposta r on p.idPergunta = r.cd_pergunta where e.idEnquete not in (select idEnquete from enquete where esconder = 1)", "select cd_enquete, comentario from comentario where cd_enquete not in (select idEnquete from enquete where esconder = 1)"));
 		} elseif ($modelo == 'true') {
 			$sql .= " and (cd_usuario = 1 or cd_usuario = 55436 or cd_usuario = 55291)";
 			echo "<p>".htmlentities("Nas enquetes abaixo, procuramos elaborar opções de respostas que tentam abrangir todo o universo de possíveis respostas às suas respectivas perguntas, sabendo que responder a uma enquete é escolher a resposta que mais se aproxima do caso de quem a responde. Estude as enquetes abaixo e observe os vários aspectos de uma enquete bem elaborada, se você achar que isso é necessário para você criar sua enquete.", ENT_NOQUOTES, 'ISO-8859-1', true)."</p><br>";
