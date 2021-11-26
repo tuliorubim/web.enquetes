@@ -38,7 +38,7 @@ include "header.php";
 	if (!isset($idEnquete)) $idEnquete = $_GET['ide'];
 	$idc = (isset($_POST['cd_categoria'])) ? $_POST['cd_categoria'] : $_GET['idc'];
 	require_once "create_html.php";
-	$design = new Create_HTML($idEnquete, $idc);
+	$design = new Create_HTML($idEnquete, 0, $idc);
 	$design->con = $we->con;
 	$design->idu = $we->idu;
 	$design->select("select cd_usuario from enquete where idEnquete = $idEnquete", array("cdu"));

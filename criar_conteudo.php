@@ -36,7 +36,7 @@ include "header.php";
 	if (!isset($idConteudo)) $idConteudo = $_GET['ide'];
 	$idc = (isset($_POST['cd_categoria'])) ? $_POST['cd_categoria'] : $_GET['idc'];
 	require_once "create_html.php";
-	$design = new Create_HTML(0, $idConteudo, $idc);
+	$design = new Create_HTML(0, $idConteudo);
 	$design->con = $we->con;
 	$design->idu = $we->idu;
 	$design->select("select cd_usuario from conteudo where idConteudo = $idConteudo", array("cdu"));
@@ -47,7 +47,7 @@ include "header.php";
 		$design->formTabela8 = Dados_webenquetes::$formTabela8;
 		$design->formTabela9 = Dados_webenquetes::$formTabela9;
 		$design->formTabela10 = Dados_webenquetes::$formTabela10;
-		$design->formTabela10 = Dados_webenquetes::$formTabela11;
+		$design->formTabela11 = Dados_webenquetes::$formTabela11;
 		
 		$inds = $design->form_categorias();
 		$inds = $design->form_conteudo($inds);

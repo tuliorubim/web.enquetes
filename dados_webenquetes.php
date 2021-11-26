@@ -69,7 +69,8 @@ trait Dados_webenquetes {
 				$maxlengths= array('', '512', '', '256');
 				$tabela = "cliente";
 				$enderecos = array("logos", "logosReduzidas");
-				self::$formTabela5 = array($variaveis, $tipos, $labels, $inputs, $enderecos, $tabela, $maxlengths, array());
+				$properties = ['', "class='form-control input-lg'", '', "class='form-control input-lg'"];
+				self::$formTabela5 = array($variaveis, $tipos, $labels, $inputs, $enderecos, $tabela, $maxlengths, $properties);
 			}
 		}
 	}
@@ -114,12 +115,13 @@ trait Dados_webenquetes {
 		$variaveis = array("idCType", "type");
 		$labels = array("", "");
 		$inputs = array("hidden", "");
+		$maxlengths = ['', '20'];
 		$properties = "class='form-control input-lg'";
-		self::$formTabela1 = array($variaveis, NULL, $labels, $inputs, NULL, "content_type", NULL, $properties);
+		self::$formTabela8 = array($variaveis, NULL, $labels, $inputs, NULL, "content_type", $maxlengths, $properties);
 	}
 	public function setFormTabela9 () {
 		$variaveis = array('idConteudo', 'content_type', 'texto', 'audio');
-		$tipos = array('integer', 'boolean', 'varchar', 'varchar');
+		$tipos = array('integer', 'boolean', 'text', 'varchar');
 		$labels = array('', '', 'Texto', 'Arquivo de audio');
 		$inputs = array('hidden', 'hidden', 'textarea', 'file');
 		$enderecos = array("audios");
