@@ -239,37 +239,47 @@ class Create_HTML extends DesignFunctions {
 		$(function () {
 			$("#type").click(function () {
 				if ($(this).val() == "Audio") {
-					$("#imagem").css("display", "none");
+					$("#d_audio").css("display", "");
+					$("#d_texto").css("display", "none");
+					$("#d_imagem1").css("display", "none");
+					for (i = 1; $("#post_"+i).html() != null; i++) {
+						$("#post_"+i).css('display', 'none');
+					}
 				} else if ($(this).val() == "Texto") {
-					$("#imagem").css("display", "");
-					$("#imagem").change(function () {
-						if ($(this).val() != '') {
-							form_data = new FormData();
-							form_data.append("idConteudo", idConteudo);
-							form_data.append("content_type", 1);
-							form_data.append("texto", $("#texto").val());
-							form_data.append("imagem", $("#imagem").prop("files")[0], $("#imagem").val());
-							$.ajax({
-								url: 'save_text.php',
-								type: 'POST',
-								dataType: 'json',
-								processData: false,
-								contentType: false,
-								data: form_data,
-								success: function (result) {
-									if (result['status'] == 'success') {
-										document.form.texto.value += "<img src='"+result['imagem']+"'>";
-										$(this).val('');
-										for (var i = 1; $("post_"+i).html() != null; i++) {
-											$("#post_"+i).css("display", "none");
-										}
-										document.form.innerHTML += "<div id='post_"+i+"'><div><img src='"+result['imagem']+"' width='300'></div><div><button id='"+result['idImagem']+"'>Reutilizar no texto</button></div></div>";
-									} else alert(result['status']);
-								},
-								error: function (xhr, s, e) {
-									alert(xhr.responseText);
+					$("#d_audio").css("display", "none");
+					$("#d_texto").css("display", "");
+					$("#d_imagem1").css("display", "");
+					for (i = 1; $("#post_"+i).html() != null; i++) {
+						$("#post_"+i).css('display', '');
+					}
+				}
+			});
+			$("#imagem1").on('change', function () {
+				if ($(this).val() != '') {
+					form_data = new FormData();
+					form_data.append("idConteudo", idConteudo);
+					form_data.append("content_type", 1);
+					form_data.append("texto", $("#texto").val());
+					form_data.append("imagem", $("#imagem").prop("files")[0], $("#imagem").val());
+					$.ajax({
+						url: 'save_text.php',
+						type: 'POST',
+						dataType: 'json',
+						processData: false,
+						contentType: false,
+						data: form_data,
+						success: function (result) {
+							if (result['status'] == 'success') {
+								document.form.texto.value += "<img src='"+result['imagem']+"'>";
+								$(this).val('');
+								for (var i = 1; $("post_"+i).html() != null; i++) {
+									$("#post_"+i).css("display", "none");
 								}
-							});
+								document.form.innerHTML += "<div id='post_"+i+"'><div><img src='"+result['imagem']+"' width='300'></div><div><button id='"+result['idImagem']+"'>Reutilizar no texto</button></div></div>";
+							} else alert(result['status']);
+						},
+						error: function (xhr, s, e) {
+							alert(xhr.responseText);
 						}
 					});
 				}
@@ -667,9 +677,9 @@ class Create_HTML extends DesignFunctions {
 				$args[$i+3][1] = " - ";
 			}
 			$months_gone = $service->months_gone($service_data[0]['dt_aquisicao']);
-			for ($i = 0; $i < $months_gone; $i += $period) {}
+			for ($j = 0; $j < $months_gone; $j += $period) {}
 			$months_acq_date = strtotime($service_data[0]['dt_aquisicao'])/($service::MES*86400);
-			$next_pay_date = date($this->dateformat, ($months_acq_date+$i)*$service::MES*86400);
+			$next_pay_date = date($this->dateformat, ($months_acq_date+$j)*$service::MES*86400);
 			$args[$i+4][0] = "Pr&oacute;xima data em que ser&aacute; cobrada sua assinatura para mais $period meses de benef&iacute;cios avan&ccedil;ados.";
 			$args[$i+4][1] = $next_pay_date;
 			$plano = $plan_data[5];
