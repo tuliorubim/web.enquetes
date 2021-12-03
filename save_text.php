@@ -3,7 +3,7 @@ include "ajax_header.php";
 include "dados_webenquetes.php";
 Dados_webenquetes::setFormTabela9();
 $ft9 = Dados_webenquetes::$formTabela9;
-$res1 = $db->save("conteudo", $ft9[0], $ft9[1], array($_POST["idConteudo"], $_POST["content_type"], $_POST["texto"], ''));
+$res1 = $db->save("conteudo", $ft9[0], $ft9[1], array($_POST["idConteudo"], $_POST["content_type"], $_POST["texto"], ''), $ft9[4]);
 $json = '';
 if (is_array($res1)) {
 	if (!empty($_FILES)) {

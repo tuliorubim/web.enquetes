@@ -152,7 +152,7 @@ class Create_HTML extends DesignFunctions {
 		$inds = $this->formGeral ($_SESSION, $this->formTabela8, array(), array(), $select, false, array(0, 0), true, $inds);
 		$idConteudo = $this->idConteudo;
 		if ($idConteudo !== NULL) {
-			$sql = "select ct.idCType, ct.type from content_type ct left join conteudo c on c.content_type = ct.idCType where e.idConteudo = $idConteudo";
+			$sql = "select ct.idCType, ct.type from content_type ct left join conteudo c on c.content_type = ct.idCType where c.idConteudo = $idConteudo";
 			$args = $this->select($sql, array(), true);
 		?>
 			<script language="javascript">
@@ -237,6 +237,7 @@ class Create_HTML extends DesignFunctions {
 		idConteudo = <?php echo isset($idConteudo) ? $idConteudo : 0;?>;
 		idu = <?php echo isset($idu) ? $idu : 0;?>;
 		$(function () {
+			$("#d_audio").css("display", "none");
 			$("#type").click(function () {
 				if ($(this).val() == "Audio") {
 					$("#d_audio").css("display", "");
@@ -260,7 +261,7 @@ class Create_HTML extends DesignFunctions {
 					form_data.append("idConteudo", idConteudo);
 					form_data.append("content_type", 1);
 					form_data.append("texto", $("#texto").val());
-					form_data.append("imagem", $("#imagem").prop("files")[0], $("#imagem").val());
+					form_data.append("imagem", $(this).prop("files")[0], $(this).val());
 					$.ajax({
 						url: 'save_text.php',
 						type: 'POST',
