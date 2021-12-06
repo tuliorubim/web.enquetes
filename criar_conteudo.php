@@ -33,7 +33,7 @@ include "header.php";
 		echo "<p><span class='status2'>$status</span></p>";
 	}
 	$idConteudo = $we->create_content();
-	if (!isset($idConteudo)) $idConteudo = $_GET['ide'];
+	if (!isset($idConteudo)) $idConteudo = $_GET['idcont'];
 	$idc = (isset($_POST['cd_categoria'])) ? $_POST['cd_categoria'] : $_GET['idc'];
 	require_once "create_html.php";
 	$design = new Create_HTML(0, $idConteudo);

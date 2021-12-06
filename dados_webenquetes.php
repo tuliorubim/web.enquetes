@@ -121,7 +121,7 @@ trait Dados_webenquetes {
 	}
 	public function setFormTabela9 () {
 		$variaveis = array('idConteudo', 'content_type', 'texto', 'audio');
-		$tipos = array('integer', 'boolean', 'text', 'varchar');
+		$tipos = array('integer', 'boolean', 'text', 'blob');
 		$labels = array('', '', 'Texto', 'Arquivo de audio');
 		$inputs = array('hidden', 'hidden', 'textarea', 'file');
 		$enderecos = array("audios");
@@ -137,7 +137,7 @@ trait Dados_webenquetes {
 		$tipos = array('integer', 'blob', 'blob', 'integer');
 		$labels = array('', 'Imagem: ', '', '', true);
 		$inputs = array('hidden', 'file', 'hidden', 'hidden');
-		$enderecos = array('imagens');
+		$enderecos = array('imagens', 'thumbs');
 		$maxlengths = array('', '256', '256', '');
 		$properties = array('', "class='form-control input-lg'", '', '');
 		$tabela = "content_image";

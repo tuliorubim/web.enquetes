@@ -3,7 +3,9 @@ include "ajax_header.php";
 include "dados_webenquetes.php";
 Dados_webenquetes::setFormTabela9();
 $ft9 = Dados_webenquetes::$formTabela9;
-$res1 = $db->save("conteudo", $ft9[0], $ft9[1], array($_POST["idConteudo"], $_POST["content_type"], $_POST["texto"], ''), $ft9[4]);
+unset($ft9[0][3]);
+unset($ft9[1][3]);
+$res1 = $db->save("conteudo", $ft9[0], $ft9[1], array($_POST["idConteudo"], $_POST["content_type"], $_POST["texto"], ''));
 $json = '';
 if (is_array($res1)) {
 	if (!empty($_FILES)) {
@@ -15,7 +17,7 @@ if (is_array($res1)) {
 			$imagemReduzida = $imagem;
 			$imagemReduzida['name'] = 'thumb'.$imagemReduzida['name'];
 		}
-		$res2 = $db->save("content_image", $ft10[0], $ft10[1], array(0, $imagem, $imagemReduzida, $idu)); 
+		$res2 = $db->save("content_image", $ft10[0], $ft10[1], array(0, $imagem, $imagemReduzida, $idu), $ft10[4]); 
 	} elseif (isset($_POST['idImagem'])) {
 		$idImagem = (int) $_POST['idImagem'];
 	} else $json = '{ "status" : "Nenhuma imagem foi enviada" }';
