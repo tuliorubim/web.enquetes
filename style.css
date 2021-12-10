@@ -1,0 +1,126 @@
+/* Gerais */
+body {margin:0; padding:0; font-family: 'Source Sans Pro', sans-serif;}
+h1, h2, h3, h4, h5, h6 {font-family: 'Roboto Slab', serif;}
+p {font-family:'Source Sans Pro', sans-serif; font-size:18px; line-height:26px;}
+.status {text-align:center; margin-top:15px; color:#00FF66; font-size:20px;}
+.status2 {margin-top:15px; color:#009900; font-size:18px;}
+table {border:thin; border-style:groove; border-radius: 5px; margin-bottom:20px;}
+th {text-align:center; padding:10px; border:thin; border-style:groove; background-color:#CCCCCC;}
+td {text-align:center; padding:10px; border:thin; border-style:groove;} 
+#meu_plano table {border:thin; border-style:groove; border-radius: 5px; margin-bottom:20px;}
+#meu_plano td {text-align:left; padding:10px; border:thin; border-style:groove;} 
+#select_plan {display:none}
+/*#link6, #link3, #link1 {display:none;}*/
+.planos {margin:0; margin-bottom:20px; float:left; width:33%; border:thin; border-style:groove; border-radius: 5px;}
+/*.planos2 {border-right-style:none;}*/
+.planos ul { padding-left: 5px; margin-left:0;}
+.planos ul li {padding: 4px; height: 70px; list-style:none;}
+.item_serv {float:left; width:90%;}
+.pergunta {margin: 10px; font-size: 18px; font-weight: 800}
+.planos center {display:table; width:100%;}
+.planos center p {background-color:#666666; color:#FFFFFF; font-weight:800; font-size:16px; border:thin; border-bottom-style:groove; height:120px;  display:table-cell; vertical-align:middle;}
+.planos center p a {color:#FFFF00;}
+.qf {float:right; text-align:right; color:#880000; width:10%;}
+.link {background-color: transparent; border: 0; cursor: pointer; display: inline-block; padding: 0;}
+/* Área do login */
+.fundo-login {width:100%; min-height:47px; background-color:#fefd8d;}
+.modal-home {float:right; margin-top:8px;}
+.estilo-modal {background-color:#00426c; border:0; margin-top:5px;}
+.estilo-modal2 {background-color:#880000; border:0; margin-top:5px; margin-left:5px;}
+.procurar {margin-right:0px; border-bottom-left-radius:5px; border-top-left-radius:5px; border-width: 1px;}
+.ir {height:24px; border-bottom-right-radius:5px; border-top-right-radius:5px; border-width: 1px;}
+/*Logo*/
+.fundo-head {min-height:136px; bakcground-color:#fff;}
+.logo {background-color:transparent; margin-top:0px; margin-bottom:15px;}
+#menu_cliente{margin-left:62%; font-size:16px;}
+
+/* Navegação */
+.navbar-default {background-color:#FFFFFF; border:0;}
+.navbar-nav > li > a {padding:45px 35px 0 0; font-family: 'Roboto Slab', serif; font-size:16px;}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:focus, .navbar-default .navbar-nav > .active > a:hover {background-color:#fff;}
+
+/* Chamada */
+.chamada {margin:60px 0 0 20px;}
+
+/*Formulário de Cadastro*/
+.form-cadastro {width:100%; min-height:418px; background-color:#00426c; border-radius:30px; padding:23px 30px;}
+.form-cadastro2 {width:100%; min-height:418px; background-color:#fefd8d; border-radius:10px; padding:23px 30px;}
+.form-cadastro2 h4.titu-cadastro {min-height:50px; background-color:#f45d00; color:#fff; font-size:32px; text-align:center; border-radius:10px; margin-top:-23px; margin-left:-30px; margin-right:-30px;}
+.form-cadastro h4.titu-cadastro {color:#fefd8d; font-size:24px; text-align:center;}
+.form-control {border-radius:10px;}
+.item2 {padding: 5px;}
+#hospedar, #pagina, #finalizar {display:none;}
+/*Chamada 2*/
+.bkg-chamada2 {width:100%; min-height:390px; background-color:#b4dffb; margin-top:80px;}
+.panel-default {background-color:transparent; border:0; padding:0 10px;}
+.panel-body h2 {font-size:38px; color:#002d49; text-align:center;}
+.panel-body img {display:table; margin:0 auto; padding-top:10px;}
+.panel-body a p {text-align:center; font-size:19px; margin-top:30px; color:#000000;}
+
+/* Ultimas enquetes */
+.bkg-enquetes-h {margin-bottom:60px;}
+h1.titu-enquetes {text-align:center; padding-top:55px;}
+.ult-enquetes {min-height:182px; border-radius:20px; background-color:#fefd8d; padding:10px; margin-top:40px;}
+.ult-enquetes h2 {text-align:center; font-size:20px; color:#00426c; margin:40px 0; text-transform:uppercase;}
+.ult-enquetes a {display:table; margin:0 auto;}
+.bt-all {display:table; margin:0 auto;}
+.bt-all a {margin-top:80px;}
+
+/* Seleção de categoria */
+.bkg-categoria-home {width:100%; min-height:340px; margin-top:60px; background-color:#ffa200}
+.bkg-categoria-home h1 {width:60%; color:#fff; display:table; margin:0 auto; text-align:center; padding-top:50px;}
+.combo {display:table; margin:0 auto; padding-top:60px;}
+
+/* Footer */
+.bkg-footer {width:100%; min-height:200px; background-color:#fefd8d;}
+.bkg-footer ul li {font-size:18px; list-style:none; padding:10px;}
+.bkg-footer ul li a {font-size:18px; color:#000;}
+a img.face {margin-top:20px;}
+
+/****************  ESTILO DAS PAGINAS INTERNAS  ******************/
+
+/*CLIENTE*/
+/*Menu*/
+.bkg-menu-cliente {width:100%; min-height:60px; background-color:#00426c;}
+.nav > li > a:focus, .nav > li > a:hover {background-color:transparent;}
+a:focus, a:hover {color:#FF6600;}
+.nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {background-color:transparent;}
+.nav-pills > li > a {font-family:'Roboto Slab', serif; font-size:16px; padding:15px 15px; background-color:transparent; color:#FFFFFF;}
+a img.btn-add {padding:2px 0px 20px 0;}
+a img.btn-add-2 {padding:22px 0px 20px 0;}
+
+
+/* COLUNA ESQUERDA PAGINA INTERNA */
+.box1 {background-color:#fefd8d; min-height:200px; border-radius:10px; padding-bottom:10px;}
+.box1 h2 {min-height:50px; background-color:#f45d00; color:#fff; font-size:32px; text-align:center; border-radius:10px;}
+.box1 p {font-size:20px; text-align:center; padding:10px; line-height:30px; margin-top:10px;}
+.box1 .bt-box {display:table; margin:0 auto;}
+.box1 ul.list-lateral {margin:25px 0; list-style-image:url(img/seta.png);}
+.box1 ul.list-lateral li {font-size:19px; padding-bottom:10px;}
+.minha_enquete {padding: 10px; width:33%; height: 70px; float:left;}
+.nome_enquete {padding-right: 8px; width: 50%; font-size:16px;}
+.nome_enquete2 {padding-right: 8px; width: 50%; font-size:12px; position:relative; top:-20px; left:50%;}
+.nova_pergunta {background-color:#FFFFFF; border:none;}
+.enter_url {margin:auto; padding:10px; width:350px; height:140px;background-color:#FFFFFF;}
+.enter_email {margin:auto; padding:10px; width:350px; height:220px;background-color:#FFFFFF;}
+#poll_options{border:groove; background-color:#fefd8d; font-size:20px; border-color:#FFA200; border-radius:6px;}
+#d_enquete {margin-bottom: 10px;}
+
+/*MEDIA QUERIES*/
+@media(max-width:767px) {
+.logo img {width:120px; height:120}
+.chamada h1 {text-align:center;}
+.chamada p {font-size:16px; margin-bottom:60px; text-align:center;}
+.bkg-categoria-home h1.ajuste {font-size:25px;}
+}
+
+/* Small */
+@media(min-width:768px) and (max-width:991px){
+
+	}
+
+/* Medium */
+@media(min-width:992px) and (max-width:1199px){}
+
+/* Large */
+@media(min-width:1200px){}

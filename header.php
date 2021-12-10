@@ -36,7 +36,16 @@ if ($we->logged_in) {
 	  <li><a href="dados.php">Meus Dados</a></li>
 	  <li><a href="minhas_enquetes.php">Minhas Enquetes</a></li>
 	  <li><a href="criar_enquete.php">Criar Enquete</a></li>
-	  <li><a href="index.php?login=off">Sair</a></li>
+	  <?php
+		if (empty($service_data)) {
+		?>
+			<li role="presentation"><a href="bonus_mensais.php">Assinar</a></li>
+		<?php 
+		} else { 
+		?>
+			<li role="presentation"><a href="meu_plano.php">Meu Plano</a></li>
+		<?php } ?>
+		<li><a href="index.php?login=off">Sair</a></li>
 	</ul>
 <?php	
 } else {
