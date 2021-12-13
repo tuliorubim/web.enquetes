@@ -176,9 +176,8 @@ class Create_HTML extends DesignFunctions {
 		
 		$inds = $this->formGeral ($_SESSION, $this->formTabela9, $this->formTabela10, $this->formTabela11, $select, false, $inds);
 		$arg = $this->select("select content_type from conteudo where idConteudo = $idConteudo");
-		var_dump ($arg[0]['content_type']);
 		if ($select[5] && $arg[0]['content_type'] == 1) {
-			$sql = "select ci.imagem, concat('<button id=\"', ci.idImagem, '\">Reutilizar no texto</button>') from content_image ci inner join cliente c on ci.cd_usuario = c.idCliente where c.idCliente = $idu";
+			$sql = "select ci.imagem, concat('<button id=\"', ci.idImagem, '\">Reutilizar no texto</button>') as button from content_image ci inner join cliente c on ci.cd_usuario = c.idCliente where c.idCliente = $idu";
 			$sizes = "width='300'";
 			$database = 'webenque_enquetes';
 			$params = array('database'=>$database, 'fields'=>$sql, 'sizes'=>$sizes);
