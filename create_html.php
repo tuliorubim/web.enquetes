@@ -180,7 +180,7 @@ class Create_HTML extends DesignFunctions {
 			$sql = "select ci.imagem, concat('<button id=\"', ci.idImagem, '\">Reutilizar no texto</button>') as button from content_image ci inner join cliente c on ci.cd_usuario = c.idCliente where c.idCliente = $idu";
 			$sizes = "width='300'";
 			$database = 'webenque_enquetes';
-			$params = array('database'=>$database, 'fields'=>$sql, 'sizes'=>$sizes);
+			$params = array('database'=>$database, 'fields'=>$sql, 'sizes'=>$sizes, 'isHTML'=>true);
 			echo $this->designBlocks($params);
 ?>
 			<button type="button" disabled="disabled" class="glyphicon glyphicon-chevron-left" id="previous"></button>
@@ -273,10 +273,10 @@ class Create_HTML extends DesignFunctions {
 							if (result['status'] == 'success') {
 								document.form.texto.value += "<img src='"+result['imagem']+"'>";
 								$(this).val('');
-								for (var i = 1; $("post_"+i).html() != null; i++) {
+								for (var i = 1; $("#post_"+i).html() != null; i++) {
 									$("#post_"+i).css("display", "none");
 								}
-								document.form.innerHTML += "<div id='post_"+i+"'><div><img src='"+result['imagem']+"' width='300'></div><div><button id='"+result['idImagem']+"'>Reutilizar no texto</button></div></div>";
+								$("#form_conteudo").html($("#form_conteudo").html()+"<div id='post_"+i+"'><div><img src='"+result['imagem']+"' width='300'></div><div><button id='"+result['idImagem']+"'>Reutilizar no texto</button></div></div>");
 							} else alert(result['status']);
 						},
 						error: function (xhr, s, e) {

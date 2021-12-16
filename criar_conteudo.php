@@ -19,7 +19,7 @@ include "header.php";
     </div>
     <div class="row">
 	<form name='form' method='post' action="criar_enquete_controle.php" enctype='multipart/form-data'>
-	<div class="col-md-6">
+	<div class="col-md-6" id='form_conteudo'>
     <h2>CRIE SEU CONTE&Uacute;DO</h2>
 	<div class="fb-like" data-href="https://www.facebook.com/WebEnquetesEPesquisas/" data-width="100" data-layout="standard" data-action="like" data-size="small" style='margin: 3px;' data-show-faces="true" data-share="false">
 	</div>
