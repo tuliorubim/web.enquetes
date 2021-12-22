@@ -177,14 +177,16 @@ class Create_HTML extends DesignFunctions {
 		$inds = $this->formGeral ($_SESSION, $this->formTabela9, $this->formTabela10, $this->formTabela11, $select, false, $inds);
 		$arg = $this->select("select content_type from conteudo where idConteudo = $idConteudo");
 		if ($select[5] && $arg[0]['content_type'] == 1) {
-			$sql = "select ci.imagem, concat('<button id=\"', ci.idImagem, '\">Reutilizar no texto</button>') as button from content_image ci inner join cliente c on ci.cd_usuario = c.idCliente where c.idCliente = $idu";
+			$sql = "select ci.imagem, concat('<button type=\"button\" id=\"', ci.idImagem, '\">Reutilizar no texto</button>') as button from content_image ci inner join cliente c on ci.cd_usuario = c.idCliente where c.idCliente = $idu";
 			$sizes = "width='300'";
 			$database = 'webenque_enquetes';
 			$params = array('database'=>$database, 'fields'=>$sql, 'sizes'=>$sizes, 'isHTML'=>true);
+			echo '<button type="button" disabled="disabled" class="glyphicon glyphicon-chevron-left" id="previous"></button>';
+			echo '<button type="button" class="glyphicon glyphicon-chevron-right" id="next"></button>';
+			echo "<div id='user_images'>";
 			echo $this->designBlocks($params);
+			echo "</div>";
 ?>
-			<button type="button" disabled="disabled" class="glyphicon glyphicon-chevron-left" id="previous"></button>
-			<button type="button" class="glyphicon glyphicon-chevron-right" id="next"></button>
 			<script language="javascript">
 			MostraUm("post_");
 			j = 1;
@@ -276,7 +278,10 @@ class Create_HTML extends DesignFunctions {
 								for (var i = 1; $("#post_"+i).html() != null; i++) {
 									$("#post_"+i).css("display", "none");
 								}
-								$("#form_conteudo").html($("#form_conteudo").html()+"<div id='post_"+i+"'><div><img src='"+result['imagem']+"' width='300'></div><div><button id='"+result['idImagem']+"'>Reutilizar no texto</button></div></div>");
+								$("#post_"+(i-1)).append("<div id='post_"+i+"'><div class='item2'><img src='"+result['imagem']+"' width='300'></div><div class='item2'><button type='button' id='"+result['idImagem']+"'>Reutilizar no texto</button></div></div>");
+								j = i;
+								$("#previous").prop("disabled", false);
+								$("#next").prop("disabled", true);
 							} else alert(result['status']);
 						},
 						error: function (xhr, s, e) {
