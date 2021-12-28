@@ -22,6 +22,7 @@
 			?>>Criar enquete</a></li>
         <li><a href="termos_uso.php">Termos de Uso</a></li>
         <li><a href="minhas_enquetes.php">Minhas enquetes</a></li>
+        <li><a href="excluir_dados.php">Excluir meus dados deste site</a></li>
         <li><a href="contato.php">Fale Conosco</a></li>
     </ul>
     </div>
