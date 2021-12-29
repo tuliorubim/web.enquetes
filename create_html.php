@@ -274,11 +274,11 @@ class Create_HTML extends DesignFunctions {
 						success: function (result) {
 							if (result['status'] == 'success') {
 								document.form.texto.value += "<img src='"+result['imagem']+"'>";
-								$(this).val('');
+								$("#imagem1").val('');
 								for (var i = 1; $("#post_"+i).html() != null; i++) {
 									$("#post_"+i).css("display", "none");
 								}
-								$("#post_"+(i-1)).append("<div id='post_"+i+"'><div class='item2'><img src='"+result['imagem']+"' width='300'></div><div class='item2'><button type='button' id='"+result['idImagem']+"'>Reutilizar no texto</button></div></div>");
+								$("#post_"+(i-1)).after("<div id='post_"+i+"'><div class='item2'><img src='"+result['imagem']+"' width='300'></div><div class='item2'><button type='button' id='"+result['idImagem']+"'>Reutilizar no texto</button></div></div>");
 								j = i;
 								$("#previous").prop("disabled", false);
 								$("#next").prop("disabled", true);
@@ -364,6 +364,13 @@ class Create_HTML extends DesignFunctions {
 		<p><a href="bonus_mensais.php" target="_blank">Experimente assinatura gr&aacute;tis</a></p>
 	<?php
 		}
+	}
+	public function is_poll () {
+		$is_poll = false;
+		$ide = $this->idEnquete;
+		$rs = mysqli_query($this->con, "select p.pergunta, r.resposta from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta where p.cd_enqute = $ide");
+		if ($rs && mysqli_num_rows($rs) >= 2) $is_poll = true;
+		return $is_poll;
 	}
 	public function create_poll ($cross=FALSE, $cd_servico=1, $cdu=NULL) {
 		$idu = ($_SESSION['user'] !== NULL) ? $_SESSION['user'] : $cdu;
