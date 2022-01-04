@@ -9,6 +9,11 @@ $idSession = 'user';
 <?php 
 include "header.php"; 
 ?>
+<script>
+	$(document).ready(function() {
+		$("#texto").Editor();
+	});
+</script>
 <div class="container">
     <div class="bkg-menu-cliente">
 	<div class="row">
