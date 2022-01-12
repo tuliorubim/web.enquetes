@@ -11,7 +11,9 @@ include "header.php";
 ?>
 <script>
 	$(document).ready(function() {
+		text = document.form.texto.value;
 		$("#texto").Editor();
+		$("#texto").Editor('setText', text);
 	});
 </script>
 <div class="container">

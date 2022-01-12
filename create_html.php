@@ -202,7 +202,7 @@ class Create_HTML extends DesignFunctions {
 						post_imagem = $(this).parent().parent();
 						var imagem = post_imagem.find("img").attr('src');
 						if (document.form.texto.value.indexOf(imagem) != -1) {
-							document.form.texto.value += "<img src='"+imagem+"'>";
+							$("#texto").Editor('setText', $("#texto").Editor('getText')+"<img src='"+imagem+"'>");
 						} else { 
 							$.ajax({
 								url: 'save_text.php',
@@ -216,7 +216,7 @@ class Create_HTML extends DesignFunctions {
 								},
 								success: function (result) {
 									if (result['status'] == 'success2') {
-										document.form.texto.value += "<img src='"+imagem+"'>";
+										$("#texto").Editor('setText', $("#texto").Editor('getText')+"<img src='"+imagem+"'>");
 									} 
 									else alert(result['status']);
 								},
@@ -273,7 +273,7 @@ class Create_HTML extends DesignFunctions {
 						data: form_data,
 						success: function (result) {
 							if (result['status'] == 'success') {
-								document.form.texto.value += "<img src='"+result['imagem']+"'>";
+								$("#texto").Editor('setText', $("#texto").Editor('getText')+"<img src='"+result['imagem']+"'>");
 								$("#imagem1").val('');
 								for (var i = 1; $("#post_"+i).html() != null; i++) {
 									$("#post_"+i).css("display", "none");
