@@ -65,6 +65,7 @@ include "header.php";
 	}
 	?>
 	</div>
+	<input type="hidden" id="textoContent" name="textoContent">
 	</form>
 	
 	</div>

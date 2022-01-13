@@ -201,7 +201,7 @@ class Create_HTML extends DesignFunctions {
 					if (!isNaN($(this).attr("id"))) {
 						post_imagem = $(this).parent().parent();
 						var imagem = post_imagem.find("img").attr('src');
-						if (document.form.texto.value.indexOf(imagem) != -1) {
+						if ($("#texto").Editor('getText').indexOf(imagem) != -1) {
 							$("#texto").Editor('setText', $("#texto").Editor('getText')+"<img src='"+imagem+"'>");
 						} else { 
 							$.ajax({
@@ -211,7 +211,7 @@ class Create_HTML extends DesignFunctions {
 								data: {
 									idConteudo: idConteudo,
 									content_type: 1,
-									texto: $("#texto").val(),
+									textoContent: $("#texto").Editor('getText'),
 									idImagem: $(this).attr("id")
 								},
 								success: function (result) {
@@ -259,10 +259,11 @@ class Create_HTML extends DesignFunctions {
 			});
 			$("#imagem1").on('change', function () {
 				if ($(this).val() != '') {
+					document.form.textoContent.value = $("#texto").Editor('getText');
 					form_data = new FormData();
 					form_data.append("idConteudo", idConteudo);
 					form_data.append("content_type", 1);
-					form_data.append("texto", $("#texto").val());
+					form_data.append("textoContent", $("#textoContent").val());
 					form_data.append("imagem", $(this).prop("files")[0], $(this).val());
 					$.ajax({
 						url: 'save_text.php',

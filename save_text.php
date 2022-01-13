@@ -5,6 +5,7 @@ Dados_webenquetes::setFormTabela9();
 $ft9 = Dados_webenquetes::$formTabela9;
 unset($ft9[0][3]);
 unset($ft9[1][3]);
+$_POST['texto'] = $_POST['textoContent'];
 $res1 = $db->save("conteudo", $ft9[0], $ft9[1], array($_POST["idConteudo"], $_POST["content_type"], $_POST["texto"], ''));
 $json = '';
 if (is_array($res1)) {
