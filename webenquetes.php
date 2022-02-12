@@ -165,18 +165,26 @@ class Webenquetes extends AdminFunctions {
 			$ide = $_GET['ide'];
 			$args = $this->select("select enquete, esconder from enquete where idEnquete = $ide");
 			$title = "Enquete: ".$args[0]['enquete']." (Adquira voc&ecirc; tamb&eacute;m o CONHECIMENTO que voc&ecirc; deseja criando e divulgando enquetes de maneira F&Aacute;CIL e R&Aacute;PIDA agora mesmo!)";
-			$description = '';
-			/*if (!$args[0]['esconder']) {
+			if (!$args[0]['esconder']) {
 				$description = $this->poll_keywords($ide);
 				$desc = explode(' ', $description);
 				$description = '';
-				for ($i = 0; $desc[$i] !== NULL; $i++) {
+				$i = 0;
+				$j = 0;
+				while ($j < 80 && is_string($desc[$i])) {
 					$last = strlen($desc[$i])-1;
-					if (!in_array($desc[$i][$last], array(',', '.', ';', '?', '!')))
-						$description .= $desc[$i].', ';
-					else $description .= substr($desc[$i], 0, $last).', ';	
+					if (!in_array($desc[$i][$last], array(',', '.', ';', '?', '!'))) {
+						if (!preg_match('/^[(ao?s?)(com)(de)(d?|n?a|os?)(em?)(às?)]$/', strtolower($desc[$i]))) {
+							$description .= $desc[$i].', ';
+							$j++;
+						}
+					} elseif (!preg_match('/^[(ao?s?)(com)(de)(d?|n?a|os?)(em?)(às?)]$/', strtolower(substr($desc[$i], 0, $last)))) {
+						$description .= substr($desc[$i], 0, $last).', ';	
+						$j++;
+					}
+					$i++;
 				}
-			} else $description = '';*/
+			} else $description = '';
 		}
 		$this->title = $title;
 		$this->description = $description;
