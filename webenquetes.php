@@ -163,10 +163,10 @@ class Webenquetes extends AdminFunctions {
 		$description = htmlentities("criar, fazer, elaborar, modelo, site, pergunta, perguntas, formulário, questionário, inquérito, enquete, pesquisa, mercado, satisfação, opinião, política, esportes, religião, atualidades, ciência, economia, entretenimento, filmes, jogos, livros, música, televisão, internet, informática, cliente, funcionário, interno", ENT_NOQUOTES, 'ISO-8859-1', true);
 		if ($_GET['ide'] !== NULL) {
 			$ide = $_GET['ide'];
-			$args = $this->select("select enquete, esconder from enquete where idEnquete = $ide");
-			$title = "Enquete: ".$args[0]['enquete']." (Adquira voc&ecirc; tamb&eacute;m o CONHECIMENTO que voc&ecirc; deseja criando e divulgando enquetes de maneira F&Aacute;CIL e R&Aacute;PIDA agora mesmo!)";
+			$description = $this->poll_keywords($ide);
+			$title = "Enquete: ".substr($description, 0, strpos($description, ' ', 130)).'...';
+			$args = $this->select("select esconder from enquete where idEnquete = $ide");
 			if (!$args[0]['esconder']) {
-				$description = $this->poll_keywords($ide);
 				$desc = explode(' ', $description);
 				$description = '';
 				$i = 0;
