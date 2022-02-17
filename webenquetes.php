@@ -101,7 +101,7 @@ class Webenquetes extends AdminFunctions {
 					$POST['email'] = "tfrubim@gmail.com";
 					$POST['name'] = "Web Enquetes";
 					$POST['subject'] = "Sua senha Web Enquetes";
-					$POST['message'] = "A senha do usuÃ¡rio que vocÃª acabou de criar na Web Enquetes Ã© \n\n".$POST['senha'].".";
+					$POST['message'] = "A senha do usuário que você acabou de criar na Web Enquetes é \n\n".$POST['senha'].".";
 					$this->sendEmail ($POST, array($email));
 					if ($_SESSION[$idSession] === NULL) $_SESSION[$idSession] = $ret[1];
 					$this->usuario = $email;
@@ -159,8 +159,8 @@ class Webenquetes extends AdminFunctions {
 		return $result;
 	}
 	public function set_title_and_keywords() {
-		$title = htmlentities("Adquira o CONHECIMENTO que vocÃª deseja criando e divulgando enquetes de maneira FÃCIL e RÃPIDA agora mesmo!", ENT_NOQUOTES, 'ISO-8859-1', true);
-		$description = htmlentities("criar, fazer, elaborar, modelo, site, pergunta, perguntas, formulÃ¡rio, questionÃ¡rio, inquÃ©rito, enquete, pesquisa, mercado, satisfaÃ§Ã£o, opiniÃ£o, polÃ­tica, esportes, religiÃ£o, atualidades, ciÃªncia, economia, entretenimento, filmes, jogos, livros, mÃºsica, televisÃ£o, internet, informÃ¡tica, cliente, funcionÃ¡rio, interno", ENT_NOQUOTES, 'ISO-8859-1', true);
+		$title = htmlentities("Adquira o CONHECIMENTO que você deseja criando e divulgando enquetes de maneira FÁCIL e RÁPIDA agora mesmo!", ENT_NOQUOTES, 'ISO-8859-1', true);
+		$description = htmlentities("criar, fazer, elaborar, modelo, site, pergunta, perguntas, formulário, questionário, inquérito, enquete, pesquisa, mercado, satisfação, opinião, política, esportes, religião, atualidades, ciência, economia, entretenimento, filmes, jogos, livros, música, televisão, internet, informática, cliente, funcionário, interno", ENT_NOQUOTES, 'ISO-8859-1', true);
 		if ($_GET['ide'] !== NULL) {
 			$ide = $_GET['ide'];
 			$description = $this->poll_keywords($ide);
@@ -174,11 +174,11 @@ class Webenquetes extends AdminFunctions {
 				while ($j < 80 && is_string($desc[$i])) {
 					$last = strlen($desc[$i])-1;
 					if (!in_array($desc[$i][$last], array(',', '.', ';', '?', '!'))) {
-						if (!preg_match('/^[(ao?s?)(com)(de)(d?|n?a|os?)(em?)(Ã s?)]$/', strtolower($desc[$i]))) {
+						if (!preg_match('/^[(ao?s?)(com)(de)(d?|n?a|os?)(em?)(às?)]$/', strtolower($desc[$i]))) {
 							$description .= $desc[$i].', ';
 							$j++;
 						}
-					} elseif (!preg_match('/^[(ao?s?)(com)(de)(d?|n?a|os?)(em?)(Ã s?)]$/', strtolower(substr($desc[$i], 0, $last)))) {
+					} elseif (!preg_match('/^[(ao?s?)(com)(de)(d?|n?a|os?)(em?)(às?)]$/', strtolower(substr($desc[$i], 0, $last)))) {
 						$description .= substr($desc[$i], 0, $last).', ';	
 						$j++;
 					}
@@ -227,7 +227,7 @@ class Webenquetes extends AdminFunctions {
 					<form name="enter_email" method="post">
 						<input type="hidden" name="butPres">
 						<input type="hidden" name="idEnquete" id="idEnquete">
-						<p><?php echo $this->html_encode("Considere criar enquetes para esse fim. Deixe conoso seu e-mail se vocÃª gostaria de receber notÃ­cias sobre nossos serviÃ§os para enquetes:");?>
+						<p><?php echo $this->html_encode("Considere criar enquetes para esse fim. Deixe conoso seu e-mail se você gostaria de receber notícias sobre nossos serviços para enquetes:");?>
 						<input type="text" name="email" placeholder="Seu email" size="35" maxlength="128" />
 						</p>
 						<p><input type="button" class="btn btn-primary estilo-modal" name="enviar1" id="enviar1" value="Enviar"></p>
@@ -334,7 +334,7 @@ class Webenquetes extends AdminFunctions {
 			echo $this->procura ($pc, array('divulgar.php', 'no_seu_site.php'), array('enquete.php?ide=', 'resultados_parciais.php?ide='), array("select e.idEnquete, e.enquete, e.introducao, p.pergunta, r.resposta from enquete e inner join pergunta p on e.idEnquete = p.cd_enquete inner join resposta r on p.idPergunta = r.cd_pergunta where e.idEnquete not in (select idEnquete from enquete where esconder = 1)", "select cd_enquete, comentario from comentario where cd_enquete not in (select idEnquete from enquete where esconder = 1)"));
 		} elseif ($modelo == 'true') {
 			$sql .= " and (cd_usuario = 1 or cd_usuario = 55436 or cd_usuario = 55291)";
-			echo "<p>".htmlentities("Nas enquetes abaixo, procuramos elaborar opÃ§Ãµes de respostas que tentam abrangir todo o universo de possÃ­veis respostas Ã s suas respectivas perguntas, sabendo que responder a uma enquete Ã© escolher a resposta que mais se aproxima do caso de quem a responde. Estude as enquetes abaixo e observe os vÃ¡rios aspectos de uma enquete bem elaborada, se vocÃª achar que isso Ã© necessÃ¡rio para vocÃª criar sua enquete.", ENT_NOQUOTES, 'ISO-8859-1', true)."</p><br>";
+			echo "<p>".htmlentities("Nas enquetes abaixo, procuramos elaborar opções de respostas que tentam abrangir todo o universo de possíveis respostas às suas respectivas perguntas, sabendo que responder a uma enquete é escolher a resposta que mais se aproxima do caso de quem a responde. Estude as enquetes abaixo e observe os vários aspectos de uma enquete bem elaborada, se você achar que isso é necessário para você criar sua enquete.", ENT_NOQUOTES, 'ISO-8859-1', true)."</p><br>";
 		}
 		if (!is_string($pc)) {
 			$sql .= " order by idEnquete desc";
@@ -468,7 +468,7 @@ class Webenquetes extends AdminFunctions {
 			if (strpos ($status, "salvo") !== FALSE) {
 				$status = "Sua enquete foi criada ou atualizada corretamente.";
 		?>
-				<!-- Event snippet for CriaÃ¯Â¿Å“Ã¯Â¿Å“o de enquetes conversion page -->
+				<!-- Event snippet for Criaï¿?ï¿?o de enquetes conversion page -->
 				<script>
 				  //gtag('event', 'conversion', {'send_to': 'AW-948860159/iIFeCKyV-_MBEP_pucQD'});
 				</script>
@@ -544,12 +544,14 @@ class Webenquetes extends AdminFunctions {
 		echo "<br><br><br>";
 	?>
 		<p><a href="criar_enquete.php?ide=<?php echo $ide;?>&np=true">Voltar e editar ou criar nova pergunta para a enquete.</a></p>
+		<br>
+		<p><a href="enquete.php?ide=<?php echo $ide;?>">Ir para a enquete.</a></p>
 	<?php 
 		if (empty($service_data)) {
 	?>
 			<p style="background-color:#FFFF99; padding:10px; border-radius:5px;">
 	<?php
-			echo htmlentities("VocÃª pode adquirir gratuitamente benefÃ­cios como exibir um anÃºncio na sua enquete, esconder resultados parciais, baixar resultados parciais inteiros ou por grupos em PDF, alÃ©m de outros benefÃ­cios. Saiba mais e adquira a assinatura gratuita clicando ", ENT_NOQUOTES, 'ISO-8859-1', true);
+			echo htmlentities("Você pode adquirir gratuitamente benefícios como exibir um anúncio na sua enquete, esconder resultados parciais, baixar resultados parciais inteiros ou por grupos em PDF, além de outros benefícios. Saiba mais e adquira a assinatura gratuita clicando ", ENT_NOQUOTES, 'ISO-8859-1', true);
 	?>
 			<a href="bonus_mensais.php" target="_blank">aqui</a>.</p>
 	<?php
