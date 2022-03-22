@@ -192,23 +192,17 @@ class Webenquetes extends AdminFunctions {
 	public function addIP() {
 		$visitas = $this->select("select count(idCliente) from cliente");
 		if ($visitas[0][0]%10 == 0) {
-			$dest = 'bd.php';
+			$dest = 'ipsss.txt';
 			$IPs = $this->open_file($dest);
 			$IPs2 = $this->select("select ip from cliente where ip <> '' group by ip having count(idCliente) > 50 order by max(data_cadastro) desc");
 			$content = '';
 			for ($i = 0; $IPs2[$i]['ip'] != NULL; $i++) {
-				$content .= ", '".$IPs2[$i]['ip']."'";
+				$content .= " ".$IPs2[$i]['ip'];
 			}
-			$content = substr($content, 2);
+			$content = substr($content, 1);
 			if (!empty($content)) { 
-				$aux = strpos($IPs, ' array');
-				$p = strpos($IPs, '(', $aux)+1;
-				$cont = strpos($IPs, ')', $p)-$p;
-				$search = substr($IPs, $p, $cont);
-				//echo "$search<br><br>$content";
-				if ($search != $content) {
-					$IPs = str_replace($search, $content, $IPs);
-					$this->save_file($IPs, $dest, 'w');
+				if ($IPs != $content) {
+					$this->save_file($content, $dest, 'w');
 				}
 			}
 		}
