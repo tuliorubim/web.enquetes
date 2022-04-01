@@ -9,8 +9,6 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet" type="text/css">
 	<link href="https://fonts.googleapis.com/css?family=Roboto+Slab:700|Source+Sans+Pro" rel="stylesheet">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-	<link href="editor.css" type="text/css" rel="stylesheet"/>	
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -20,7 +18,7 @@
 	<?php
 	if (!isset($_GET['ide'])) {
 	?>
-		<script data-ad-client="ca-pub-7212330127162982" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<!--<script data-ad-client="ca-pub-7212330127162982" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>-->
 	<?php 
 	} else {
 		$we->select("select c.idCliente from cliente c inner join enquete e on c.idCliente = e.cd_usuario where e.idEnquete = ".$_GET['ide'], array("cdu"));
@@ -35,7 +33,7 @@
 		$limit2 = $service2::LIM_VOTES_NO_ADS2;
 		if (!$em_vigor || $gratis || ($period == 1 && $num_votos > $limit1) || ($period == 3 && $num_votos > $limit2)) {
 	?>
-			<script data-ad-client="ca-pub-7212330127162982" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			<!--<script data-ad-client="ca-pub-7212330127162982" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>-->
 	<?php }} ?>
 	<!-- Global site tag (gtag.js) - Google Ads: 948860159 
 	<script async src="https://www.googletagmanager.com/gtag/js?id=AW-948860159"></script>
@@ -52,4 +50,3 @@
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="js/bootstrap.min.js"></script>
-<script src="editor.js"></script>

@@ -3,7 +3,7 @@ require_once "funcoes/funcoesAdministrativas.php";
 require_once "dados_webenquetes.php";
 class Webenquetes extends AdminFunctions {
 	use Dados_webenquetes;
-	private const IDMYPOLL = 5348;
+	private const IDMYPOLL = 10008;
 	public $con;
 	public $logged_in = false;
 	public $fw = '640px';
@@ -65,12 +65,16 @@ class Webenquetes extends AdminFunctions {
 		$enquetes = $this->select("select e.idEnquete, e.enquete from enquete e inner join voto v on e.idEnquete = v.cd_enquete where esconder = 0 group by e.idEnquete having count(v.dt_voto) > 30 order by e.dt_criacao desc limit 6");
 		return $enquetes;
 	}
-	public function login_to_content () {
+	public function cria_enquete () {
 		global $status;
 		$POST = $_POST;
 		$idSession = $this->idSession;
 		$dateformat = $this->dateformat;
 		$timeformat = $this->timeformat;
+		$variaveis = array("idEnquete", "cd_categoria", "cd_usuario", "enquete", "introducao", "dt_criacao");
+		$tipos = array('integer', 'integer', 'integer', 'varchar', 'varchar', 'datetime');
+		$tabela = "enquete";
+		$POST["dt_criacao"] = date("$dateformat $timeformat");
 		if (!$this->logged_in) {
 			$email = $POST['usuario'];
 			$senha = $POST['senha'];
@@ -94,13 +98,17 @@ class Webenquetes extends AdminFunctions {
 						setcookie($idSession, '', time()-10, '/', $cookie_url, $cookie_https);
 					}
 					$ret = $this->save($tabela1, $variaveis1, $tipos1, $POST, $enderecos1, -1);
+					$POST['email'] = "tfrubim@gmail.com";
+					$POST['name'] = "Web Enquetes";
 					$POST['subject'] = "Sua senha Web Enquetes";
 					$POST['message'] = "A senha do usuário que você acabou de criar na Web Enquetes é \n\n".$POST['senha'].".";
-					//Email::send_email ("tfrubim@gmail.com", array($email), $POST['subject'], $POST['message']);
+					//$this->sendEmail ($POST, array($email));
 					if ($_SESSION[$idSession] === NULL) $_SESSION[$idSession] = $ret[1];
 					$this->usuario = $email;
 					$this->logged_in = true;
 					$POST['cd_usuario'] = $ret[1];
+					$ret2 = $this->save($tabela, $variaveis, $tipos, $POST, array(), -1);
+					$idEnquete = $ret2[1];
 					$status = '';
 					echo "<script>novo_usuario = true;</script>";
 				} else {
@@ -108,36 +116,16 @@ class Webenquetes extends AdminFunctions {
 				}
 			} else {
 				$POST['cd_usuario'] = $idCliente; 
+				$ret = $this->save($tabela, $variaveis, $tipos, $POST, array(), -1);
+				$idEnquete = $ret[1];
 				$this->login($POST, 'cliente', array('usuario', 'senha', 'button'));
 			}
-		} 
-		echo "<script language='javascript'>$('#status').html('<font color=red>$status</font>');</script>";
-	}
-	public function create_content($is_poll=false) {
-		global $status;
-		$POST = $_POST;
-		$idSession = $this->idSession;
-		$dateformat = $this->dateformat;
-		$timeformat = $this->timeformat;
-		if ($this->logged_in) {
-			if ($is_poll) {
-				$variaveis = array("idEnquete", "cd_categoria", "cd_usuario", "enquete", "dt_criacao");
-				$tipos = array('integer', 'integer', 'integer', 'varchar', 'datetime');
-				$tabela = "enquete";
-				$POST["dt_criacao"] = date("$dateformat $timeformat");
-				$POST['cd_usuario'] = $_SESSION[$idSession]; 
-				$POST['enquete'] = $_POST['title'];
-			} else {
-				$variaveis = array('idConteudo', 'cd_usuario', 'cd_categoria', 'titulo', "dt_criacao");
-				$tipos = array('integer', 'integer', 'integer', 'varchar', 'datetime');
-				$tabela = "conteudo";
-				$POST["dt_criacao"] = date("$dateformat $timeformat");
-				$POST['cd_usuario'] = $_SESSION[$idSession]; 
-				$POST['titulo'] = $_POST['title'];
-			}
+		} else {
+			$POST['cd_usuario'] = $_SESSION[$idSession]; 
 			$ret = $this->save($tabela, $variaveis, $tipos, $POST, array(), -1);
 			$idEnquete = $ret[1];
 		}
+		echo "<script language='javascript'>$('#status').html('<font color=red>$status</font>');</script>";
 		return $idEnquete;
 	}
 	public function new_user() {
@@ -149,7 +137,7 @@ class Webenquetes extends AdminFunctions {
 		}
 		$data = date("$dateformat $timeformat");
 		if (empty($this->idu)) {
-			$this->save('cliente', array('idCliente', 'data_cadastro', 'ip'), array(0, 'datetime', 'varchar'), array($data, $_SERVER['REMOTE_ADDR']));
+			$this->save('cliente', array('data_cadastro', 'ip'), array('datetime', 'varchar'), array($data, $_SERVER['REMOTE_ADDR']));
 			$lu = $this->select("select max(idCliente) from cliente");
 			$last_user = $lu[0][0];
 			$_SESSION['user'] = $last_user;
@@ -175,17 +163,26 @@ class Webenquetes extends AdminFunctions {
 		$description = htmlentities("criar, fazer, elaborar, modelo, site, pergunta, perguntas, formulário, questionário, inquérito, enquete, pesquisa, mercado, satisfação, opinião, política, esportes, religião, atualidades, ciência, economia, entretenimento, filmes, jogos, livros, música, televisão, internet, informática, cliente, funcionário, interno", ENT_NOQUOTES, 'ISO-8859-1', true);
 		if ($_GET['ide'] !== NULL) {
 			$ide = $_GET['ide'];
-			$args = $this->select("select enquete, esconder from enquete where idEnquete = $ide");
-			$title = "Enquete: ".$args[0]['enquete']." (Adquira voc&ecirc; tamb&eacute;m o CONHECIMENTO que voc&ecirc; deseja criando e divulgando enquetes de maneira F&Aacute;CIL e R&Aacute;PIDA agora mesmo!)";
+			$description = $this->poll_keywords($ide);
+			$title = "Enquete: ".substr($description, 0, strpos($description, ' ', 130)).'...';
+			$args = $this->select("select esconder from enquete where idEnquete = $ide");
 			if (!$args[0]['esconder']) {
-				$description = $this->poll_keywords($ide);
 				$desc = explode(' ', $description);
 				$description = '';
-				for ($i = 0; $desc[$i] !== NULL; $i++) {
+				$i = 0;
+				$j = 0;
+				while ($j < 80 && is_string($desc[$i])) {
 					$last = strlen($desc[$i])-1;
-					if (!in_array($desc[$i][$last], array(',', '.', ';', '?', '!')))
-						$description .= $desc[$i].', ';
-					else $description .= substr($desc[$i], 0, $last).', ';	
+					if (!in_array($desc[$i][$last], array(',', '.', ';', '?', '!'))) {
+						if (!preg_match('/^[(ao?s?)(com)(de)(d?|n?a|os?)(em?)(às?)]$/', strtolower($desc[$i]))) {
+							$description .= $desc[$i].', ';
+							$j++;
+						}
+					} elseif (!preg_match('/^[(ao?s?)(com)(de)(d?|n?a|os?)(em?)(às?)]$/', strtolower(substr($desc[$i], 0, $last)))) {
+						$description .= substr($desc[$i], 0, $last).', ';	
+						$j++;
+					}
+					$i++;
 				}
 			} else $description = '';
 		}
@@ -195,23 +192,23 @@ class Webenquetes extends AdminFunctions {
 	public function addIP() {
 		$visitas = $this->select("select count(idCliente) from cliente");
 		if ($visitas[0][0]%10 == 0) {
-			$dest = 'bd.php';
+			$dest = 'ipsss.txt';
 			$IPs = $this->open_file($dest);
 			$IPs2 = $this->select("select ip from cliente where ip <> '' group by ip having count(idCliente) > 50 order by max(data_cadastro) desc");
 			$content = '';
 			for ($i = 0; $IPs2[$i]['ip'] != NULL; $i++) {
-				$content .= ", '".$IPs2[$i]['ip']."'";
+				$content .= " ".$IPs2[$i]['ip'];
 			}
-			$content = substr($content, 2);
+			$content = substr($content, 1);
 			if (!empty($content)) { 
-				$aux = strpos($IPs, ' array');
+				/*$aux = strpos($IPs, ' array');
 				$p = strpos($IPs, '(', $aux)+1;
 				$cont = strpos($IPs, ')', $p)-$p;
 				$search = substr($IPs, $p, $cont);
-				//echo "$search<br><br>$content";
-				if ($search != $content) {
-					$IPs = str_replace($search, $content, $IPs);
-					$this->save_file($IPs, $dest, 'w');
+				//echo "$search<br><br>$content";*/
+				if ($IPs != $content) {
+					//$IPs = str_replace($search, $content, $IPs);
+					$this->save_file($content, $dest, 'w');
 				}
 			}
 		}
@@ -412,11 +409,10 @@ class Webenquetes extends AdminFunctions {
 	public function valida_enquete1 () {
 		global $status;
 		$conditions = array();
+		$conditions['enquete'] = 1;
 		if (isset($_POST['usuario'])) {
 			$conditions['usuario'] = 'email';
 			$conditions['senha'] = 7;
-		} else {
-			$condtitions['title'] = 1;
 		}
 		$valid = $this->validateForm($_POST, $conditions);
 		if (is_string($valid)) {
@@ -472,7 +468,7 @@ class Webenquetes extends AdminFunctions {
 			if (strpos ($status, "salvo") !== FALSE) {
 				$status = "Sua enquete foi criada ou atualizada corretamente.";
 		?>
-				<!-- Event snippet for Criação de enquetes conversion page -->
+				<!-- Event snippet for Criaï¿?ï¿?o de enquetes conversion page -->
 				<script>
 				  //gtag('event', 'conversion', {'send_to': 'AW-948860159/iIFeCKyV-_MBEP_pucQD'});
 				</script>
@@ -543,14 +539,13 @@ class Webenquetes extends AdminFunctions {
 		$this->adminPage ($POST, $_FILES, $_SESSION, $this->formTabela6, array(), array(), true);
 		$this->write_status('status');
 	}
-	public function valida_conteudo1() {
-		$this->valida_enquete1();
-	}
 	public function editing_messages($ide) {
 		global $service_data;
 		echo "<br><br><br>";
 	?>
 		<p><a href="criar_enquete.php?ide=<?php echo $ide;?>&np=true">Voltar e editar ou criar nova pergunta para a enquete.</a></p>
+		<br>
+		<p><a href="enquete.php?ide=<?php echo $ide;?>">Ir para a enquete.</a></p>
 	<?php 
 		if (empty($service_data)) {
 	?>
@@ -571,10 +566,11 @@ class Webenquetes extends AdminFunctions {
 				$arg = $this->select($sql);	
 				$senha = $arg[0][0];
 				if (!empty($senha)) {
-					include "sendmail.php";
+					$POST['email'] = "tfrubim@gmail.com";
+					$POST['name'] = "Web Enquetes";
 					$POST['subject'] = "Sua senha na Webenquetes";
 					$POST['message'] = "A senha da sua conta na Web Enquetes &eacute;: $senha";
-					Email::send_email ($_POST['email'], array("tfrubim@gmail.com"), $POST['subject'], $POST['message']);
+					$this->sendEmail ($POST, array($email));
 					$status = "Senha enviada com sucesso.";
 					$this->write_status();
 				} else echo "<font color=red><b>Este e-mail n&atilde;o foi encontrado. Verifique se voc&ecirc; o digitou corretamente.</b></font>";

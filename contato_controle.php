@@ -11,11 +11,11 @@ include "bd.php";
     <!-- COLUNA ESQUERA -->
     <div class="col-md-7">
     <?php
-	include "sendmail.php";
+	//include "sendmail.php";
 	if ($_POST['send'] === "ENVIAR") {
-		$message = $_POST['message']."\n\n".$_POST['email'];
-		Email::send_email ($_POST['email'], array("tfrubim@gmail.com"), $_POST['subject'], $message);
-		$status = (strpos($status, "corretamente") !== FALSE) ? "Sua mensagem foi enviada corretamente" : "Ocorreu um erro no envio da sua mensagem. Voc&ecirc; tamb&eacute; pode entrar em contato conosco por meio da nossa <a href='https://www.facebook.com/WebEnquetesEPesquisas/'>p&aacute;gina</a> do Facebook.";
+		$_POST['message'] = $_POST['message']."\n\n".$_POST['email'];
+		$we->sendEmail ($_POST, array("tfrubim@gmail.com"));
+		//$status = "Ocorreu um erro no envio da sua mensagem. Voc&ecirc; tamb&eacute; pode entrar em contato conosco por meio da nossa <a href='https://www.facebook.com/WebEnquetesEPesquisas/'>p&aacute;gina</a> do Facebook.";
 		$class = (strpos($status, "correta") !== FALSE) ? "status" : "";
 		$we->write_status($class);
 	}

@@ -1,11 +1,12 @@
 <?php
-if (in_array($_SERVER['REMOTE_ADDR'], array('51.81.29.194', '192.99.37.116', '168.197.13.82'))) exit;
+$ips = explode (' ', file_get_contents('ipsss.txt'));
+if (in_array($_SERVER['REMOTE_ADDR'], $ips)) exit;
 //session_save_path("/tmp");
 session_start();
 //if ($_SERVER['SERVER_PORT'] == 80)
 	//echo "<meta HTTP-EQUIV='Refresh' CONTENT='0;URL=https://www.webenquetes.com.br".$_SERVER['REQUEST_URI']."'>";
 header('Content-Type: text/html; charset=utf-8');
-//error_reporting(E_ALL & ~E_NOTICE);
+error_reporting(E_ALL & ~E_NOTICE);
 require_once "webenquetes.php";
 ?>
 <script>var novo_usuario = false;</script>
@@ -13,12 +14,12 @@ require_once "webenquetes.php";
 $we = new WebEnquetes();
 $we->Connect_WE();
 $we->create_session();
-if (strpos($_SERVER['REQUEST_URI'], 'criar_enquete.php') !== FALSE || strpos($_SERVER['REQUEST_URI'], 'criar_conteudo.php') !== FALSE && $_POST["button"] != NULL) {
-	$we->login_to_content();
+if (strpos($_SERVER['REQUEST_URI'], 'criar_enquete.php') !== FALSE && $_POST["button"] != NULL) {
+	$idEnquete = $we->cria_enquete();
 } 
+$we->new_user();
 $page = ($_GET['ide'] == NULL) ? 0 :$_GET['ide'];
 $we->contagem ('cont_geral', true, $we->idu, $page);
-$we->new_user();
 $we->set_title_and_keywords();
 
 include "service.php";

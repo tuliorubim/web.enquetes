@@ -34,12 +34,10 @@ include "header.php";
 	if ($status != '') {
 		echo "<p><span class='status2'>$status</span></p>";
 	}
-	if (strlen($_POST['title']) > 0)
-		$idEnquete = $we->create_content(true);
 	if (!isset($idEnquete)) $idEnquete = $_GET['ide'];
 	$idc = (isset($_POST['cd_categoria'])) ? $_POST['cd_categoria'] : $_GET['idc'];
 	require_once "create_html.php";
-	$design = new Create_HTML($idEnquete, 0, $idc);
+	$design = new Create_HTML($idEnquete, $idc);
 	$design->con = $we->con;
 	$design->idu = $we->idu;
 	$design->select("select cd_usuario from enquete where idEnquete = $idEnquete", array("cdu"));

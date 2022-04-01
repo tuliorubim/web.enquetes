@@ -5,14 +5,12 @@ class Create_HTML extends DesignFunctions {
 	use Dados_webenquetes;
 	public $idu;
 	private $idEnquete;
-	private $idConteudo;
 	private $idc;
 	private $extension;
 	public $select;
 	
-	public function __construct($ide=0, $idContent=0, $idc=NULL, $ext='html') {
+	public function __construct($ide=0, $idc=NULL, $ext='html') {
 		$this->idEnquete = $ide;
-		$this->idConteudo = $idContent;
 		$this->idc = $idc;
 		$this->extension = $ext;
 	}
@@ -37,7 +35,7 @@ class Create_HTML extends DesignFunctions {
 			</script>
 		<?php	
 		}
-		$this->idc = $args[0]['idCategoria'];
+		$this->idc = $args[0]['idc'];
 		$this->select = $select;
 		return $inds;
 	}
@@ -63,7 +61,7 @@ class Create_HTML extends DesignFunctions {
 		$idu = $this->idu;
 		$sel = $select[5];
 		if ($cd_servico > 0) {
-			$select[0] = "select idCliente, logo, logoReduzida, site from cliente where idCliente = $idu";
+			$select[0] = "select idCliente, logo, logoReduzida from cliente where idCliente = $idu";
 			$select[5] = true;
 			$inds = $this->formGeral ($_SESSION, $this->formTabela5, array(), array(), $select, false, $inds);
 		}
@@ -91,7 +89,7 @@ class Create_HTML extends DesignFunctions {
 			$indEdit = $row['idPergunta'];
 		}
 		$select[0] = "select p.*, r.* from pergunta p left join resposta r on p.idPergunta = r.cd_pergunta where p.cd_enquete = $idEnquete and p.idPergunta = $indEdit order by r.idResposta";
-		$args = $this->select("select count(dt_voto) as dez from voto where cd_enquete = $idEnquete");
+		$args = $this->select("select count(dt_voto) from voto where cd_enquete = $idEnquete");
 		$excluir = true;
 		if ($args[0]['dez'] >= 10 && $cd_servico == 0) {
 			$excluir = false;
@@ -126,176 +124,6 @@ class Create_HTML extends DesignFunctions {
 			$incluiConteudo = array("content" => $conteudo, "beforeAfter" => "after", "level" => 0);
 			echo $this->designBlocks (array("database" => $banco, "fields" => $fields, "includeContent" => $incluiConteudo));
 		} 
-	}
-	public function form_conteudo($inds) {
-		$select = $this->select;
-		$select[1] = 'form'; 
-		$idConteudo = $this->idConteudo;
-		$idu = $this->idu;
-		
-		if ($idConteudo !== NULL) {
-			$select[0] = "select idConteudo, cd_usuario, cd_categoria, dt_criacao, titulo, introducao, usar_logo from conteudo where idConteudo = $idConteudo and cd_usuario = $idu";	
-		} else $select[5] = false;
-			
-		$inds = $this->formGeral ($_SESSION, $this->formTabela7, array(), array(), $select, false, $inds);
-		
-		$this->addForeignKey("conteudo", "cd_categoria", "categoria", "idCategoria");
-		$this->addForeignKey("conteudo", "cd_usuario", "usuario", "idUsuario");
-		$this->select = $select;
-		return $inds;
-	}
-	public function form_content_type ($inds) {
-		$sql = "select * from content_type order by idCType";
-		$select = array($sql, "select");
-		$select[5] = true;
-		
-		$inds = $this->formGeral ($_SESSION, $this->formTabela8, array(), array(), $select, false, array(0, 0), true, $inds);
-		$idConteudo = $this->idConteudo;
-		if ($idConteudo !== NULL) {
-			$sql = "select ct.idCType, ct.type from content_type ct left join conteudo c on c.content_type = ct.idCType where c.idConteudo = $idConteudo";
-			$args = $this->select($sql, array(), true);
-		?>
-			<script language="javascript">
-				$("input[name='idCType']").val('<?php echo $args[0]['idCType']; ?>');
-				$("#type").val("<?php echo $args[0]['type']; ?>");
-			</script>
-		<?php	
-		}
-		$this->select = $select;
-		return $inds;
-	}
-	public function form_conteudo2 ($inds) {
-		$select = $this->select;
-		$select[1] = 'form';
-		$idConteudo = $this->idConteudo;
-		$idu = $this->idu;
-		
-		if ($idConteudo !== NULL) {
-			$select[0] = "select idConteudo, content_type, texto, audio from conteudo where idConteudo = $idConteudo and cd_usuario = $idu";	
-		} else $select[5] = false;
-		
-		$inds = $this->formGeral ($_SESSION, $this->formTabela9, $this->formTabela10, $this->formTabela11, $select, false, $inds);
-		$arg = $this->select("select content_type from conteudo where idConteudo = $idConteudo");
-		if ($select[5] && $arg[0]['content_type'] == 1) {
-			$sql = "select ci.imagem, concat('<button type=\"button\" id=\"', ci.idImagem, '\">Reutilizar no texto</button>') as button from content_image ci inner join cliente c on ci.cd_usuario = c.idCliente where c.idCliente = $idu";
-			$sizes = "width='300'";
-			$database = 'webenque_enquetes';
-			$params = array('database'=>$database, 'fields'=>$sql, 'sizes'=>$sizes, 'isHTML'=>true);
-			echo '<button type="button" disabled="disabled" class="glyphicon glyphicon-chevron-left" id="previous"></button>';
-			echo '<button type="button" class="glyphicon glyphicon-chevron-right" id="next"></button>';
-			echo "<div id='user_images'>";
-			echo $this->designBlocks($params);
-			echo "</div>";
-?>
-			<script language="javascript">
-			MostraUm("post_");
-			j = 1;
-			$(function () {
-				$("#previous").click(function () {
-					SlideMenos("post_");
-				});
-				$("#next").click(function () {
-					SlideMais("post_");
-				});
-				$("button").click(function () {
-					if (!isNaN($(this).attr("id"))) {
-						post_imagem = $(this).parent().parent();
-						var imagem = post_imagem.find("img").attr('src');
-						if ($("#texto").Editor('getText').indexOf(imagem) != -1) {
-							$("#texto").Editor('setText', $("#texto").Editor('getText')+"<img src='"+imagem+"'>");
-						} else { 
-							$.ajax({
-								url: 'save_text.php',
-								type: 'POST',
-								dataType: 'json',
-								data: {
-									idConteudo: idConteudo,
-									content_type: 1,
-									textoContent: $("#texto").Editor('getText'),
-									idImagem: $(this).attr("id")
-								},
-								success: function (result) {
-									if (result['status'] == 'success2') {
-										$("#texto").Editor('setText', $("#texto").Editor('getText')+"<img src='"+imagem+"'>");
-									} 
-									else alert(result['status']);
-								},
-								error: function (xhr, s, e) {
-									alert(xhr.responseText);
-								}
-							});
-						}
-					} 
-				});
-			});
-			
-			</script>
-<?php			
-		} else {
-			echo "<script language='javascript'>$('#imagem').css('display', 'none');</script>";
-		}
-?>
-		<script language="javascript">
-		idConteudo = <?php echo isset($idConteudo) ? $idConteudo : 0;?>;
-		idu = <?php echo isset($idu) ? $idu : 0;?>;
-		$(function () {
-			$("#d_audio").css("display", "none");
-			$("#type").click(function () {
-				if ($(this).val() == "Audio") {
-					$("#d_audio").css("display", "");
-					$("#d_texto").css("display", "none");
-					$("#d_imagem1").css("display", "none");
-					for (i = 1; $("#post_"+i).html() != null; i++) {
-						$("#post_"+i).css('display', 'none');
-					}
-				} else if ($(this).val() == "Texto") {
-					$("#d_audio").css("display", "none");
-					$("#d_texto").css("display", "");
-					$("#d_imagem1").css("display", "");
-					for (i = 1; $("#post_"+i).html() != null; i++) {
-						$("#post_"+i).css('display', '');
-					}
-				}
-			});
-			$("#imagem1").on('change', function () {
-				if ($(this).val() != '') {
-					document.form.textoContent.value = $("#texto").Editor('getText');
-					form_data = new FormData();
-					form_data.append("idConteudo", idConteudo);
-					form_data.append("content_type", 1);
-					form_data.append("textoContent", $("#textoContent").val());
-					form_data.append("imagem", $(this).prop("files")[0], $(this).val());
-					$.ajax({
-						url: 'save_text.php',
-						type: 'POST',
-						dataType: 'json',
-						processData: false,
-						contentType: false,
-						data: form_data,
-						success: function (result) {
-							if (result['status'] == 'success') {
-								$("#texto").Editor('setText', $("#texto").Editor('getText')+"<img src='"+result['imagem']+"'>");
-								$("#imagem1").val('');
-								for (var i = 1; $("#post_"+i).html() != null; i++) {
-									$("#post_"+i).css("display", "none");
-								}
-								$("#post_"+(i-1)).after("<div id='post_"+i+"'><div class='item2'><img src='"+result['imagem']+"' width='300'></div><div class='item2'><button type='button' id='"+result['idImagem']+"'>Reutilizar no texto</button></div></div>");
-								j = i;
-								$("#previous").prop("disabled", false);
-								$("#next").prop("disabled", true);
-							} else alert(result['status']);
-						},
-						error: function (xhr, s, e) {
-							alert(xhr.responseText);
-						}
-					});
-				}
-			});
-		});
-		</script>
-<?php
-		$this->select = $select;
-		return $inds;
 	}
 	public function minhas_enquetes () {
 		$sql = "select * from enquete where cd_usuario = $this->idu order by idEnquete";
@@ -365,13 +193,6 @@ class Create_HTML extends DesignFunctions {
 		<p><a href="bonus_mensais.php" target="_blank">Experimente assinatura gr&aacute;tis</a></p>
 	<?php
 		}
-	}
-	public function is_poll () {
-		$is_poll = false;
-		$ide = $this->idEnquete;
-		$rs = mysqli_query($this->con, "select p.pergunta, r.resposta from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta where p.cd_enqute = $ide");
-		if ($rs && mysqli_num_rows($rs) >= 2) $is_poll = true;
-		return $is_poll;
 	}
 	public function create_poll ($cross=FALSE, $cd_servico=1, $cdu=NULL) {
 		$idu = ($_SESSION['user'] !== NULL) ? $_SESSION['user'] : $cdu;
@@ -708,33 +529,31 @@ class Create_HTML extends DesignFunctions {
 		$header[2] = "<center><p>Assinatura <a href='bonus_mensais.php'>gr&aacute;tis</a>. Assinatura <a href='assinar.php'>paga.</a></center>";
 		$args = array();
 		$args[0][0] = "Respostas ilimitadas por m&ecirc;s";
-		$args[1][0] = "Uma resposta por pessoa<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='Este site cont&eacute;m um sistema autom&aacute;tico eficiente que impede que uma pessoa responda mais de uma vez a uma mesma enquete ou teste. Quando algu&eacute;m responde a uma enquete de novo, sua resposta &eacute; editada, e a nova resposta substitui a anterior. Testes n&atilde;o podem ser respondidos mais de uma vez.'></span>";
-		$args[2][0] = "Desativar e reativar enquete<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='Voc&ecirc; pode desativar e reativar sua enquete ou teste a qualquer momento. A enquete/teste desativada &eacute; vis&iacute;vel somente para voc&ecirc;. Este recurso pode ser usado para se estabelecer data de t&eacute;rmino para sua enquete ou teste.'></span>";
+		$args[1][0] = "Um voto por pessoa<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='Este site cont&eacute;m um sistema autom&aacute;tico eficiente que impede que uma pessoa responda mais de uma vez a uma mesma enquete. Quando algu&eacute;m vota de novo, seu voto &eacute; editado, e o novo voto substitui o anterior.'></span>";
+		$args[2][0] = "Desativar e reativar enquete<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='Voc&ecirc; pode desativar e reativar sua enquete a qualquer momento. A enquete desativada e seus resultados parciais s&atilde;o vis&iacute;veis somente para voc&ecirc;. Este recurso pode ser usado para se estabelecer data de t&eacute;rmino para sua enquete.'></span>";
 		$args[3][0] = "Suporte ao cliente<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='O suporte ao cliente ocorrer&aacute; nos dias de semana &agrave; noite e nos fins de semana de dia e de noite. Nunca de madrugada. E ser&aacute; feito por e-mail ou por meio da p&aacute;gina do Facebook cujo link est&aacute; no rodap&eacute; desta p&aacute;gina.'></span>";
-		$args[4][0] = "Exibi&ccedil;&atilde;o de enquetes e testes modelo<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='O menu principal deste site cont&eacute;m o item Enquetes Modelo, onde voc&ecirc; ter&aacute; acesso a enquetes e testes bem elaborados para te dar uma luz sobre como criar uma enquete bem feita ou um teste v&aacute;lido, caso voc&ecirc; n&atilde;o saiba como fazer isso.'></span>";
-		$args[5][0] = "Destaques do momento<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='Se voc&ecirc; conseguir divulgar bem seu conte&uacute;do (texto/&aacute;udio cient&iacute;fico, de opini&atilde;o, enquete, teste), ele poder&aacute; aparecer entre os conte&uacute;dos que s&atilde;o destaque do momento, os quais s&atilde;o exibidos em todas as p&aacute;ginas deste site. Por&eacute;m, a sua divulga&ccedil;&atilde;o do seu conte&uacute;do &eacute; muito mais significativa para a visibilidade do mesmo do que ele aperecer nos destaques do momento.'></span>";
-		$args[6][0] = "Esconder resultados parciais<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='Esta op&ccedil;&atilde;o est&aacute; dispon&iacute;vel apenas para assinantes. Em muitas situa&ccedil;&otilde;es, &eacute; interessante para o criador da enquete ou teste esconder o conhecimento revelado nos resultados dos mesmos, como por exemplo no caso de n&atilde;o se querer que concorrentes tenham acesso a eles. No caso de testes com resultados escondidos, quem faz o teste poder&aacute; ver somente sua pontua&ccedil;&atilde;o e as respostas certas.'></span>";
-		$args[7][0] = "Conte&uacute;do privado<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='O criador de um conte&uacute;do (texto/&aacute;udio cient&iacute;fico, de opini&atilde;o, enquete, teste) pode querer que apenas um grupo restrito de pessoas tenha acesso a ele, como por exemplo no caso em que uma enquete &eacute; direcionada a moradores de um condom&iacute;nio, n&atilde;o podendo pessoas que n&atilde;o residem nele respond&ecirc;-la. Assim, o criador da enquete a torna privada, para que ela n&atilde;o apare&ccedil;a entre as enquetes destaque do momento, em resultados de busca neste site e para que nem possam ser achadas no Google, e assim ela a divulga somenta para seu p&uacute;blico alvo. Op&ccedil;&atilde;o dispon&iacute;vel somente para assinantes.'></span>";
-		$args[8][0] = "Exibir seu an&uacute;ncio<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='Somente assinantes podem exibir um an&uacute;cio seu junto aos seus conte&uacute;dos (textos/&aacute;udios, enquetes e testes). Seu an&uacute;ncio dever&aacute; ser uma imagem que voc&ecirc; cadastra ao atualizar seus dados ou ao criar um conte&uacute;do. ".$this->html_encode("Se você fornecer um site na criação de conteúdo ou na atualização de dados, seu anúncio será um link para esse site.")."'></span>";
-		$args[9][0] = "Baixar resultados da enquete/teste<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='Somente assinantes podem baixar os resultados parciais ou finais de sua enquete e/ou teste. Os resultados s&atilde;o baixados no formato PDF e podem ser baixados tamb&eacute;m neste formato resultados por grupos de pessoas.'></span>";
-		$args[10][0] = "Excluir nossos an&uacute;ncios<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='Na assinatura gratuita, os nossos an&uacute;ncios n&atilde;o s&atilde;o exclu&iacute;dos de seus conte&uacute;dos. Isso acontece somente na assinatura paga, e de acordo com o per&iacute;odo de pagamento escolhido.'></span>";
-		$args[11][0] = "Imagens no texto<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='Quanto voc&ecirc; escreve um texto que ser&aacute; avaliado por meio de testes e ou enquetes, voc&ecirc; poder&aacute; colocar imagens ilustrativas espalhadas no mesmo.'></span>";
-		$args[12][0] = "Seu conte&uacute;do no seu site<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' data-html='true' title='Voc&ecirc; pode hospedar sua enquete e/ou teste da Web Enquetes no seu site, baixando o HTML do mesmo e colando-o em p&aacute;ginas do seu site. Quanto a textos, para que as imagens do mesmo apare&ccedil;am corretamente no seu site, voc&ecirc; deve copi&aacute;-lo do seu formul&aacute;rio de edi&ccedil;&atilde;o, e n&atilde;o da p&aacute;gina onde ele aparece, e col&aacute;-lo numa p&aacute;gina sua. Cabe a voc&ecirc; decidir como o seu conte&uacute;do na Web Enquetes ser&aacute; exibido no seu site. A diferen&ccedil;a entre ser usu&aacute;rio b&aacute;sico e ser assiante refere-se somente a enquetes e testes, neste ponto.'></span>";
-		$args[13][0] = "Resultados por grupos<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='Quando uma enquete/teste tem mais de uma pergunta, &eacute; poss&iacute;vel aplicar os resultados parciais por grupos, escolhendo-se uma das op&ccedil;&otilde;es de resposta a qualquer pergunta nos resultados parciais da enquete/teste (que &eacute; o grupo escolhido) e vendo como as pessoas que escolheram tal resposta responderam &agrave;s outras perguntas.'></span>";
-		for ($i = 0; $i < 11; $i++) {
+		$args[4][0] = "Exibi&ccedil;&atilde;o de enquetes modelo<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='O menu principal deste site cont&eacute;m o item Enquetes Modelo, onde voc&ecirc; ter&aacute; acesso a enquetes bem elaboradas para te dar uma luz sobre como criar uma enquete bem feita, caso voc&ecirc; n&atilde;o saiba como fazer isso.'></span>";
+		$args[5][0] = "Destaques do momento<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='Se voc&ecirc; conseguir divulgar bem sua enquete, ela poder&aacute; aparecer entre as enquetes que s&atilde;o destaque do momento, as quais s&atilde;o exibidas em todas as p&aacute;ginas deste site. Assim, sua enquete poder&aacute; receber ainda mais respostas por estar sendo exibida como estando entre as de destaque do momento.'></span>";
+		$args[6][0] = "Esconder resultados parciais<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='Esta op&ccedil;&atilde;o est&aacute; dispon&iacute;vel apenas para assinantes. Em muitas situa&ccedil;&otilde;es, &eacute; interessante para o criador da enquete esconder o conhecimento revelado nos resultados da mesma, como por exemplo no caso de n&atilde;o se querer que concorrentes tenham acesso a eles.'></span>";
+		$args[7][0] = "Enquete privada<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='O criador de uma enquete pode querer que apenas um grupo restrito de pessoas tenha acesso a ela, como por exemplo no caso em que uma enquete &eacute; direcionada a moradores de um condom&iacute;nio, n&atilde;o podendo pessoas que n&atilde;o residem nele respond&ecirc;-la. Assim, o criador da enquete a torna privada, para que ela n&atilde;o apare&ccedil;a entre as enquetes destaque do momento, em resultados de busca neste site e para que nem possam ser achadas no Google, e assim ela a divulga somenta para seu p&uacute;blico alvo. Op&ccedil;&atilde;o dispon&iacute;vel somente para assinantes.'></span>";
+		$args[8][0] = "Poder excluir enquetes<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='Somente assinantes podem excluir suas enquetes. Se sua assinatura terminar e voc&ecirc; n&atilde;o tiver exclu&iacute;do suas enquetes cujos resultados parciais voc&ecirc; possa ter escondido, tais enquetes n&atilde; poder&atilde;o ser exclu&iacute;s e seus resultados parciais voltar&atilde;o a ser exibidos publicamente at&eacute; que voc&ecirc; renove sua assinatura.'></span>";
+		$args[9][0] = "Exibir seu an&uacute;ncio<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='Somente assinantes podem exibir um an&uacute;cio seu em suas enquetes. Seu an&uacute;ncio dever&aacute; ser uma imagem que voc&ecirc; cadastra ao atualizar seus dados ou ao criar uma enquete.'></span>";
+		$args[10][0] = "Baixar resultados da enquete<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='Somente assinantes podem baixar os resultados parciais ou finais de sua enquete. Os resultados s&atilde;o baixados no formato PDF e podem ser baixados tamb&eacute;m neste formato resultados por grupos de pessoas.'></span>";
+		$args[11][0] = "Excluir nossos an&uacute;ncios<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='Na assinatura gratuita, os nossos an&uacute;ncios n&atilde;o s&atilde;o exclu&iacute;dos. Isso acontece somente na assinatura paga, e de acordo com o per&iacute;odo de pagamento escolhido.'></span>";
+		$args[12][0] = "Enquete no seu site<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' data-html='true' title='Voc&ecirc; pode hospedar sua enquete da Web Enquetes no seu site, baixando o HTML da mesma e colando-a em p&aacute;ginas do seu site.'></span>";
+		$args[13][0] = "Resultados enviesados<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='right' title='Quando uma enquete tem mais de uma pergunta, &eacute; poss&iacute;vel aplicar os resultados parciais enviesados, escolhendo-se uma das op&ccedil;&otilde;es de resposta a qualquer pergunta nos resultados parciais da enquete e vendo como as pessoas que escolheram tal resposta responderam &agrave;s outras perguntas da enquete.'></span>";
+		for ($i = 0; $i < 12; $i++) {
 			if ($i < 6) {
 				$args[$i][1] = "<span class='glyphicon glyphicon-ok' style='color:#00CC00'></span>";
 			} else $args[$i][1] = "<span class='glyphicon glyphicon-remove' style='color:#CC0000'></span>";
-			if ($i < 10) {
+			if ($i < 11) {
 				$args[$i][2] = "<span class='glyphicon glyphicon-ok' style='color:#00CC00'></span>";
 			} else $args[$i][2] = "De acordo com o per&iacute;odo de pagamento. <a href='assinar.php'>Saiba mais</a>";
 		}
-		$args[11][1] = "At&eacute; uma imagem para upload<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='left' title='".$this->html_encode("Você poderá fazer upload de no máximo uma imagem para ser usada no seu texto, embora você possa também usar imagens hospedadas em outros servidores sem limites, mas respeitando os devidos direitos autorais.")."'></span>";
-		$args[11][2] = "At&eacute; seis imagens para upload<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='left' title='".$this->html_encode("Você poderá fazer upload de até seis imagens para serem usadas no seu texto, embora você possa também usar imagens hospedadas em outros servidores sem limites, mas respeitando os devidos direitos autorais.")."'></span>";
-		$args[12][1] = "Padr&atilde;o<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='left' title='No plano b&aacute;sico, a enquete/teste a ser hospedada no seu site, caso voc&ecirc; tenha um, aparecer&aacute; com todas as perguntas de uma vez, caso ela tenha mais de uma pergunta, o que tomar&aacute; um espa&ccedil;o consider&aacute;vel da p&aacute;gina do site onde ela aparece. Al&eacute;m disso, quando uma pessoa responde a essa enquete/teste no seu site, ela &eacute; redirecionada para fora dele, indo aos resultados parciais da mesma no site da Web Enquetes. A marca da Web Enquetes tamb&eacute;m &eacute; exibida junto com a enquete/teste hospedada.'></span>";
-		$args[12][2] = "Sob medida<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='left' title='Como assinante, quando voc&ecirc; cria uma enquete/teste de mais de uma pergunta, a vers&atilde;o dela hospedada no seu site exibir&aacute; uma pergunta de cada vez, ocupando pouco espa&ccedil;o nele. Al&eacute;m disso, quando algu&eacute;m termina de responder &agrave; sua enquete/teste no seu site, ela permanece nele, e n&atilde;o h&aacute; redirecionamento para a Web Enquetes. A marca da Web Enquetes n&atilde;o aparece com a enquete/teste hospedada.'></span>";
-		$args[13][1] = "B&aacute;sico<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='left' title='Em enquetes/testes de mais de uma pergunta, voc&ecirc; pode escolher apenas uma das respostas a qualquer pergunta para saber como as pessoas que escolheram tal resposta responderam &agrave;s outras perguntas.'></span>";
-		$args[13][2] = "Avan&ccedil;ado<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='left' title='Em enquetes/testes de mais de uma pergunta, nos resultados parciais, voc&ecirc; pode escolher mais de uma resposta a quaisquer perguntas para ver como as essoas que escolheram tais respostas selecionadas responderam &agrave;s outras perguntas.'></span>";
+		$args[12][1] = "Padr&atilde;o<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='left' title='No plano b&aacute;sico, a enquete a ser hospedada no seu site, caso voc&ecirc; tenha um, aparecer&aacute; com todas as perguntas de uma vez, caso ela tenha mais de uma pergunta, o que tomar&aacute; um espa&ccedil;o consider&aacute;vel da p&aacute;gina do site onde ela aparece. Al&eacute;m disso, quando uma pessoa responde a essa enquete no seu site, ela &eacute; redirecionada para fora dele, indo aos resultados parciais da mesma no site da Web Enquetes. A marca da Web Enquetes tamb&eacute;m &eacute; exibida junto com a enquete hospedada.'></span>";
+		$args[12][2] = "Sob medida<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='left' title='Como assinante, quando voc&ecirc; cria uma enquete de mais de uma pergunta, a vers&atilde;o dela hospedada no seu site exibir&aacute; uma pergunta de cada vez, ocupando pouco espa&ccedil;o nele. Al&eacute;m disso, quando algu&eacute;m termina de responder &agrave; sua enquete no seu site, ela permanece nele, e n&atilde;o h&Aacute; redirecionamento para a Web Enquetes. A marca da Web Enquetes n&atilde;o aparece com a enquete hospedada.'></span>";
+		$args[13][1] = "B&aacute;sico<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='left' title='Em enquetes de mais de uma pergunta, voc&ecirc; s&oacute; pode escolher apenas uma das respostas a qualquer pergunta para saber como as pessoas que escolheram tal resposta responderam &agrave;s outras perguntas.'></span>";
+		$args[13][2] = "Avan&ccedil;ado<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='left' title='Em enquetes de mais de uma pergunta, nos resultados parciais, voc&ecirc; pode escolher mais de uma resposta a quaisquer perguntas para ver como as essoas que escolheram tais respostas selecionadas responderam &agrave;s outras perguntas.'></span>";
 		$this->write_table($args, array("header" => $header));
 	}
 }
