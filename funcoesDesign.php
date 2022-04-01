@@ -338,7 +338,7 @@ class DesignFunctions extends DBFunctions {
 				}
 			/*If the type of the current input is "textarea", then it must be created by the tag "textarea"*/
 			} else {
-				$html .= "<textarea rows=5 cols=40 name='".$args[$i]."$indTab1' id='".$args[$i]."$indTab1' $properties ";
+				$html .= "<textarea rows=5 cols=40 name='".$args[$i]."$indTab1' id='".$args[$i]."$indTab1' maxlength='$maxlength' $properties ";
 				// If the last element of $formTable1[2] is not the boolean value 'true', then the label will be displayed inside the input as a placeholder.
 				if (!$is_label) $html .= "placeholder='".$formTable1[2][$i]."' ";
 				$html .= ">".$values[0][$i]."</textarea>\n";
@@ -406,7 +406,7 @@ class DesignFunctions extends DBFunctions {
 						$html .= ($formTable2[3][$i] !== "checkbox" && $formTable2[3][$i] !== "radio") ? "' value='".$values[0][$i+$k]."' size='$size' maxlength='$maxlength' $properties /></div>\n" : "' value='".$values[0][$k]."' size='$size' maxlength='$maxlength' $properties /> ".$values[0][$i+$k]."</div>\n";
 					}
 					elseif ($formTable2[3][$i] === "file"){
-						$html .= "<div class='c'><input type='".$formTable2[3][$i]."' name='".$args2[$i].$indTab1."0' id='".$args2[$i].$indTab1."0' value='' $properties /></div>";
+						$html .= "<div class='c'><input type='".$formTable2[3][$i]."' name='".$args2[$i].$indTab1."0' id='".$args2[$i].$indTab1."0' value='' maxlength='$maxlength' $properties /></div>";
 						//If the value of the current input is an image, it will be displayed beside it.
 						if (is_image($values[0][$i+$k])) {
 							$values[0][$i+$k] = "<img src='".$values[0][$i+$k]."' width=280 border='0'>";
@@ -415,7 +415,7 @@ class DesignFunctions extends DBFunctions {
 					}
 					// The code inside the 'else' below is executed only if the current input type is textarea.
 					else {
-						$html .= "<div class='c'><textarea rows=3 cols=40 name='".$args2[$i].$indTab1."0' id='".$args2[$i].$indTab1."0' $properties ";
+						$html .= "<div class='c'><textarea rows=3 cols=40 name='".$args2[$i].$indTab1."0' id='".$args2[$i].$indTab1."0' maxlength='$maxlength' $properties ";
 						// If the last element of $formTable2[2] is not the boolean values 'true', then the label will be displayed inside the input as a placeholder.
 						if (!$is_label) $html .= "placeholder='".$formTable2[2][$i]."' ";
 						$html .= ">".$values[0][$i+$k]."</textarea></div>\n";
@@ -468,14 +468,14 @@ class DesignFunctions extends DBFunctions {
 						if (!$is_label) $html .= "' placeholder='".$formTable2[2][$j];
 						$html .= ($formTable2[3][$j] !== "checkbox" && $formTable2[3][$j] !== "radio") ? "' value='$value' size='$size' maxlength='$maxlength' $properties /></div>\n" : "' value='".$values[$i][$k]."' size='$size' maxlength='$maxlength' $properties /> ".$values[$i][$j+$k]."</div>\n";
 					} elseif ($formTable2[3][$j] === "file"){
-						$html .= "<div class='c'><input type='".$formTable2[3][$j]."' name='".$args2[$j].$indTab1."$i' id='".$args2[$j].$indTab1."$i' value='' $properties /></div>";
+						$html .= "<div class='c'><input type='".$formTable2[3][$j]."' name='".$args2[$j].$indTab1."$i' id='".$args2[$j].$indTab1."$i' value='' maxlength='$maxlength' $properties /></div>";
 						if (is_image($value)) {
 							$value = "<img src='$value' width=280 border='0'>";
 							$html .= "<div class='lab' style='float: down;'>$value</div>\n";
 						}
 					}
 					else {
-						$html .= "<div class='c'><textarea rows=3 cols=40 name='".$args2[$j].$indTab1."$i' id='".$args2[$j].$indTab1."$i' $properties ";
+						$html .= "<div class='c'><textarea rows=3 cols=40 name='".$args2[$j].$indTab1."$i' id='".$args2[$j].$indTab1."$i' maxlength='$maxlength' $properties ";
 						// If the last element of $formTable2[2] is not the boolean values 'true', then the label will be displayed inside the input as a placeholder.
 						if (!$is_label) $html .= "placeholder='".$formTable2[2][$j]."' ";
 						$html .= ">$value</textarea></div>\n";

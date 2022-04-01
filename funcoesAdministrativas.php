@@ -1,6 +1,9 @@
 <?php 
 require_once "funcoesBD.php";
 require_once "funcoesCelulas.php";
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+//require 'vendor/autoload.php';
 class AdminFunctions extends DBFunctions {
 	//const STAR = "<font color=red>*</font>";
 	
@@ -9,7 +12,7 @@ class AdminFunctions extends DBFunctions {
 	public $cookie_https = TRUE;
 	public $willSave = true;
 	
-	public function contagem ($table, $condition, $cd_usuario=0, $page) {
+	public function contagem ($table, $condition, $cd_usuario, $page) {
 		$con = $this->con;
 		mysqli_query($con, "create table if not exists $table (
 		codigo integer not null auto_increment, dataHora dateTime, cd_usuario integer not null default -1, page integer not null default 0, primary key (codigo))");
@@ -44,13 +47,13 @@ class AdminFunctions extends DBFunctions {
 		$cont = $row['count(codigo)'];	
 		echo "Visitantes desde $dataInicio: $cont"; 
 	}
-	public function sendEmail ($POST, $recipients, $auth=NULL, $names=array('email', 'name', 'subject', 'message'), $host='localhost') {  
+	public function sendEmail ($POST, $recipients, $auth=array("tfrubim@gmail.com", "qmtzykjowtxlkola"), $names=array('email', 'name', 'subject', 'message'), $host='smtp.gmail.com') {  
 		global $status;
-		include("PHPMailer-master/src/PHPMailer.php");
 		$mail = new PHPMailer();
-		
-		//$mail->Port = 25;
 		$mail->IsSMTP(); //ENVIAR VIA SMTP    fsource_PHPMailer__
+		$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+		//$mail->SMTPDebug = SMTP::DEBUG_SERVER;
+		$mail->Port = 465;
 		$mail->Host = $host; //SERVIDOR DE SMTP, USE smtp.SeuDominio.com OU smtp.hostsys.com.br
 		if (is_array($auth)) {
 			$mail->SMTPAuth = true; //ATIVA O /SMTP AUTENTICADO
@@ -76,7 +79,7 @@ class AdminFunctions extends DBFunctions {
 		if(!$mail->Send()) {
 			$status = "Your message couldn't be sent. Error: " . $mail->ErrorInfo;
 			return;
-		} else $status = "Your message was sent successfully!";
+		} else $status = "Sua mensagem foi enviada corretamente!";
 	//echo $mail->Body;
 	}
 	
@@ -155,7 +158,7 @@ class AdminFunctions extends DBFunctions {
 	public function desmembraPaginas ($page, $pages, $i) {
 		$pages[$i] = $page;
 		$os = 0;
-		$arq = open_file($page);
+		$arq = $this->open_file($page);
 		$pos = strpos($arq, "include", $os);
 		while ($pos !== FALSE) {
 			$ini = $pos+9;
@@ -168,7 +171,126 @@ class AdminFunctions extends DBFunctions {
 		}
 		return $pages;
 	}
-	public function procura ($palavras, $pages, $excluir) {
+	public function split_words($palavras) {
+		$palavras2 = array();
+		$i = 0;
+		while (($offset = strpos($palavras, '\"')) !== false) {
+			$offset2 = strpos($palavras, '\"', $offset+2);
+			$palavras2[$i] = substr($palavras, $offset+2, $offset2-$offset-2);
+			$palavras = $this->apaga($palavras, $offset, $offset2-$offset+2);
+			$i++;		
+		}
+		if (!empty($palavras))
+			$palavras2 = array_merge($palavras2, explode(' ', $palavras));
+		$i = 0;
+		foreach ($palavras2 as $p) {
+			if (empty($p)) {
+				unset($palavras2[$i]);
+			}
+			$i++;
+		}
+		return $palavras2;
+	}
+	public function procura ($palavras, $pages, $dinamic_pages, $queries) {
+		$all_pages = array();
+		foreach ($pages as $page) {
+			$pages2 = $this->desmembraPaginas($page, array(), 0);
+			$all_pages = array_merge($all_pages, $pages2);
+		}
+		$paragrafo = array();
+		$goto = array();
+		foreach ($all_pages as $page) {
+			$arq = $this->open_file($page);
+			$offset = 0;
+			preg_match('/html(entities)|(_encode)|(specialchars)/', $arq, $matches, PREG_OFFSET_CAPTURE, $offset); 
+			while ($matches[0][1] != NULL) {
+				$text_ini = strpos($arq, '"', $matches[0][1])+1;
+				preg_match('/[^\\\\]"/', $arq, $matches, PREG_OFFSET_CAPTURE, $text_ini);
+				$text_length = $matches[0][1]-$text_ini+1;
+				$text = substr($arq, $text_ini, $text_length);
+				$paragrafo[] = $this->html_encode($text); 
+				$goto[] = "<a href='$page'>Veja aqui.</a>";
+				$offset = $text_ini+$text_length;
+				preg_match('/html(entities)|(_encode)|(specialchars)/', $arq, $matches, PREG_OFFSET_CAPTURE, $offset); 
+			}
+		}
+		$j = 0;
+		$palavras2 = $this->split_words($palavras);
+		foreach ($queries as $sql) {
+			$fields = explode(', ', substr($sql, 7, strpos($sql, ' from')-7));
+			$where = (strpos($sql, 'where') === false) ? ' where (' : ' and (';
+			for ($i = 1; $fields[$i] !== NULL; $i++) {
+				foreach ($palavras2 as $w) {
+					$where .= $fields[$i]." like '%$w%' or ";
+				}
+			} 
+			$where = substr($where, 0, strlen($where)-4).')';
+			$pos_where = false;
+			if (strpos($sql, ' limit') !== false) $pos_where = strpos($sql, ' limit');
+			if (strpos($sql, ' order by') !== false) $pos_where = strpos($sql, ' order by');
+			if (strpos($sql, ' group by') !== false) $pos_where = strpos($sql, ' group by');
+			if (!$pos_where) $sql .= $where;
+			else $sql = $this->insere($sql, $where, $pos_where);
+			$args = $this->select($sql);
+			$text_aux = '';
+			foreach ($args as $arg) {
+				$i = 0;
+				$text = '';
+				while ($arg[$i] !== NULL) {
+					$a = $arg[$i];
+					if ($i > 0) {
+						if (strpos($text_aux, $a) === FALSE){
+							$text .= $a.' ';
+							$text_aux .= $a;
+						}
+					} else
+						$goto[] = "<a href='".$dinamic_pages[$j].$a."'>Veja aqui.</a>";
+					$i++;
+				}
+				$paragrafo[] = $this->html_encode($text);
+			}	
+			$j++;
+		}
+		$result = "";
+		$achou = FALSE;
+		$i = 0;
+		$maisusadas = array('a', 'e', 'o', 'as', 'os', 'à', 'às', 'de', 'em', 'da', 'das', 'do', 'dos', 'na', 'nas', 'no', 'nos', 'com'); //'/^[(ao?s?)(às?)(com)(de)(d|n?a|os?)(em?)]$/'
+		foreach ($paragrafo as $p) {
+			foreach ($palavras2 as $w) {
+				if (!in_array(strtolower($w), $maisusadas)) {
+					$w = htmlentities($w, ENT_NOQUOTES, 'UTF-8', true);
+					while ($offset !== FALSE) {
+						if ($offset < strlen($p) ) {
+							$pos = strpos (strtolower($p), strtolower($w), $offset);
+							if ($pos !== FALSE) {
+								$achou = TRUE;
+								$p = $this->insere($p, "</b></font>",
+								$pos+strlen($w));
+								$p = $this->insere($p, "<font color='green'><b>", $pos);
+	//echo "$p, $w, $offset<br>";3
+							}
+						}
+						else break;
+	//echo $pos."<br>";
+						$offset = $pos;
+						if ($offset !== FALSE) {
+							$offset += strlen("<font color='green'><b>$w</b></font>");
+						}
+					}
+				}
+				$offset = 0;
+			}
+	//echo $achou;
+			if ($achou) {
+				$result .= $p.$goto[$i]."<br><br>";//."&nbsp;<a href='".$args[$i][1]."'>Ir para apágina deste conteúdo</a>";
+			}
+			$achou = FALSE;
+			$i++;
+		}
+	//echo $result;04w4
+		return "<span style='margin: 15px;'>".$result."</span>";
+	}
+	public function procura2 ($palavras, $pages, $excluir) {
 		$con = $this->con;
 		$variaveis1 = array("codigo", "palavras");
 		$types1 = array("integer", "varchar");
@@ -236,7 +358,7 @@ class AdminFunctions extends DBFunctions {
 		$result = "";
 		$achou = FALSE;
 		$i = 0;
-		$maisusadas = array('a', 'e', 'o', 'as', 'os', 'à', 'às', 'de', 'em', 'da', 'das', 'do', 'dos', 'na', 'nas', 'no', 'nos', 'com');
+		$maisusadas = array('a', 'e', 'o', 'as', 'os', 'à', 'às', 'de', 'em', 'da', 'das', 'do', 'dos', 'na', 'nas', 'no', 'nos', 'com'); //'/^[(ao?s?)(às?)(com)(de)(d|n?a|os?)(em?)]$/'
 		foreach ($paragrafo as $p) {
 			foreach ($palavras2 as $w) {
 				if (!in_array(strtolower($w), $maisusadas)) {
