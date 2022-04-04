@@ -300,7 +300,11 @@ class DesignFunctions extends DBFunctions {
 			if ($is_label)
 				$html .= "<label for='".$args[$i]."$indTab1'>".$formTable1[2][$i]."</label>";
 			$maxlength = $formTable1[6][$i]; // The input maxlength can be any size.
-			$m = (int) $maxlength;
+			$comma_pos = strpos($maxlength, ',');
+			if ($comma_pos !== false) {
+				$m = ((int) substr($maxlength, 0, $comma_pos))+((int) substr($maxlength, $comma_pos+1))+1;
+				$maxlength = "$m";
+			} else $m = (int) $maxlength;
 			if ($m > $max) {
 				$size = "$max"; // The input size is limited in $max (=50), as seen before.
 			} else $size = $maxlength;
@@ -373,7 +377,11 @@ class DesignFunctions extends DBFunctions {
 					}
 					// Again the input maxlength can be any size, but is size cannot be more than $max (=50).
 					$maxlength = $formTable2[6][$i];                                
-					$m = (int) $maxlength;   
+					$comma_pos = strpos($maxlength, ',');
+					if ($comma_pos !== false) {
+						$m = ((int) substr($maxlength, 0, $comma_pos))+((int) substr($maxlength, $comma_pos+1))+1;
+						$maxlength = "$m";
+					} else $m = (int) $maxlength;   
 					if ($m > $max) {
 						$size = "$max";
 					} else $size = $maxlength;
@@ -441,7 +449,11 @@ class DesignFunctions extends DBFunctions {
 					$html .= ">";// the div that surrounds an input, whose id is equal to the input name.
 					$maxlength = $formTable2[6][$j];
 					// The inputs maxlengths can be any size, but their sizes are limited in $max (=50).
-					$m = (int) $maxlength;
+					$comma_pos = strpos($maxlength, ',');
+					if ($comma_pos !== false) {
+						$m = ((int) substr($maxlength, 0, $comma_pos))+((int) substr($maxlength, $comma_pos+1))+1;
+						$maxlength = "$m";
+					} else $m = (int) $maxlength;   
 					if ($m > $max) {
 						$size = "$max";
 					} else $size = $maxlength;

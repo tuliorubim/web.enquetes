@@ -33,7 +33,7 @@ trait Dados_webenquetes {
 		$maxlengths = array("", "", "1024", "", "4,2", "");
 		$tabela = "pergunta";
 		$enderecos = array();
-		$properties = array('', '', "class='form-control input-lg'", "onclick = 'this.value = this.checked;'", "class='input-lg' style='border-color:#CCCCCC; margin-top:5px'");
+		$properties = array('', '', "class='input-lg'", "onclick = 'this.value = this.checked;'", "class='input-lg' style='margin-top:5px'");
 		self::$formTabela3 = array($variaveis, $tipos, $labels, $inputs, $enderecos, $tabela, $maxlengths, $properties);
 	}
 	public static function setFormTabela4() {
@@ -44,7 +44,7 @@ trait Dados_webenquetes {
 		$maxlengths2 = array("", "", "1024", '');
 		$tabela2 = "resposta";
 		$enderecos2 = array();
-		$properties = array('', '', "class='form-control input-lg'");
+		$properties = array('', '', "class='input-lg'");
 		self::$formTabela4 = array($variaveis2, $tipos2, $labels2, $inputs2, $enderecos2, $tabela2, $maxlengths2, $properties, 200);
 	}
 	public static function setFormTabela5($cd_servico) {

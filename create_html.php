@@ -89,13 +89,22 @@ class Create_HTML extends DesignFunctions {
 			$indEdit = $row['idPergunta'];
 		}
 		$select[0] = "select p.*, r.* from pergunta p left join resposta r on p.idPergunta = r.cd_pergunta where p.cd_enquete = $idEnquete and p.idPergunta = $indEdit order by r.idResposta";
-		$args = $this->select("select count(dt_voto) from voto where cd_enquete = $idEnquete");
+		$args = $this->select("select count(dt_voto) as dez from voto where cd_enquete = $idEnquete");
 		$excluir = true;
 		if ($args[0]['dez'] >= 10 && $cd_servico == 0) {
 			$excluir = false;
 			$this->formTabela4[9] = 'readonly';
 		}
-		
+?>
+		Enquete: <input type="radio" name="enquete_ou_teste" value="0" /><br />
+		Teste: <input type="radio" name="enquete_ou_teste" value="1" />
+		<script language="javascript">
+		$(function () {
+			d = ($("enquete_ou_teste").val() == '0') ? 'none' : '';
+			$("input[name='cd_resposta']").css("display", d);
+		});
+		</script>
+<?php
 		$inds = $this->formGeral ($_SESSION, $this->formTabela3, $this->formTabela4, array(), $select, false, $inds);
 		$this->select = $select;
 		return array($inds, $excluir);
