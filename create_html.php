@@ -106,11 +106,16 @@ class Create_HTML extends DesignFunctions {
 			}
 		}
 		$(function () {
-			d = ($("input[name='enquete_ou_teste']").val() == '0') ? 'none' : '';
+			d = ($("#cd_resposta_certa").val() == 0) ? 'none' : '';
 			EnableDisableTest(d);
 			$("input[name='enquete_ou_teste']").change(function () {
 				d = ($(this).val() == '0') ? 'none' : '';
 				EnableDisableTest(d);
+			});
+			$("input[name='cd_resposta']").click(function () {
+				rid = $(this).attr("id");
+				id = rid.substring(11);
+				$(this).val(id);
 			});
 		});
 		</script>
