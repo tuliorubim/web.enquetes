@@ -506,6 +506,7 @@ class Webenquetes extends AdminFunctions {
 		if ($POST["multipla_resposta"] == NULL || $POST["multipla_resposta"] == false) {
 			$POST["multipla_resposta"] = 0;
 		}
+		unset($this->formTabela4[0][3]);
 		
 		$this->adminPage ($POST, $_FILES, $_SESSION, $this->formTabela3, $this->formTabela4, array());
 		if ($POST['enquete_ou_teste'] == '1') {
@@ -515,12 +516,12 @@ class Webenquetes extends AdminFunctions {
 					$limit = (int) $POST['cd_resposta'];
 					$arg1 = $this->select("select max(idPergunta) from pergunta where cd_enquete = $ide");
 					$arg2 = $this->select("select max(idResposta) from (select idResposta from resposta where cd_pergunta = ".$arg1[0][0]." order by idResposta limit $limit) r");
-					mysqli_query($con, "update pergunta set cd_resposta_certa = ".$arg2[0][0]);
+					mysqli_query($con, "update pergunta set cd_resposta_certa = ".$arg2[0][0]." where idPergunta = ".$arg1[0][0]);
 				} else {
 					$limit = ((int) $POST['cd_resposta'])+1;
 					$arg2 = $this->select("select max(idResposta) from (select idResposta from resposta where cd_pergunta = ".$POST['idPergunta']." order by idResposta limit $limit) r");
 					if ($POST['cd_resposta_certa'] != $arg2[0][0])
-						mysqli_query($con, "update pergunta set cd_resposta_certa = ".$arg2[0][0]);
+						mysqli_query($con, "update pergunta set cd_resposta_certa = ".$arg2[0][0]." where idPergunta = ".$POST['idPergunta']);
 				}
 			} else $status = "Voc&ecirc; n&atilde;o especificou uma reposta certa para este teste.";
 		}

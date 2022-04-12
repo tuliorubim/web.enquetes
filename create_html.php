@@ -96,8 +96,8 @@ class Create_HTML extends DesignFunctions {
 			$this->formTabela4[9] = 'readonly';
 		}
 ?>
-		<input type="radio" name="enquete_ou_teste" value="0" checked="checked"/> <b>Enquete</b><br />
-		<input type="radio" name="enquete_ou_teste" value="1" /> <b>Teste</b>
+		<input type="radio" name="enquete_ou_teste" id="enquete_ou_teste0" value="0" checked="checked"/> <b>Enquete</b><br />
+		<input type="radio" name="enquete_ou_teste" id="enquete_ou_teste1" value="1" /> <b>Teste</b>
 		<script language="javascript">
 		function EnableDisableTest(d) {
 			$("#d_valor").css("display", d);
@@ -108,6 +108,15 @@ class Create_HTML extends DesignFunctions {
 		$(function () {
 			d = ($("#cd_resposta_certa").val() == 0) ? 'none' : '';
 			EnableDisableTest(d);
+			if (d == '') {
+				$("#enquete_ou_teste1").prop("checked", true);
+				for (i = 0; $("#idResposta"+i).val() != null; i++) {
+					if ($("#idResposta"+i).val() == $("#cd_resposta_certa").val()) {
+						break;
+					}
+				}
+				$("#cd_resposta"+i).prop("checked", true);
+			}
 			$("input[name='enquete_ou_teste']").change(function () {
 				d = ($(this).val() == '0') ? 'none' : '';
 				EnableDisableTest(d);
