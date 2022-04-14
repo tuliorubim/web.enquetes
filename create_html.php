@@ -48,9 +48,40 @@ class Create_HTML extends DesignFunctions {
 		if ($idEnquete !== NULL) {
 			$select[0] = "select * from enquete where idEnquete = $idEnquete and cd_usuario = $idu";	
 		} else $select[5] = false;
-			
+?>
+		<div style="margin-top:10px;"><b>Este question&aacute;rio &eacute; composto de:</b><br />
+		<input type="radio" name="enq_ou_prova" id="enquete_ou_prova0" value='1' /> <b>Somente enquetes</b><br />
+		<input type="radio" name="enq_ou_prova" id="enquete_ou_prova1" value='2' /> <b>Somente testes</b><br />
+		<input type="radio" name="enq_ou_prova" id="enquete_ou_prova2" value='3' checked="checked"/> <b>Ambos</b><br /></div>
+		<script language="javascript">
+		$(function () {
+			$("input[name='enquete_ou_prova']").change(function () {
+				switch ($(this).val()) {
+					case '1' :
+						$("#enquete_ou_teste0").prop("checked", true);
+						$('#d_tempo_teste').css('display', 'none');
+						EnableDisableTest("none");
+						$("#enquete_ou_teste").css("display", "none");
+						break;
+					case '2' :
+						$("#enquete_ou_teste1").prop("checked", true);
+						$('#d_tempo_teste').css('display', '');
+						EnableDisableTest("");
+						$("#enquete_ou_teste").css("display", "none");
+						break;
+					case '3' :
+						$("#enquete_ou_teste0").prop("checked", true);
+						$('#d_tempo_teste').css('display', 'none');
+						EnableDisableTest("none");
+						$("#enquete_ou_teste").css("display", "");
+						break;
+				}
+			});
+		});
+		</script>
+<?php			
 		$inds = $this->formGeral ($_SESSION, $this->formTabela2, array(), array(), $select, false, $inds);
-		
+		echo "<script>$('#d_tempo_teste').css('display', 'none');</script>";
 		$this->addForeignKey("enquete", "cd_categoria", "categoria", "idCategoria");
 		$this->addForeignKey("enquete", "cd_usuario", "usuario", "idUsuario");
 		$this->select = $select;
@@ -96,8 +127,11 @@ class Create_HTML extends DesignFunctions {
 			$this->formTabela4[9] = 'readonly';
 		}
 ?>
+		<div id="enquete_ou_teste">
+		<b>Esta pergunta ser&aacute;:</b><br />
 		<input type="radio" name="enquete_ou_teste" id="enquete_ou_teste0" value="0" checked="checked"/> <b>Enquete</b><br />
 		<input type="radio" name="enquete_ou_teste" id="enquete_ou_teste1" value="1" /> <b>Teste</b>
+		</div>
 		<script language="javascript">
 		function EnableDisableTest(d) {
 			$("#d_valor").css("display", d);

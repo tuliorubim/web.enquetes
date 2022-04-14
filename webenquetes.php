@@ -459,6 +459,8 @@ class Webenquetes extends AdminFunctions {
 			if ($ide == NULL) $POST["dt_criacao"] = date("$dateformat $timeformat");
 			if ($POST['code'] == NULL) $POST['code'] = $this->codeGenerator();
 			if ($POST['acima_de_cem'] == NULL) $POST['acima_de_cem'] = 0;
+			if ($POST['tempo_teste'] == NULL) $POST['tempo_teste'] = 0;
+			$POST['enquete_ou_prova'] = $_POST['enq_ou_prova'];
 			$POST["disponivel"] = 1;
 			if ($ide != NULL) mysqli_query($this->con, "update poll_html set mudou = 1 where cd_enquete = $ide and is_poll = true");
 		}

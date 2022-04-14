@@ -14,14 +14,15 @@ trait Dados_webenquetes {
 		self::$formTabela1 = array($variaveis, NULL, $labels, $inputs, NULL, "categoria", NULL, $properties);
 	}
 	public static function setFormTabela2() {
-		$variaveis = array("idEnquete", "cd_categoria", "cd_usuario", "enquete", "introducao", "dt_criacao", "disponivel", "duracao", "code", "url", "esconder", "hide_results", "acima_de_cem", "usar_logo");
-		$tipos = array('integer', 'integer', 'integer', 'varchar', 'varchar', 'datetime', 'boolean', 'integer', 'varchar', "varchar", 'boolean', 'boolean', 'boolean', 'boolean');
-		$labels = array("", "", "", "Enquete", 'Introdu&ccedil;&atilde;o', "", '', '', '', '', '', '', '', '');
-		$inputs = array("hidden", "hidden", "hidden", "text", "textarea", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden");
-		$maxlengths = array("", "", "", "64", "1024", '', '', '', '12', '256', '', '', '', '');
+		$variaveis = array("idEnquete", "cd_categoria", "cd_usuario", "enquete", "introducao", "dt_criacao", "disponivel", "duracao", "code", "url", "esconder", "hide_results", "acima_de_cem", "usar_logo", "tempo_teste", "enquete_ou_prova");
+		$tipos = array('integer', 'integer', 'integer', 'varchar', 'varchar', 'datetime', 'boolean', 'integer', 'varchar', "varchar", 'boolean', 'boolean', 'boolean', 'boolean', 'time', 'tinyint');
+		$labels = array("", "", "", "Enquete", 'Introdu&ccedil;&atilde;o', "", '', '', '', '', '', '', '', '', 'Tempo de dura&ccedil;&atilde;o', '');
+		$inputs = array("hidden", "hidden", "hidden", "text", "textarea", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden", "time", "hidden");
+		$maxlengths = array("", "", "", "64", "1024", '', '', '', '12', '256', '', '', '', '', '', '');
 		$properties = array();
 		$properties[3] = "class='form-control input-lg'";
 		$properties[4] = "class='form-control input-lg'";
+		$properties[14] = "class='input-lg'";
 		$tabela = "enquete";
 		self::$formTabela2 = array($variaveis, $tipos, $labels, $inputs, array(), $tabela, $maxlengths, $properties);
 	}
