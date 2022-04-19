@@ -50,32 +50,40 @@ class Create_HTML extends DesignFunctions {
 		} else $select[5] = false;
 ?>
 		<div style="margin-top:10px;"><b>Este question&aacute;rio &eacute; composto de:</b><br />
-		<input type="radio" name="enq_ou_prova" id="enquete_ou_prova0" value='1' /> <b>Somente enquetes</b><br />
-		<input type="radio" name="enq_ou_prova" id="enquete_ou_prova1" value='2' /> <b>Somente testes</b><br />
-		<input type="radio" name="enq_ou_prova" id="enquete_ou_prova2" value='3' checked="checked"/> <b>Ambos</b><br /></div>
+		<input type="radio" name="enq_ou_prova" id="enquete_ou_prova1" value='1' /> <b>Somente enquetes</b><br />
+		<input type="radio" name="enq_ou_prova" id="enquete_ou_prova2" value='2' /> <b>Somente testes</b><br />
+		<input type="radio" name="enq_ou_prova" id="enquete_ou_prova3" value='3' checked="checked"/> <b>Ambos</b><br /></div>
 		<script language="javascript">
+		function EnqTestMix (q) {
+			switch (q) {
+				case '1' :
+					$("#enquete_ou_teste0").prop("checked", true);
+					$('#d_tempo_teste').css('display', 'none');
+					EnableDisableTest("none");
+					$("#enquete_ou_teste").css("display", "none");
+					break;
+				case '2' :
+					$("#enquete_ou_teste1").prop("checked", true);
+					$('#d_tempo_teste').css('display', '');
+					EnableDisableTest("");
+					$("#enquete_ou_teste").css("display", "none");
+					break;
+				case '3' :
+					$("#enquete_ou_teste0").prop("checked", true);
+					$('#d_tempo_teste').css('display', 'none');
+					EnableDisableTest("none");
+					$("#enquete_ou_teste").css("display", "");
+					break;
+			}
+		} 
+		
 		$(function () {
-			$("input[name='enquete_ou_prova']").change(function () {
-				switch ($(this).val()) {
-					case '1' :
-						$("#enquete_ou_teste0").prop("checked", true);
-						$('#d_tempo_teste').css('display', 'none');
-						EnableDisableTest("none");
-						$("#enquete_ou_teste").css("display", "none");
-						break;
-					case '2' :
-						$("#enquete_ou_teste1").prop("checked", true);
-						$('#d_tempo_teste').css('display', '');
-						EnableDisableTest("");
-						$("#enquete_ou_teste").css("display", "none");
-						break;
-					case '3' :
-						$("#enquete_ou_teste0").prop("checked", true);
-						$('#d_tempo_teste').css('display', 'none');
-						EnableDisableTest("none");
-						$("#enquete_ou_teste").css("display", "");
-						break;
-				}
+			q = $("input[name='enquete_ou_prova']").val();
+			q = (q == '') ? '3' : q;
+			$("#enquete_ou_prova"+q).prop("checked", true);
+			EnqTestMix (q);
+			$("input[name='enq_ou_prova']").change(function () {
+				EnqTestMix ($(this).val());
 			});
 		});
 		</script>
@@ -141,7 +149,8 @@ class Create_HTML extends DesignFunctions {
 		}
 		$(function () {
 			d = ($("#cd_resposta_certa").val() == 0) ? 'none' : '';
-			EnableDisableTest(d);
+			if ($("input[name='enquete_ou_prova']").val() == '')
+				EnableDisableTest(d);
 			if (d == '') {
 				$("#enquete_ou_teste1").prop("checked", true);
 				for (i = 0; $("#idResposta"+i).val() != null; i++) {
