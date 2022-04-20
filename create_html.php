@@ -71,7 +71,8 @@ class Create_HTML extends DesignFunctions {
 				case '3' :
 					$("#enquete_ou_teste0").prop("checked", true);
 					$('#d_tempo_teste').css('display', 'none');
-					EnableDisableTest("none");
+					d = ($("#cd_resposta_certa").val() == 0) ? 'none' : '';
+					EnableDisableTest(d);
 					$("#enquete_ou_teste").css("display", "");
 					break;
 			}
