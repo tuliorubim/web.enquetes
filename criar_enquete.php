@@ -211,9 +211,31 @@ $(document).ready(function () {
 	if ($("#esconder").val() == 1)
 		$("input[name='hide_poll']").prop("checked", "checked");
 	$("input[name='salvar']").click(function () {
+		ep1 = $("input[name='enquete_ou_prova']").val();
+		ep2 = $("input[name='enq_ou_prova']").val();
 		valid = validateForm (document.form, conditions);
 		if (valid) {
-			ValidaGravacao();
+			if (ep1 == '' || ep1 == ep2) {
+				ValidaGravacao();
+			} else if (ep1 == '1') {
+				if (ep2 == '2' && confirm("Você definou seu questionário para ter apenas enquetes.")) {
+					ValidaGravacao();
+				} else if (ep2 == '3' && confirm("Você definou seu questionário para ter apenas enquetes.")) {
+					ValidaGravacao();
+				}
+			} else if (ep1 == '2') {
+				if (ep2 == '1' && confirm("Você definou seu questionário para ter apenas testes.")) {
+					ValidaGravacao();
+				} else if (ep2 == '3' && confirm("Você definou seu questionário para ter apenas testes.")) {
+					ValidaGravacao();
+				}
+			} else if (ep1 == '3') {
+				if (ep2 == '1' && confirm("Você definou seu questionário para ter enquetes e testes.")) {
+					ValidaGravacao();
+				} else if (ep2 == '2' && confirm("Você definou seu questionário para ter enquetes e testes.")) {
+					ValidaGravacao();
+				}
+			}
 		}
 	});
 	$("#baixar").click(function () {
