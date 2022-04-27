@@ -217,22 +217,10 @@ $(document).ready(function () {
 		if (valid) {
 			if (ep1 == '' || ep1 == ep2) {
 				ValidaGravacao();
-			} else if (ep1 == '1') {
-				if (ep2 == '2' && confirm("Você definou seu questionário para ter apenas enquetes.")) {
+			} else if (ep2 == '3') {
+				if (ep1 == '1' && confirm("Tem certeza de que deseja que seu formulário deixe de ser só de enquetes para ser também de testes?")) {
 					ValidaGravacao();
-				} else if (ep2 == '3' && confirm("Você definou seu questionário para ter apenas enquetes.")) {
-					ValidaGravacao();
-				}
-			} else if (ep1 == '2') {
-				if (ep2 == '1' && confirm("Você definou seu questionário para ter apenas testes.")) {
-					ValidaGravacao();
-				} else if (ep2 == '3' && confirm("Você definou seu questionário para ter apenas testes.")) {
-					ValidaGravacao();
-				}
-			} else if (ep1 == '3') {
-				if (ep2 == '1' && confirm("Você definou seu questionário para ter enquetes e testes.")) {
-					ValidaGravacao();
-				} else if (ep2 == '2' && confirm("Você definou seu questionário para ter enquetes e testes.")) {
+				} else if (ep1 == '2' && confirm("Tem certeza de que deseja que seu formulário deixe de ser só de testes para ser também de enquetes?")) {
 					ValidaGravacao();
 				}
 			}
