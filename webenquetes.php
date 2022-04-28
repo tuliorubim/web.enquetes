@@ -462,11 +462,7 @@ class Webenquetes extends AdminFunctions {
 			if ($POST['tempo_teste'] == NULL) $POST['tempo_teste'] = 0;
 			if (!isset($POST["enquete_ou_prova"])) {
 				$POST['enquete_ou_prova'] = $_POST['enq_ou_prova'];
-			} elseif ($POST['enquete_ou_prova'] != $_POST['enq_ou_prova'] && $_POST['enq_ou_prova'] != '3') {
-				$enquetes = $this->select("select count(idPergunta) from pergunta where cd_enquete = $ide cd_resposta_certa = 0");
-				$testes = $this->select("select count(idPergunta) from pergunta where cd_enquete = $ide cd_resposta_certa > 0");
-				
-			}
+			} 
 			$POST["disponivel"] = 1;
 			if ($ide != NULL) mysqli_query($this->con, "update poll_html set mudou = 1 where cd_enquete = $ide and is_poll = true");
 		}
@@ -517,9 +513,54 @@ class Webenquetes extends AdminFunctions {
 		unset($this->formTabela4[0][3]);
 		
 		$this->adminPage ($POST, $_FILES, $_SESSION, $this->formTabela3, $this->formTabela4, array());
+		$class = 'st';
+		if ($POST['enquete_ou_prova'] != $_POST['enq_ou_prova']) {
+			if ($_POST['enq_ou_prova'] != '3') {
+				$enquetes = $this->select("select count(idPergunta) from pergunta where cd_enquete = $ide cd_resposta_certa = 0");
+				$testes = $this->select("select count(idPergunta) from pergunta where cd_enquete = $ide cd_resposta_certa > 0");
+				$aux = '';
+				if ($enquetes > 0 && $testes > 0) {
+					switch ($_POST['enq_ou_prova']) {
+						case '1' :
+							$status = "N&atilde;o &eacute; poss&iacute;vel mudar o seu question&aacute;rio para somente enquetes, pois ele cont&eacute;m testes e enquetes."; 
+							break;
+						case '2' :
+							$status = "N&atilde;o &eacute; poss&iacute;vel mudar o seu question&aacute;rio para somente testes, pois ele cont&eacute;m testes e enquetes."; 
+							break;
+					}
+				} elseif ($enquetes > 0) {
+					switch ($_POST['enq_ou_prova']) {
+						case '1' :
+							mysqli_query($this->con, "update enquete set enquete_ou_prova = 1 where idEnquete = $ide");
+							$status = "Seu question&aacute;rio tornou-se question&aacute;rio apenas de enquetes com sucesso."; 
+							$class = 'status';
+							break;
+						case '2' :
+							$status = "N&atilde;o &eacute; poss&iacute;vel mudar o seu question&aacute;rio para somente testes, pois ele cont&eacute;m somente enquetes."; 
+							break;
+					}
+				} elseif ($testes > 0) {
+					switch ($_POST['enq_ou_prova']) {
+						case '2' :
+							mysqli_query($this->con, "update enquete set enquete_ou_prova = 2 where idEnquete = $ide");
+							$status = "Seu question&aacute;rio tornou-se question&aacute;rio apenas de testes com sucesso."; 
+							$class = 'status';
+							break;
+						case '1' :
+							$status = "N&atilde;o &eacute; poss&iacute;vel mudar o seu question&aacute;rio para somente enquetes, pois ele cont&eacute;m somente testes."; 
+							break;
+					}
+				}
+			} else {
+				mysqli_query($this->con, "update enquete set enquete_ou_prova = 3 where idEnquete = $ide");
+				$status = "Seu question&aacute;rio tornou-se question&aacute;rio misto com sucesso.";		
+			}
+		}
+		if (!empty($status)) $status .= "<br><br>";
+		$this->write_status($class);
+		$status = '';
 		if ($POST['enquete_ou_teste'] == '1') {
 			if (isset($POST['cd_resposta'])) {
-				//var_dump($POST['idPergunta']);
 				if ($POST['idPergunta'] == NULL) {
 					$limit = (int) $POST['cd_resposta'];
 					$arg1 = $this->select("select max(idPergunta) from pergunta where cd_enquete = $ide");

@@ -215,15 +215,7 @@ $(document).ready(function () {
 		ep2 = $("input[name='enq_ou_prova']").val();
 		valid = validateForm (document.form, conditions);
 		if (valid) {
-			if (ep1 == '' || ep1 == ep2) {
-				ValidaGravacao();
-			} else if (ep2 == '3') {
-				if (ep1 == '1' && confirm("Tem certeza de que deseja que seu formulário deixe de ser só de enquetes para ser também de testes?")) {
-					ValidaGravacao();
-				} else if (ep1 == '2' && confirm("Tem certeza de que deseja que seu formulário deixe de ser só de testes para ser também de enquetes?")) {
-					ValidaGravacao();
-				}
-			}
+			ValidaGravacao();
 		}
 	});
 	$("#baixar").click(function () {
