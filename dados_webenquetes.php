@@ -38,11 +38,11 @@ trait Dados_webenquetes {
 		self::$formTabela3 = array($variaveis, $tipos, $labels, $inputs, $enderecos, $tabela, $maxlengths, $properties);
 	}
 	public static function setFormTabela4() {
-		$variaveis2 = array("idResposta", "cd_pergunta", "resposta", "cd_resposta");
-		$tipos2 = array("integer", "integer", "varchar", "");
-		$labels2 = array("", "", "Op&ccedil;&atilde;o de resposta", 'Resposta certa');
-		$inputs2 = array("hidden", "hidden", "textarea", "radio");
-		$maxlengths2 = array("", "", "1024", '');
+		$variaveis2 = array("idResposta", "cd_pergunta", "letra", "resposta", "cd_resposta");
+		$tipos2 = array("integer", "integer", "char", "varchar", "");
+		$labels2 = array("", "", "", "Op&ccedil;&atilde;o de resposta", 'Resposta certa');
+		$inputs2 = array("hidden", "hidden", "hidden", "textarea", "radio");
+		$maxlengths2 = array("", "", '1', "1024", '');
 		$tabela2 = "resposta";
 		$enderecos2 = array();
 		$properties = array('', '', "class='input-lg'");

@@ -510,14 +510,16 @@ class Webenquetes extends AdminFunctions {
 		if ($POST["multipla_resposta"] == NULL || $POST["multipla_resposta"] == false) {
 			$POST["multipla_resposta"] = 0;
 		}
-		unset($this->formTabela4[0][3]);
+		unset($this->formTabela4[0][4]);
 		
 		$this->adminPage ($POST, $_FILES, $_SESSION, $this->formTabela3, $this->formTabela4, array());
 		$class = 'st';
 		if ($POST['enquete_ou_prova'] != $_POST['enq_ou_prova']) {
 			if ($_POST['enq_ou_prova'] != '3') {
-				$enquetes = $this->select("select count(idPergunta) from pergunta where cd_enquete = $ide cd_resposta_certa = 0");
-				$testes = $this->select("select count(idPergunta) from pergunta where cd_enquete = $ide cd_resposta_certa > 0");
+				$enquetes = $this->select("select count(idPergunta) from pergunta where cd_enquete = $ide and cd_resposta_certa = 0");
+				$testes = $this->select("select count(idPergunta) from pergunta where cd_enquete = $ide and cd_resposta_certa > 0");
+				$enquetes = $enquetes[0][0];
+				$testes = $testes[0][0];
 				$aux = '';
 				if ($enquetes > 0 && $testes > 0) {
 					switch ($_POST['enq_ou_prova']) {
@@ -554,6 +556,7 @@ class Webenquetes extends AdminFunctions {
 			} else {
 				mysqli_query($this->con, "update enquete set enquete_ou_prova = 3 where idEnquete = $ide");
 				$status = "Seu question&aacute;rio tornou-se question&aacute;rio misto com sucesso.";		
+				$class = 'status';
 			}
 		}
 		if (!empty($status)) $status .= "<br><br>";
