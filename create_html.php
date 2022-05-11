@@ -169,6 +169,16 @@ class Create_HTML extends DesignFunctions {
 				rid = $(this).attr("id");
 				id = rid.substring(11);
 				$(this).val(id);
+			}); 
+			$("textarea").change(function () {
+				if ($("#enquete_ou_teste1").prop("checked")) {
+					if ($("textarea").attr('name').indexOf("resposta") > -1) {
+						i = Number($(this).attr("name").substring(8));
+						ord = (!document.form.resposta0) ? i+96 : i+97;
+						char = String.fromCharCode(ord);
+						$("input[name='letra"+i+"']").val(($(this).val().length > 0) ? char : '');
+					}
+				}		
 			});
 		});
 		</script>
@@ -284,11 +294,11 @@ class Create_HTML extends DesignFunctions {
 			$args2 = $this->select("select cd_usuario, enquete, hide_results from enquete where idEnquete = $ide");
 			$args3 = $this->select("select code from enquete where idEnquete = $ide", array(), true);
 			
-			$variaveis = array("idPergunta", "cd_enquete", "pergunta", "multipla_resposta");
-			$tipos = array("integer", "integer", "varchar", "boolean");
+			$variaveis = array("idPergunta", "cd_enquete", "pergunta", "multipla_resposta", "valor", "cd_resposta_certa");
+			$tipos = array("integer", "integer", "varchar", "boolean", "decimal", "integer");
 			$labels = array();
-			$inputs = array("hidden", "hidden", "html", "hidden");
-			$maxlengths = array("", "", "1024", "");
+			$inputs = array("hidden", "hidden", "html", "hidden", "hidden", "hidden");
+			$maxlengths = array("", "", "1024", "", "4,2", "");
 			$properties = NULL;
 			$tabela = "pergunta";
 			$enderecos = array();
@@ -307,7 +317,7 @@ class Create_HTML extends DesignFunctions {
 			
 			$inds = array(0, 0);
 			$select = array('', 'form', 'no_print');
-			$args = $this->select("select idPergunta, multipla_resposta from pergunta where cd_enquete = $ide order by idPergunta");
+			$args = $this->select("select idPergunta, multipla_resposta, cd_resposta_certa, valor from pergunta where cd_enquete = $ide order by idPergunta");
 			$select[5] = true;
 			$idp = 0;
 			$h = '';
@@ -320,6 +330,22 @@ class Create_HTML extends DesignFunctions {
 				$idp = $args[$i][0];
 				$select[0] = "select p.*, r.* from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta where idPergunta = $idp order by r.idResposta";
 				$formTabela1[8] =  $i+1;
+				$crc = $args[$i]["cd_resposta_certa"];
+				if ($crc > 0) {
+					$formTabela1[2][2] = "Teste: ";
+					$valor = $args[$i]["valor"];
+					if ($valor > 0) {
+						$formTabela1[2][4] = "Valor do teste: ";
+						$formTabela1[3][4] = "html";
+					} else {
+						$formTabela1[2][4] = "";
+						$formTabela1[3][4] = "hidden";
+					}
+				} else {
+					$formTabela1[2][2] = "";
+					$formTabela1[2][4] = "";
+					$formTabela1[3][4] = "hidden";
+				}
 				if ($args[$i][1]) {
 					$formTabela2[3][2] = "checkbox";
 					for ($j = 0; $j < $cont; $j++) {
