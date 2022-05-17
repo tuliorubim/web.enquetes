@@ -134,7 +134,7 @@ class DBFunctions {
 				$field = (int) $value;
 			} elseif (in_array($type, array('numeric', 'decimal', 'float', 'double'))) {
 				$field = (float) $value;
-			} elseif ($type == 'varchar') {
+			} elseif (strpos($type, 'char') !== false || strpos($type, 'text') !== false) {
 				$field = "'".mysqli_real_escape_string($con, $value)."'"; // If the value type is varchar, the only thing to do is to surround the value by '', in order to be ready to be used in a SQL code.
 			} elseif ($type == 'blob') {
 				/* If the value to be formatted is a file, the procedure to prepare images to be saved is slightly different from the one to prepare other files to be stored. In this case, the value is an array of data related to a file and it's taken from the PHP variable $_FILES. $values['name'] is the name of a file sent through the form. The first thing to do is save the file in the folder defined in one of the values of $addresses. */

@@ -170,15 +170,15 @@ class Create_HTML extends DesignFunctions {
 				id = rid.substring(11);
 				$(this).val(id);
 			}); 
-			$("textarea").change(function () {
+			$("textarea").on("keydown", function () {
 				if ($("#enquete_ou_teste1").prop("checked")) {
-					if ($("textarea").attr('name').indexOf("resposta") > -1) {
+					if ($(this).attr('name').indexOf("resposta") > -1) {
 						i = Number($(this).attr("name").substring(8));
 						ord = (!document.form.resposta0) ? i+96 : i+97;
 						char = String.fromCharCode(ord);
 						$("input[name='letra"+i+"']").val(($(this).val().length > 0) ? char : '');
 					}
-				}		
+				}	
 			});
 		});
 		</script>
@@ -305,11 +305,11 @@ class Create_HTML extends DesignFunctions {
 			
 			$formTabela1 = array($variaveis, $tipos, $labels, $inputs, $enderecos, $tabela, $maxlengths, $properties);
 			
-			$variaveis2 = array("idResposta", "cd_pergunta", "resposta");
-			$tipos2 = array("integer", "integer", "varchar");
+			$variaveis2 = array("idResposta", "cd_pergunta", "letra", "resposta");
+			$tipos2 = array("integer", "integer", "char", "varchar");
 			$labels2 = array();
-			$inputs2 = array("hidden", "hidden", "radio");
-			$maxlengths2 = array("", "", "1024");
+			$inputs2 = array("hidden", "hidden", "hidden", "radio");
+			$maxlengths2 = array("", "", "1", "1024");
 			$tabela2 = "resposta";
 			$enderecos2 = array();
 			
@@ -337,22 +337,25 @@ class Create_HTML extends DesignFunctions {
 					if ($valor > 0) {
 						$formTabela1[2][4] = "Valor do teste: ";
 						$formTabela1[3][4] = "html";
+						$formTabela2[3][2] = "html";
 					} else {
 						$formTabela1[2][4] = "";
 						$formTabela1[3][4] = "hidden";
+						$formTabela2[3][2] = "hidden";
 					}
 				} else {
 					$formTabela1[2][2] = "";
 					$formTabela1[2][4] = "";
 					$formTabela1[3][4] = "hidden";
+					$formTabela2[3][2] = "hidden";
 				}
 				if ($args[$i][1]) {
-					$formTabela2[3][2] = "checkbox";
+					$formTabela2[3][3] = "checkbox";
 					for ($j = 0; $j < $cont; $j++) {
-						$formTabela2[7][$j] = array('', '', "onclick='this.value=this.checked;'");		
+						$formTabela2[7][$j] = array('', '', '', "onclick='this.value=this.checked;'");		
 					}
 				} else {
-					$formTabela2[3][2] = "radio";
+					$formTabela2[3][3] = "radio";
 					$formTabela2[7] = array();
 				}
 				/*if ($i === 1)
@@ -360,6 +363,9 @@ class Create_HTML extends DesignFunctions {
 				$this->formGeral ($_SESSION, $formTabela1, $formTabela2, NULL, $select, true);
 				$h .= $this->html;
 			}
+			?>
+			<script>$("#d_letra1_1").css("float", 'left');</script>
+			<?php
 			if (!$cross || ($args2[0]['cd_usuario'] !== NULL && $args2[0]['cd_usuario'] == $idu)) {
 				$url = '';
 				$dois = '';

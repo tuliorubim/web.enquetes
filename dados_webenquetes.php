@@ -45,7 +45,7 @@ trait Dados_webenquetes {
 		$maxlengths2 = array("", "", '1', "1024", '');
 		$tabela2 = "resposta";
 		$enderecos2 = array();
-		$properties = array('', '', "class='input-lg'");
+		$properties = array('', '', '', "class='input-lg'");
 		self::$formTabela4 = array($variaveis2, $tipos2, $labels2, $inputs2, $enderecos2, $tabela2, $maxlengths2, $properties, 200);
 	}
 	public static function setFormTabela5($cd_servico) {
