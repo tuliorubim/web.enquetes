@@ -160,11 +160,13 @@ class Create_HTML extends DesignFunctions {
 					}
 				}
 				$("#cd_resposta"+i).prop("checked", true);
+				$("input[name='cd_resposta']").val(i);
 			}
 			$("input[name='enquete_ou_teste']").change(function () {
 				d = ($(this).val() == '0') ? 'none' : '';
 				EnableDisableTest(d);
 			});
+			//alert($("input[name='cd_resposta']").val());
 			$("input[name='cd_resposta']").click(function () {
 				rid = $(this).attr("id");
 				id = rid.substring(11);
@@ -328,7 +330,7 @@ class Create_HTML extends DesignFunctions {
 					$formTabela2[8] = $cont-1;
 				}
 				$idp = $args[$i][0];
-				$select[0] = "select p.*, r.* from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta where idPergunta = $idp order by r.idResposta";
+				$select[0] = "select p.*, r.idResposta, r.cd_pergunta, concat(r.letra, ')'), r.resposta from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta where idPergunta = $idp order by r.idResposta";
 				$formTabela1[8] =  $i+1;
 				$crc = $args[$i]["cd_resposta_certa"];
 				if ($crc > 0) {
@@ -358,14 +360,19 @@ class Create_HTML extends DesignFunctions {
 					$formTabela2[3][3] = "radio";
 					$formTabela2[7] = array();
 				}
+				if ($args[$i][2] > 0) {
+					$h .= "<style type='text/css'>";
+					for ($j = 0; $j < $cont; $j++) {
+						$h .= "#d_letra".($i+1)."_$j {float: left; margin-right: 5px}\n";
+					}
+					$h .= "</style>";
+				}
 				/*if ($i === 1)
 					$select[4] = "no_print";*/
 				$this->formGeral ($_SESSION, $formTabela1, $formTabela2, NULL, $select, true);
 				$h .= $this->html;
 			}
-			?>
-			<script>$("#d_letra1_1").css("float", 'left');</script>
-			<?php
+			
 			if (!$cross || ($args2[0]['cd_usuario'] !== NULL && $args2[0]['cd_usuario'] == $idu)) {
 				$url = '';
 				$dois = '';

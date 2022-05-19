@@ -6,6 +6,7 @@
     <title><?php echo $we->title;?></title>
 	<meta name="keywords" content="<?php echo $we->description;?>">
     <!-- Bootstrap -->
+	
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet" type="text/css">
 	<link href="https://fonts.googleapis.com/css?family=Roboto+Slab:700|Source+Sans+Pro" rel="stylesheet">
