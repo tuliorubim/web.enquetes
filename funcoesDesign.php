@@ -298,7 +298,7 @@ class DesignFunctions extends DBFunctions {
 			// If the last element of $formTable1[2] is the boolean value 'true', then the labels will be displayed along with their inputs.
 			$is_label = ($formTable1[2][$c-1] === true || !in_array($formTable1[3][$i], array("text", "password", "textarea")));
 			if ($is_label)
-				$html .= "<label for='".$args[$i]."$indTab1'>".$formTable1[2][$i]."</label>";
+				$html .= "<label for='".$args[$i]."$indTab1' id='l_".$args[$i]."$indTab1'>".$formTable1[2][$i]."</label>";
 			$maxlength = $formTable1[6][$i]; // The input maxlength can be any size.
 			$comma_pos = strpos($maxlength, ',');
 			if ($comma_pos !== false) {
@@ -373,7 +373,7 @@ class DesignFunctions extends DBFunctions {
 					// If the last element of $formTable2[2] is the boolean value 'true', then the labels will be displayed along with their inputs.
 					$is_label = ($formTable2[2][$c-1] === true || !in_array($formTable2[3][$i], array("text", "password", "textarea")));
 					if ($is_label) {
-						$html .= "<label for='".$args2[$i].$indTab1."0'>".$formTable2[2][$i]."</label>";
+						$html .= "<label for='".$args2[$i].$indTab1."0' id='l_".$args2[$i].$indTab1."0'>".$formTable2[2][$i]."</label>";
 					}
 					// Again the input maxlength can be any size, but is size cannot be more than $max (=50).
 					$maxlength = $formTable2[6][$i];                                
@@ -464,7 +464,7 @@ class DesignFunctions extends DBFunctions {
 					// If the last element of $formTable2[2] is the boolean value 'true', then the labels will be displayed along with their inputs.
 					$is_label = ($formTable2[2][$c-1] === true || !in_array($formTable2[3][$j], array("text", "password", "textarea")));
 					if ($is_label) {
-						$html .= "<label for='".$args2[$j].$indTab1."$i'>".$formTable2[2][$j].'</label>';
+						$html .= "<label for='".$args2[$j].$indTab1."$i' id='l_".$args2[$j].$indTab1."$i'>".$formTable2[2][$j].'</label>';
 					}
 					$value = '';
 					/* If $select[1] == "select", then the data of the part of the form related to table 2 are manipulated only in the first instance of the table 2 inputs, created previously, by changing the value of the list in $list2. But if $select[1] == "form", each record of these data will be written in each instance of the table 2 inputs. */

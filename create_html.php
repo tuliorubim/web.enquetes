@@ -362,6 +362,7 @@ class Create_HTML extends DesignFunctions {
 				}
 				if ($args[$i][2] > 0) {
 					$h .= "<style type='text/css'>";
+					$h .= "#l_valor".($i+1)." {float: left; margin-right: 5px}\n";
 					for ($j = 0; $j < $cont; $j++) {
 						$h .= "#d_letra".($i+1)."_$j {float: left; margin-right: 5px}\n";
 					}
