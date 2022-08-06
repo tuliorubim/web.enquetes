@@ -164,7 +164,7 @@ class Webenquetes extends AdminFunctions {
 		if ($_GET['ide'] !== NULL) {
 			$ide = $_GET['ide'];
 			$description = $this->poll_keywords($ide);
-			$title = "Enquete: ".substr($description, 0, strpos($description, ' ', 130)).'...';
+			$title = (strlen($description) > 130) ? "Enquete: ".substr($description, 0, strpos($description, ' ', 130)).'...' : "Enquete: ".$description;
 			$args = $this->select("select esconder from enquete where idEnquete = $ide");
 			if (!$args[0]['esconder']) {
 				$desc = explode(' ', $description);

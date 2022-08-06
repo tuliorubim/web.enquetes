@@ -24,7 +24,8 @@ include "criar_enquete_modelo.php";
 	$SESSION = $_SESSION;
 	$ide = $POST["idEnquete"];
 	$status = '';
-	$POST['tempo_teste'] .= ':00';
+	if (strlen($POST['tempo_teste']) > 0)
+		$POST['tempo_teste'] .= ':00';
 	$valid = $we->valida_enquete2();
 	
 	$we->select("select cd_usuario from enquete where idEnquete = $ide", array("cdu"));

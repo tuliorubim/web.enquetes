@@ -241,7 +241,7 @@ class Create_HTML extends DesignFunctions {
 			echo "<script language='javascript'>$('#status').html('<font color=red>$status</font>');</script>";
 		}
 		$args = $this->select("select c.idCategoria, c.categoria, e.enquete, e.introducao, e.dt_criacao, e.hide_results from categoria c inner join enquete e on c.idCategoria = e.cd_categoria where idEnquete = $ide");
-		echo "<h4>".$args[0]['enquete']."</h4>";
+		echo "<h4>".strip_tags($args[0]['enquete'])."</h4>";
 		$args2 = $this->select("select c.cd_servico, c.logo, e.usar_logo from cliente c inner join enquete e on c.idCliente = e.cd_usuario where e.idEnquete = $ide");
 		if ($args2[0]['cd_servico'] > 0 && $args2[0]['usar_logo']) {
 			$this->exibir_imagem($args2[0]['logo'], 700);
@@ -257,8 +257,12 @@ class Create_HTML extends DesignFunctions {
 		<p><a href='resultados_parciais.php?ide=<?php echo $ide; ?>' id="result">Ver resultados parciais. </a></p>
 	<?php
 		}
-		if (!empty($args[0]['introducao']))
-			echo "<p>Introdu&ccedil;&atilde;o: ".$args[0]['introducao']."</p>";
+		if (!empty($args[0]['introducao'])) {
+			$content = str_replace("\n", '<br>', $args[0]['introducao']);
+			$content = str_replace("<script", "", $content);
+			$content = str_replace("<?", "", $content);
+			echo "<p>".$content."</p>";
+		}
 	}
 	public function create_result_header ($cd_servico, $cd_usuario, $hide_results) {
 		global $service_data;
@@ -504,7 +508,7 @@ class Create_HTML extends DesignFunctions {
 	public function create_results ($cd_servico) {
 		$idEnquete = $this->idEnquete;
 		$html = $this->html;
-		$sql = "select p.idPergunta, p.pergunta, p.multipla_resposta, r.idResposta, r.resposta, count(v.dt_voto) as votos from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta left join voto v on r.idResposta = v.cd_resposta where p.cd_enquete = $idEnquete group by r.idResposta order by p.idPergunta, count(v.dt_voto) desc, r.idResposta";
+		$sql = "select p.idPergunta, p.pergunta, p.multipla_resposta, p.valor, p.cd_resposta_certa, r.idResposta, r.resposta, count(v.dt_voto) as votos from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta left join voto v on r.idResposta = v.cd_resposta where p.cd_enquete = $idEnquete group by r.idResposta order by p.idPergunta, count(v.dt_voto) desc, r.idResposta";
 		$args = $this->select($sql);
 		$args1 = $this->select("select count(idPergunta) as num_quest from pergunta where cd_enquete = $idEnquete");
 		$idP = 0;
