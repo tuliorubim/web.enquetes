@@ -15,10 +15,10 @@ trait Dados_webenquetes {
 	}
 	public function setFormTabela2() {
 		$variaveis = array("idEnquete", "cd_categoria", "cd_usuario", "enquete", "introducao", "dt_criacao", "disponivel", "duracao", "code", "url", "esconder", "hide_results", "acima_de_cem", "usar_logo");
-		$tipos = array('integer', 'integer', 'integer', 'varchar', 'varchar', 'datetime', 'boolean', 'integer', 'varchar', "varchar", 'boolean', 'boolean', 'boolean', 'boolean');
-		$labels = array("", "", "", "Enquete", 'Introdu&ccedil;&atilde;o', "", '', '', '', '', '', '', '', '');
+		$tipos = array('integer', 'integer', 'integer', 'varchar', 'text', 'datetime', 'boolean', 'integer', 'varchar', "varchar", 'boolean', 'boolean', 'boolean', 'boolean');
+		$labels = array("", "", "", "Enquete", 'Introdu&ccedil;&atilde;o ou conte&uacute;do para an&aacute;lise (permite HTML e &eacute; opcional)', "", '', '', '', '', '', '', '', '');
 		$inputs = array("hidden", "hidden", "hidden", "text", "textarea", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden");
-		$maxlengths = array("", "", "", "64", "1024", '', '', '', '12', '256', '', '', '', '');
+		$maxlengths = array("", "", "", "64", "65535", '', '', '', '12', '256', '', '', '', '');
 		$properties = array();
 		$properties[3] = "class='form-control input-lg'";
 		$properties[4] = "class='form-control input-lg'";

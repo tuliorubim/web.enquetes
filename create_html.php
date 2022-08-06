@@ -151,8 +151,8 @@ class Create_HTML extends DesignFunctions {
 			$status = "Esta enquete n&atilde;o est&aacute; dispon&iacute;vel. S&oacute; voc&ecirc; pode v&ecirc;-la.";
 			echo "<script language='javascript'>$('#status').html('<font color=red>$status</font>');</script>";
 		}
-		$args = $this->select("select c.idCategoria, c.categoria, e.enquete, e.introducao, e.dt_criacao, e.hide_results from categoria c inner join enquete e on c.idCategoria = e.cd_categoria where idEnquete = $ide");
-		echo "<h4>".$args[0]['enquete']."</h4>";
+		$args = $this->select("select c.idCategoria, c.categoria, e.enquete, e.introducao, e.dt_criacao, e.hide_results from categoria c inner join enquete e on c.idCategoria = e.cd_categoria where idEnquete = $ide", array(), true);
+		echo "<h4>".strip_tags($args[0]['enquete'])."</h4>";
 		$args2 = $this->select("select c.cd_servico, c.logo, e.usar_logo from cliente c inner join enquete e on c.idCliente = e.cd_usuario where e.idEnquete = $ide");
 		if ($args2[0]['cd_servico'] > 0 && $args2[0]['usar_logo']) {
 			$this->exibir_imagem($args2[0]['logo'], 700);
@@ -168,8 +168,12 @@ class Create_HTML extends DesignFunctions {
 		<p><a href='resultados_parciais.php?ide=<?php echo $ide; ?>' id="result">Ver resultados parciais. </a></p>
 	<?php
 		}
-		if (!empty($args[0]['introducao']))
-			echo "<p>Introdu&ccedil;&atilde;o: ".$args[0]['introducao']."</p>";
+		if (!empty($args[0]['introducao'])) {
+			$content = str_replace("\n", '<br>', $args[0]['introducao']);
+			$content = str_replace("<script", "", $content);
+			$content = str_replace("<?", "", $content);
+			echo "<p>".$content."</p>";
+		}
 	}
 	public function create_result_header ($cd_servico, $cd_usuario, $hide_results) {
 		global $service_data;
