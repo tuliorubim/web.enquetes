@@ -15,7 +15,7 @@ trait Dados_webenquetes {
 	}
 	public static function setFormTabela2() {
 		$variaveis = array("idEnquete", "cd_categoria", "cd_usuario", "enquete", "introducao", "dt_criacao", "disponivel", "duracao", "code", "url", "esconder", "hide_results", "acima_de_cem", "usar_logo", "tempo_teste", "enquete_ou_prova");
-		$tipos = array('integer', 'integer', 'integer', 'varchar', 'text', 'datetime', 'boolean', 'integer', 'varchar', "varchar", 'boolean', 'boolean', 'boolean', 'boolean', 'time', 'tinyint');
+		$tipos = array('integer', 'integer', 'integer', 'varchar', 'varchar', 'datetime', 'boolean', 'integer', 'varchar', "varchar", 'boolean', 'boolean', 'boolean', 'boolean', 'time', 'tinyint');
 		$labels = array("", "", "", "Enquete", 'Introdu&ccedil;&atilde;o ou conte&uacute;do para an&aacute;lise (permite HTML e &eacute; opcional)', "", '', '', '', '', '', '', '', '', 'Tempo de dura&ccedil;&atilde;o', '');
 		$inputs = array("hidden", "hidden", "hidden", "text", "textarea", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden");
 		$maxlengths = array("", "", "", "64", "65535", '', '', '', '12', '256', '', '', '', '', '', '');
