@@ -6,16 +6,16 @@ trait Dados_webenquetes {
 	public static $formTabela4;
 	public static $formTabela5;
 	public static $formTabela6;
-	public function setFormTabela1() {
+	public static function setFormTabela1() {
 		$variaveis = array("idCategoria", "categoria");
 		$labels = array("", "Categoria: ");
 		$inputs = array("hidden", "");
 		$properties = "class='form-control input-lg'";
 		self::$formTabela1 = array($variaveis, NULL, $labels, $inputs, NULL, "categoria", NULL, $properties);
 	}
-	public function setFormTabela2() {
+	public static function setFormTabela2() {
 		$variaveis = array("idEnquete", "cd_categoria", "cd_usuario", "enquete", "introducao", "dt_criacao", "disponivel", "duracao", "code", "url", "esconder", "hide_results", "acima_de_cem", "usar_logo");
-		$tipos = array('integer', 'integer', 'integer', 'varchar', 'text', 'datetime', 'boolean', 'integer', 'varchar', "varchar", 'boolean', 'boolean', 'boolean', 'boolean');
+		$tipos = array('integer', 'integer', 'integer', 'varchar', 'varchar', 'datetime', 'boolean', 'integer', 'varchar', "varchar", 'boolean', 'boolean', 'boolean', 'boolean');
 		$labels = array("", "", "", "Enquete", 'Introdu&ccedil;&atilde;o ou conte&uacute;do para an&aacute;lise (permite HTML e &eacute; opcional)', "", '', '', '', '', '', '', '', '');
 		$inputs = array("hidden", "hidden", "hidden", "text", "textarea", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden", "hidden");
 		$maxlengths = array("", "", "", "64", "65535", '', '', '', '12', '256', '', '', '', '');
@@ -25,7 +25,7 @@ trait Dados_webenquetes {
 		$tabela = "enquete";
 		self::$formTabela2 = array($variaveis, $tipos, $labels, $inputs, array(), $tabela, $maxlengths, $properties);
 	}
-	public function setFormTabela3() {
+	public static function setFormTabela3() {
 		$variaveis = array("idPergunta", "cd_enquete", "pergunta", "multipla_resposta");
 		$tipos = array("integer", "integer", "varchar", "boolean");
 		$labels = array("", "", "Pergunta", "Permite escolha de mais de uma op&ccedil;&atilde;o de resposta: ");
@@ -36,7 +36,7 @@ trait Dados_webenquetes {
 		$properties = array('', '', "class='form-control input-lg'", "onclick = 'this.value = this.checked;'");
 		self::$formTabela3 = array($variaveis, $tipos, $labels, $inputs, $enderecos, $tabela, $maxlengths, $properties);
 	}
-	public function setFormTabela4() {
+	public static function setFormTabela4() {
 		$variaveis2 = array("idResposta", "cd_pergunta", "resposta");
 		$tipos2 = array("integer", "integer", "varchar");
 		$labels2 = array("", "", "Op&ccedil;&atilde;o de resposta");
@@ -47,7 +47,7 @@ trait Dados_webenquetes {
 		$properties = array('', '', "class='form-control input-lg'");
 		self::$formTabela4 = array($variaveis2, $tipos2, $labels2, $inputs2, $enderecos2, $tabela2, $maxlengths2, $properties, 200);
 	}
-	public function setFormTabela5($cd_servico) {
+	public static function setFormTabela5($cd_servico) {
 		if ($cd_servico > 0) {
 			self::$formTabela2[2][13] = "Exibir an&uacute;ncio na enquete?";
 			self::$formTabela2[3][13] = "checkbox";
@@ -61,7 +61,7 @@ trait Dados_webenquetes {
 			self::$formTabela5 = array($variaveis, $tipos, $labels, $inputs, $enderecos, $tabela, $maxlengths, array());
 		}
 	}
-	public function setFormTabela6($idu) {
+	public static function setFormTabela6($idu) {
 		$variaveis1 = array("idCliente", "nome", "empresa", "site", "logo", "logoReduzida", "data_cadastro", "usuario", "senha", "repsenha");
 		$tipos1 = array("integer", "varchar", "varchar", "varchar", "blob", "blob", "datetime", "varchar", "varchar", "varchar");
 		$labels1 = array("", "Nome ", "Empresa ", "Seu site ", "An&uacute;ncio em imagem ", '', '', "E-mail $star ", "Senha $star ", "Repetir Senha $star ", true);

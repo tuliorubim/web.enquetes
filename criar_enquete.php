@@ -195,7 +195,7 @@ $(document).ready(function () {
 			}
 		});
 	}
-	//$("#introducao").attr("rows", 15);
+	$("#introducao").attr("rows", 15);
 	$('[data-toggle="tooltip"]').tooltip();
 	$("#usar_logo").click(function () { 
 		$(this).val($(this).prop("checked"));	
