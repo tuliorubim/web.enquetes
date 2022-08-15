@@ -505,6 +505,15 @@ class Create_HTML extends DesignFunctions {
 		$html = $h;
 		$this->html = $html;
 	}
+	public function test_answered ($idPergunta, $cd_resposta_certa) {
+		if ($cd_resposta_certa == 0) {
+			return false;
+		} else {
+			$idu = $this->idu;
+			$args = $this->select("select cd_resposta from voto where cd_usuario = $idu and cd_pergunta = $idPergunta");
+			return !empty($args[0][0]);
+		}
+	}
 	public function create_results ($cd_servico) {
 		$idEnquete = $this->idEnquete;
 		$html = $this->html;
@@ -515,27 +524,31 @@ class Create_HTML extends DesignFunctions {
 		$j = -1;
 		for ($i = 0; $args[$i][0] !== NULL; $i++) {
 			if ($idP != $args[$i]["idPergunta"]) {
+				$cd_resposta_certa = $args[$i]['cd_resposta_certa'];
 				$idP = $args[$i]["idPergunta"];
-				$html .= "<div class='pergunta'>".$args[$i]["pergunta"]."</div>";
+				$show_result = ($cd_resposta_certa == 0 || test_answered($idP, $cd_resposta_certa)); 
+				if ($show_result) $html .= "<div class='pergunta'>".$args[$i]["pergunta"]."</div>";
 				$args2 = $this->select("select count(dt_voto) as votos_pergunta from voto where cd_pergunta = $idP");
 				$j++;
 			}
-			$input = '';
-			$idR = $args[$i]["idResposta"];
-			if ($args1[0]['num_quest'] > 1 || $args[$i]["multipla_resposta"] == 1) {
-				$input = " <input ";
-				if ($cd_servico == 0) {
-					$input .= "type='radio' name='resposta' ";
-				} else $input .= "type='checkbox' name='resposta$i' ";
-				$input .= "class='resposta' value=$idR title='Clique aqui e saiba como as pessoas que votaram nesta resposta votaram nas respostas das outras perguntas.'>";
-			}
-			$porcentagem = 0;
-			$votos_resposta = $args[$i]['votos'];
-			$votos_pergunta = $args2[0]['votos_pergunta'];
-			if ($votos_pergunta > 0) $porcentagem = round(100*$votos_resposta/$votos_pergunta, 1);
-			$html .= "<p>".$args[$i]["resposta"]." $input&nbsp;&nbsp;&nbsp;&nbsp;<span id='votos$i' style='font-weight:600;'>$votos_resposta votos, $porcentagem %</span></p>";
-			if ($idP != $args[$i+1]["idPergunta"]) {
-				$html .= "<p><span class='resposta' id='vp$j' style='font-weight:600;'>Total de votos: $votos_pergunta</span></p>";
+			if ($show_result) {
+				$input = '';
+				$idR = $args[$i]["idResposta"];
+				if ($args1[0]['num_quest'] > 1 || $args[$i]["multipla_resposta"] == 1) {
+					$input = " <input ";
+					if ($cd_servico == 0) {
+						$input .= "type='radio' name='resposta' ";
+					} else $input .= "type='checkbox' name='resposta$i' ";
+					$input .= "class='resposta' value=$idR title='Clique aqui e saiba como as pessoas que votaram nesta resposta votaram nas respostas das outras perguntas.'>";
+				}
+				$porcentagem = 0;
+				$votos_resposta = $args[$i]['votos'];
+				$votos_pergunta = $args2[0]['votos_pergunta'];
+				if ($votos_pergunta > 0) $porcentagem = round(100*$votos_resposta/$votos_pergunta, 1);
+				$html .= "<p>".$args[$i]["resposta"]." $input&nbsp;&nbsp;&nbsp;&nbsp;<span id='votos$i' style='font-weight:600;'>$votos_resposta votos, $porcentagem %</span></p>";
+				if ($idP != $args[$i+1]["idPergunta"]) {
+					$html .= "<p><span class='resposta' id='vp$j' style='font-weight:600;'>Total de votos: $votos_pergunta</span></p>";
+				}
 			}
 		}
 		$args3 = $this->select("select count(dt_voto) as votos_enquete from voto where cd_enquete = $idEnquete");
