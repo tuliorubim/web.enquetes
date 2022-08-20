@@ -32,14 +32,14 @@ include "bd.php";
 	<div id="question_num" style="font-size:18px; font-weight:800"></div><button type="button" disabled="disabled" class="glyphicon glyphicon-chevron-left" id="previous"></button>
 	<button type="button" class="glyphicon glyphicon-chevron-right" id="next"></button>
 		<?php
-		$poll = $poll_html->select_html_from_db(true);
+		/*$poll = $poll_html->select_html_from_db(true);
 		if (!$poll[0] && $poll[1]) {
 			echo $poll[1];
-		} else {
+		} else {*/
 			$poll_html->create_poll();
-			$poll_html->save_html_to_db($poll_html->html, true);
+			//$poll_html->save_html_to_db($poll_html->html, true);
 			echo $poll_html->html;
-		}	
+		//}	
 		?>	
 	<br>
 	<button type="button" class="btn btn-primary estilo-modal" id="responder">RESPONDER</button>

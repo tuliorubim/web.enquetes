@@ -264,27 +264,13 @@ class Create_HTML extends DesignFunctions {
 			echo "<p>".$content."</p>";
 		}
 	}
-	public function create_result_header ($cd_servico, $cd_usuario, $hide_results) {
-		global $service_data;
-		$idEnquete = $_GET['ide'];
-		$args = $this->select("select e.enquete, e.usar_logo, cl.logo from enquete e inner join cliente cl on e.cd_usuario = cl.idCliente where idEnquete = $idEnquete");
-		$idu = $this->idu;
-		if ($cd_servico > 0 && $idu === $cd_usuario) { 
-	?>
-		<p><a id="pdf" href="pdf_result.php?ide=<?php echo $idEnquete;?>">Baixar PDF deste resultado</a></p>
-	<?php 
-		}
-	?>
-		<h2>Resultados parciais</h2>
-		<h4>da enquete: <?php echo $args[0]['enquete']; ?></h4>
-	<?php
-		if ($cd_servico > 0 && $args[0]['usar_logo'] && !$hide_results) {
-			$this->exibir_imagem($args[0]['logo'], 700);
-		}
-		if (empty($service_data) && $cd_usuario == $idu) {
-	?>
-		<p><a href="bonus_mensais.php" target="_blank">Experimente assinatura gr&aacute;tis</a></p>
-	<?php
+	public function show_question ($idPergunta, $cd_resposta_certa) {
+		if ($cd_resposta_certa == 0) {
+			return true;
+		} else {
+			$idu = $this->idu;
+			$args = $this->select("select cd_resposta from voto where cd_usuario = $idu and cd_pergunta = $idPergunta");
+			return empty($args[0][0]);
 		}
 	}
 	public function create_poll ($cross=FALSE, $cd_servico=1, $cdu=NULL) {
@@ -334,50 +320,52 @@ class Create_HTML extends DesignFunctions {
 					$formTabela2[8] = $cont-1;
 				}
 				$idp = $args[$i][0];
-				$select[0] = "select p.*, r.idResposta, r.cd_pergunta, concat(r.letra, ')'), r.resposta from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta where idPergunta = $idp order by r.idResposta";
-				$formTabela1[8] =  $i+1;
 				$crc = $args[$i]["cd_resposta_certa"];
-				if ($crc > 0) {
-					$formTabela1[2][2] = "Teste: ";
-					$valor = $args[$i]["valor"];
-					if ($valor > 0) {
-						$formTabela1[2][4] = "Valor do teste: ";
-						$formTabela1[3][4] = "html";
-						$formTabela2[3][2] = "html";
+				if (show_question ($idp, $crc)) {
+					$select[0] = "select p.*, r.idResposta, r.cd_pergunta, concat(r.letra, ')'), r.resposta from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta where idPergunta = $idp order by r.idResposta";
+					$formTabela1[8] =  $i+1;
+					$crc = $args[$i]["cd_resposta_certa"];
+					if ($crc > 0) {
+						$formTabela1[2][2] = "Teste: ";
+						$valor = $args[$i]["valor"];
+						if ($valor > 0) {
+							$formTabela1[2][4] = "Valor do teste: ";
+							$formTabela1[3][4] = "html";
+							$formTabela2[3][2] = "html";
+						} else {
+							$formTabela1[2][4] = "";
+							$formTabela1[3][4] = "hidden";
+							$formTabela2[3][2] = "hidden";
+						}
 					} else {
+						$formTabela1[2][2] = "";
 						$formTabela1[2][4] = "";
 						$formTabela1[3][4] = "hidden";
 						$formTabela2[3][2] = "hidden";
 					}
-				} else {
-					$formTabela1[2][2] = "";
-					$formTabela1[2][4] = "";
-					$formTabela1[3][4] = "hidden";
-					$formTabela2[3][2] = "hidden";
-				}
-				if ($args[$i][1]) {
-					$formTabela2[3][3] = "checkbox";
-					for ($j = 0; $j < $cont; $j++) {
-						$formTabela2[7][$j] = array('', '', '', "onclick='this.value=this.checked;'");		
+					if ($args[$i][1]) {
+						$formTabela2[3][3] = "checkbox";
+						for ($j = 0; $j < $cont; $j++) {
+							$formTabela2[7][$j] = array('', '', '', "onclick='this.value=this.checked;'");		
+						}
+					} else {
+						$formTabela2[3][3] = "radio";
+						$formTabela2[7] = array();
 					}
-				} else {
-					$formTabela2[3][3] = "radio";
-					$formTabela2[7] = array();
-				}
-				if ($args[$i][2] > 0) {
-					$h .= "<style type='text/css'>";
-					$h .= "#l_valor".($i+1)." {float: left; margin-right: 5px}\n";
-					for ($j = 0; $j < $cont; $j++) {
-						$h .= "#d_letra".($i+1)."_$j {float: left; margin-right: 5px}\n";
+					if ($args[$i][2] > 0) {
+						$h .= "<style type='text/css'>";
+						$h .= "#l_valor".($i+1)." {float: left; margin-right: 5px}\n";
+						for ($j = 0; $j < $cont; $j++) {
+							$h .= "#d_letra".($i+1)."_$j {float: left; margin-right: 5px}\n";
+						}
+						$h .= "</style>";
 					}
-					$h .= "</style>";
+					/*if ($i === 1)
+						$select[4] = "no_print";*/
+					$this->formGeral ($_SESSION, $formTabela1, $formTabela2, NULL, $select, true);
+					$h .= $this->html;
 				}
-				/*if ($i === 1)
-					$select[4] = "no_print";*/
-				$this->formGeral ($_SESSION, $formTabela1, $formTabela2, NULL, $select, true);
-				$h .= $this->html;
 			}
-			
 			if (!$cross || ($args2[0]['cd_usuario'] !== NULL && $args2[0]['cd_usuario'] == $idu)) {
 				$url = '';
 				$dois = '';
@@ -505,9 +493,32 @@ class Create_HTML extends DesignFunctions {
 		$html = $h;
 		$this->html = $html;
 	}
-	public function test_answered ($idPergunta, $cd_resposta_certa) {
+	public function create_result_header ($cd_servico, $cd_usuario, $hide_results) {
+		global $service_data;
+		$idEnquete = $_GET['ide'];
+		$args = $this->select("select e.enquete, e.usar_logo, cl.logo from enquete e inner join cliente cl on e.cd_usuario = cl.idCliente where idEnquete = $idEnquete");
+		$idu = $this->idu;
+		if ($cd_servico > 0 && $idu === $cd_usuario) { 
+	?>
+		<p><a id="pdf" href="pdf_result.php?ide=<?php echo $idEnquete;?>">Baixar PDF deste resultado</a></p>
+	<?php 
+		}
+	?>
+		<h2>Resultados parciais</h2>
+		<h4>da enquete: <?php echo $args[0]['enquete']; ?></h4>
+	<?php
+		if ($cd_servico > 0 && $args[0]['usar_logo'] && !$hide_results) {
+			$this->exibir_imagem($args[0]['logo'], 700);
+		}
+		if (empty($service_data) && $cd_usuario == $idu) {
+	?>
+		<p><a href="bonus_mensais.php" target="_blank">Experimente assinatura gr&aacute;tis</a></p>
+	<?php
+		}
+	}
+	public function show_result ($idPergunta, $cd_resposta_certa) {
 		if ($cd_resposta_certa == 0) {
-			return false;
+			return true;
 		} else {
 			$idu = $this->idu;
 			$args = $this->select("select cd_resposta from voto where cd_usuario = $idu and cd_pergunta = $idPergunta");
@@ -522,11 +533,12 @@ class Create_HTML extends DesignFunctions {
 		$args1 = $this->select("select count(idPergunta) as num_quest from pergunta where cd_enquete = $idEnquete");
 		$idP = 0;
 		$j = -1;
+		$show_result = true;
 		for ($i = 0; $args[$i][0] !== NULL; $i++) {
 			if ($idP != $args[$i]["idPergunta"]) {
 				$cd_resposta_certa = $args[$i]['cd_resposta_certa'];
 				$idP = $args[$i]["idPergunta"];
-				$show_result = ($cd_resposta_certa == 0 || test_answered($idP, $cd_resposta_certa)); 
+				$show_result = $this->show_result($idP, $cd_resposta_certa); 
 				if ($show_result) $html .= "<div class='pergunta'>".$args[$i]["pergunta"]."</div>";
 				$args2 = $this->select("select count(dt_voto) as votos_pergunta from voto where cd_pergunta = $idP");
 				$j++;
