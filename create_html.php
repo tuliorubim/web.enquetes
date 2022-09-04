@@ -321,7 +321,7 @@ class Create_HTML extends DesignFunctions {
 				}
 				$idp = $args[$i][0];
 				$crc = $args[$i]["cd_resposta_certa"];
-				if (show_question ($idp, $crc)) {
+				if ($this->show_question ($idp, $crc)) {
 					$select[0] = "select p.*, r.idResposta, r.cd_pergunta, concat(r.letra, ')'), r.resposta from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta where idPergunta = $idp order by r.idResposta";
 					$formTabela1[8] =  $i+1;
 					$crc = $args[$i]["cd_resposta_certa"];
@@ -534,6 +534,7 @@ class Create_HTML extends DesignFunctions {
 		$idP = 0;
 		$j = -1;
 		$show_result = true;
+		$cd_resposta_certa = 0;
 		for ($i = 0; $args[$i][0] !== NULL; $i++) {
 			if ($idP != $args[$i]["idPergunta"]) {
 				$cd_resposta_certa = $args[$i]['cd_resposta_certa'];
@@ -541,6 +542,7 @@ class Create_HTML extends DesignFunctions {
 				$show_result = $this->show_result($idP, $cd_resposta_certa); 
 				if ($show_result) $html .= "<div class='pergunta'>".$args[$i]["pergunta"]."</div>";
 				$args2 = $this->select("select count(dt_voto) as votos_pergunta from voto where cd_pergunta = $idP");
+				$minha_resposta = $this->select("select cd_resposta from voto where cd_pergunta = $idP");
 				$j++;
 			}
 			if ($show_result) {
@@ -557,7 +559,24 @@ class Create_HTML extends DesignFunctions {
 				$votos_resposta = $args[$i]['votos'];
 				$votos_pergunta = $args2[0]['votos_pergunta'];
 				if ($votos_pergunta > 0) $porcentagem = round(100*$votos_resposta/$votos_pergunta, 1);
-				$html .= "<p>".$args[$i]["resposta"]." $input&nbsp;&nbsp;&nbsp;&nbsp;<span id='votos$i' style='font-weight:600;'>$votos_resposta votos, $porcentagem %</span></p>";
+				$html .= "<p id='resposta_$i'>".$args[$i]["resposta"]." $input&nbsp;&nbsp;&nbsp;&nbsp;";
+				if ($cd_resposta_certa > 0) {
+					if (isset($minha_resposta[0]['cd_resposta'])) {
+						$fundo_verde = "<script language='javascript'>$(function () {$('#resposta_$i').css('background-color', 'green');});</script>";
+					 	$fundo_vermelho = "<script language='javascript'>$(function () {$('#resposta_$i').css('background-color', 'red');});</script>";
+					 	if ($args[$i]['idResposta'] == $cd_resposta_certa && $args[$i]['idResposta'] == $minha_resposta[0]['cd_resposta']) {
+							$html .= "Voc&ecirc; acertou ";
+							echo $fundo_verde;
+						} elseif ($args[$i]['idResposta'] == $cd_resposta_certa) {
+							$html .= "Resposta certa ";
+							echo $fundo_verde;
+						} elseif ($args[$i]['idResposta'] == $minha_resposta[0]['cd_resposta']) {
+							$html .= "Sua resposta ";
+							echo $fundo_vermelho;
+						}
+					}
+				}
+				$html .= "<span id='votos$i' style='font-weight:600;'>$votos_resposta votos, $porcentagem %</span></p>";
 				if ($idP != $args[$i+1]["idPergunta"]) {
 					$html .= "<p><span class='resposta' id='vp$j' style='font-weight:600;'>Total de votos: $votos_pergunta</span></p>";
 				}
