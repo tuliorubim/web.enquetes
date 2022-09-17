@@ -25,7 +25,7 @@ include "criar_enquete_modelo.php";
 	$ide = $POST["idEnquete"];
 	$status = '';
 	if (strlen($POST['tempo_teste']) > 0)
-		$POST['tempo_teste'] .= ':00';
+		//$POST['tempo_teste'] .= ':00';
 	$valid = $we->valida_enquete2();
 	
 	$we->select("select cd_usuario from enquete where idEnquete = $ide", array("cdu"));
@@ -47,7 +47,6 @@ include "criar_enquete_modelo.php";
 		}
 		
 		$we->crud_pergunta_respostas($ide);
-		
 		if ($POST['aceitar_termos'] === 'on') {
 			mysqli_query($we->con, "update cliente set aceito = 1 where idCliente = ".$_SESSION[$we->idSession]);
 		}
