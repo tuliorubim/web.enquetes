@@ -11,14 +11,40 @@ include "dados_modelo.php";
     <!-- COLUNA ESQUERA -->
     <div class="col-md-7">
 	<?php
+	class AdminUser extends AdminFunctions {
+		use Dados_webenquetes;
+		public function __construct($con) {
+			$this->con = $con;
+		}
+		public function valida_cliente () {
+			$conditions = array();
+			$conditions['usuario'] = 'email';
+			if (strlen($_POST['site']) > 0) $conditions['site'] = 'url';
+			return $this->validateForm($_POST, $conditions);
+		}
+		public function crud_cliente() {
+			$POST = $_POST;
+			if (!empty($_FILES['logo']['name'])) {
+				$POST['logoReduzida'] = $_FILES['logo'];
+				$POST['logoReduzida']['name'] = 'thumb'.$POST['logoReduzida']['name'];
+			}
+			if (empty($POST['data_cadastro'])) {
+				$POST['data_cadastro'] = date("d/m/Y H:i:s");
+			} 
+			$this->adminPage ($POST, $_FILES, $_SESSION, $this->formTabela6, array(), array(), true);
+			$this->write_status('status');
+		}
+
+	}
 	$cdu = $_POST['idCliente'];
-	$valid = $we->valida_cliente();
+	$adm = new AdminUser($we->con);
+	$valid = $adm->valida_cliente();
 	if (is_bool($valid) && ($cdu === NULL || $cdu == $we->idu)) {
-		$we->formTabela6 = Dados_webenquetes::$formTabela6;
-		$we->crud_cliente();
+		$adm->formTabela6 = Dados_webenquetes::$formTabela6;
+		$adm->crud_cliente();
 	} elseif (is_string($valid)) {
 		$status = $valid;
-		$we->write_status();
+		$adm->write_status();
 	}
 	?>
 	</div>
