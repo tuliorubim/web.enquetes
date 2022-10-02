@@ -26,6 +26,219 @@ include "header.php";
 	<div class="fb-like" data-href="https://www.facebook.com/WebEnquetesEPesquisas/" data-width="100" data-layout="standard" data-action="like" data-size="small" style='margin: 3px;' data-show-faces="true" data-share="false">
 	</div>
 	<?php
+	class CriarEnquete extends DesignFunctions {
+		use Dados_webenquetes;
+		public $select;
+		public $idc;
+		public $idEnquete;
+		public $idu;
+		public function __construct($ide, $idc, $idu, $con) {
+			$this->idEnquete = $ide;
+			$this->idc = $idc;
+			$this->idu = $idu;
+			$this->con = $con;
+		}
+		public function form_categorias () {
+			$sql = "select * from categoria order by categoria";
+			$select = array($sql, "select");
+			$select[5] = true;
+			
+			$inds = $this->formGeral ($_SESSION, $this->formTabela1, array(), array(), $select, false, array(0, 0), true);
+			$idc = $this->idc;
+			$idEnquete = $this->idEnquete;
+			if ($idc === NULL) $idc = 0;
+			if ($idc !== 0 || $idEnquete !== NULL) {
+				if ($idEnquete !== NULL) {
+					$sql = "select c.idCategoria, c.categoria from categoria c left join enquete e on c.idCategoria = e.cd_categoria where e.idEnquete = $idEnquete";
+				} else $sql = "select idCategoria, categoria from categoria where idCategoria = $idc";	
+				$args = $this->select($sql, array(), true);
+			?>
+				<script language="javascript">
+					$("input[name='idCategoria']").val('<?php echo $args[0]['idCategoria']; ?>');
+					$("#categoria").val("<?php echo $args[0]['categoria']; ?>");
+				</script>
+			<?php	
+			}
+			$this->idc = $args[0]['idc'];
+			$this->select = $select;
+			return $inds;
+		}
+		public function form_enquete($inds) {
+			$select = $this->select;
+			$select[1] = 'form'; 
+			$idEnquete = $this->idEnquete;
+			$idu = $this->idu;
+			
+			if ($idEnquete !== NULL) {
+				$select[0] = "select * from enquete where idEnquete = $idEnquete and cd_usuario = $idu";	
+			} else $select[5] = false;
+	?>
+			<div style="margin-top:10px;"><b>Este question&aacute;rio &eacute; composto de:</b><br />
+			<input type="radio" name="enq_ou_prova" id="enquete_ou_prova1" value='1' /> <b>Somente enquetes</b><br />
+			<input type="radio" name="enq_ou_prova" id="enquete_ou_prova2" value='2' /> <b>Somente testes</b><br />
+			<input type="radio" name="enq_ou_prova" id="enquete_ou_prova3" value='3' checked="checked"/> <b>Ambos</b><br /></div>
+			<script language="javascript">
+			function EnqTestMix (q) {
+				switch (q) {
+					case '1' :
+						$("#enquete_ou_teste0").prop("checked", true);
+						$('#d_tempo_teste').css('display', 'none');
+						EnableDisableTest("none");
+						$("#enquete_ou_teste").css("display", "none");
+						break;
+					case '2' :
+						$("#enquete_ou_teste1").prop("checked", true);
+						$('#d_tempo_teste').css('display', '');
+						EnableDisableTest("");
+						$("#enquete_ou_teste").css("display", "none");
+						break;
+					case '3' :
+						$("#enquete_ou_teste0").prop("checked", true);
+						$('#d_tempo_teste').css('display', 'none');
+						d = ($("#cd_resposta_certa").val() == 0) ? 'none' : '';
+						EnableDisableTest(d);
+						$("#enquete_ou_teste").css("display", "");
+						break;
+				}
+			} 
+			
+			$(function () {
+				q = $("input[name='enquete_ou_prova']").val();
+				q = (q == '') ? '3' : q;
+				$("#enquete_ou_prova"+q).prop("checked", true);
+				EnqTestMix (q);
+				$("input[name='enq_ou_prova']").change(function () {
+					EnqTestMix ($(this).val());
+				});
+			});
+			</script>
+	<?php			
+			$inds = $this->formGeral ($_SESSION, $this->formTabela2, array(), array(), $select, false, $inds);
+			echo "<script>$('#d_tempo_teste').css('display', 'none');</script>";
+			$this->addForeignKey("enquete", "cd_categoria", "categoria", "idCategoria");
+			$this->addForeignKey("enquete", "cd_usuario", "usuario", "idUsuario");
+			$this->select = $select;
+			return $inds;
+		}
+		public function upload_ad($inds, $cd_servico) {
+			$select = $this->select;
+			$idu = $this->idu;
+			$sel = $select[5];
+			if ($cd_servico > 0) {
+				$select[0] = "select idCliente, logo, logoReduzida from cliente where idCliente = $idu";
+				$select[5] = true;
+				$inds = $this->formGeral ($_SESSION, $this->formTabela5, array(), array(), $select, false, $inds);
+			}
+			?>
+			<script language="javascript">
+			var cds = <?php echo (isset($cd_servico)) ? $cd_servico : 0;?>;
+			if (cds > 0 && $(".lab").html() == null) $("#d_usar_logo").css("display", "none");
+			</script>
+			<?php
+			$select[5] = $sel;
+			$this->select = $select;
+			return $inds;
+		}
+		public function form_pergunta_respostas ($inds, $cd_servico) { 
+			$select = $this->select;
+			$idEnquete = $this->idEnquete;
+			$indEdit = 0;
+			if ($_GET['np'] == "true") {
+				$select[5] = false;
+			} elseif (isset($_GET['idp'])) {
+				$indEdit = $_GET['idp'];
+			} elseif ($idEnquete > 0) {
+				$rs = mysqli_query($this->con, "select idPergunta from pergunta where cd_enquete = $idEnquete order by idPergunta");
+				$row = mysqli_fetch_array($rs);
+				$indEdit = $row['idPergunta'];
+			}
+			$select[0] = "select p.*, r.* from pergunta p left join resposta r on p.idPergunta = r.cd_pergunta where p.cd_enquete = $idEnquete and p.idPergunta = $indEdit order by r.idResposta";
+			$args = $this->select("select count(dt_voto) as dez from voto where cd_enquete = $idEnquete");
+			$excluir = true;
+			if ($args[0]['dez'] >= 10 && $cd_servico == 0) {
+				$excluir = false;
+				$this->formTabela4[9] = 'readonly';
+			}
+	?>
+			<div id="enquete_ou_teste">
+			<b>Esta pergunta ser&aacute;:</b><br />
+			<input type="radio" name="enquete_ou_teste" id="enquete_ou_teste0" value="0" checked="checked"/> <b>Enquete</b><br />
+			<input type="radio" name="enquete_ou_teste" id="enquete_ou_teste1" value="1" /> <b>Teste</b>
+			</div>
+			<script language="javascript">
+			function EnableDisableTest(d) {
+				$("#d_valor").css("display", d);
+				for (var i = 0; i <= 200; i++) {
+					$("#d_cd_resposta"+i).css("display", d);
+				}
+			}
+			$(function () {
+				d = ($("#cd_resposta_certa").val() == 0) ? 'none' : '';
+				if ($("input[name='enquete_ou_prova']").val() == '')
+					EnableDisableTest(d);
+				if (d == '') {
+					$("#enquete_ou_teste1").prop("checked", true);
+					for (i = 0; $("#idResposta"+i).val() != null; i++) {
+						if ($("#idResposta"+i).val() == $("#cd_resposta_certa").val()) {
+							break;
+						}
+					}
+					$("#cd_resposta"+i).prop("checked", true);
+					$("input[name='cd_resposta']").val(i);
+				}
+				$("input[name='enquete_ou_teste']").change(function () {
+					d = ($(this).val() == '0') ? 'none' : '';
+					EnableDisableTest(d);
+				});
+				//alert($("input[name='cd_resposta']").val());
+				$("input[name='cd_resposta']").click(function () {
+					rid = $(this).attr("id");
+					id = rid.substring(11);
+					$(this).val(id);
+				}); 
+				$("textarea").on("keydown", function () {
+					if ($("#enquete_ou_teste1").prop("checked")) {
+						if ($(this).attr('name').indexOf("resposta") > -1) {
+							i = Number($(this).attr("name").substring(8));
+							ord = (!document.form.resposta0) ? i+96 : i+97;
+							char = String.fromCharCode(ord);
+							$("input[name='letra"+i+"']").val(($(this).val().length > 0) ? char : '');
+						}
+					}	
+				});
+			});
+			</script>
+	<?php
+			$inds = $this->formGeral ($_SESSION, $this->formTabela3, $this->formTabela4, array(), $select, false, $inds);
+			$this->select = $select;
+			return array($inds, $excluir);
+		}
+		public function poll_for_editing () {	
+			$idEnquete = $this->idEnquete;
+			if ($_GET['np'] === "true" || $this->select[5] || $idEnquete !== NULL) {
+				$banco = 'enquetes';
+				$fields = "select p.pergunta, r.resposta from pergunta p left join resposta r on p.idPergunta = r.cd_pergunta where p.cd_enquete = $idEnquete order by p.idPergunta, r.idResposta";
+				$i = 0;
+				$conteudo = array();
+				$rs = mysqli_query($this->con, "select idPergunta from pergunta where cd_enquete = $idEnquete order by idPergunta");
+				$idc = $this->idc;
+				while ($rs && $row = mysqli_fetch_array($rs)) {
+					$c = $row["idPergunta"];
+					$page = 'criar_enquete.php';
+					if ($idc !== NULL && $idEnquete !== NULL)
+						$page .= "?idc=$idc&ide=$idEnquete&idp=$c";
+					elseif ($idEnquete !== NULL) 
+						$page .= "?ide=$idEnquete&idp=$c";
+					elseif ($idc !== NULL) 
+						$page .= "?idc=$idc";
+					$conteudo[$i] = "<a href='$page' >Editar</a>";
+					$i++;
+				}
+				$incluiConteudo = array("content" => $conteudo, "beforeAfter" => "after", "level" => 0);
+				echo $this->designBlocks (array("database" => $banco, "fields" => $fields, "includeContent" => $incluiConteudo));
+			} 
+		}
+	}
 	$we->valida_enquete1();
 	$status = $service->get_free_months();
 	if ($service->status == '') {
@@ -36,10 +249,7 @@ include "header.php";
 	}
 	if (!isset($idEnquete)) $idEnquete = $_GET['ide'];
 	$idc = (isset($_POST['cd_categoria'])) ? $_POST['cd_categoria'] : $_GET['idc'];
-	require_once "create_html.php";
-	$design = new Create_HTML($idEnquete, $idc);
-	$design->con = $we->con;
-	$design->idu = $we->idu;
+	$design = new CriarEnquete($idEnquete, $idc, $we->con, $we->idu);
 	$design->select("select cd_usuario from enquete where idEnquete = $idEnquete", array("cdu"));
 	if ($idEnquete === NULL || $cdu == $design->idu) {
 		$design->formTabela1 = Dados_webenquetes::$formTabela1;
@@ -75,7 +285,7 @@ include "header.php";
 		<?php } ?>	
 		</script>
 		<?php
-		$we->select("select aceito from cliente where idCliente = ".$_SESSION[$idSession], array("aceito"));
+		$design->select("select aceito from cliente where idCliente = ".$_SESSION[$idSession], array("aceito"));
 		if (!$aceito) {
 		?>
 			<br>

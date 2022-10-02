@@ -30,10 +30,23 @@ include "header.php";
 	if ($status != '') {
 		echo "<p><span class='status2'>$status</span></p>";
 	}
-	require_once 'create_html.php';
-	$design = new Create_HTML();
-	$design->idu = $we->idu;
-	$design->con = $we->con;
+	class MinhasEnquetes extends DesignFunctions {
+		public $idu;
+		public function __construct($idu, $con) {
+			$this->idu = $idu;
+			$this->con = $con;
+		}
+		public function minhas_enquetes () {
+			$sql = "select * from enquete where cd_usuario = $this->idu order by idEnquete";
+			$args = $this->select($sql);
+			for ($i = 0; $args[$i][0] !== NULL; $i++) {
+				$html = "<div class='minha_enquete'>".$args[$i]['enquete']."</div><div class='minha_enquete'><a href='criar_enquete.php?ide=".$args[$i]['idEnquete']."'>Editar e Gerenciar</a></div><div class='minha_enquete'><a href='enquete.php?ide=".$args[$i]['idEnquete']."' target='_top'>Visualizar</a></div>";
+				echo $html;
+			}
+		}
+	
+	}	
+	$design = new MinhasEnquetes($we->idu, $we->con);
 	$design->minhas_enquetes();
 	?>
 	<div class="modal fade enter_url" tabIndex=-1 role="dialog" aria-labelledby="mySmallModalLabel">

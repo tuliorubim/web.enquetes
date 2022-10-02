@@ -29,10 +29,25 @@ include "dados_modelo.php";
 	if ($status != '') {
 		echo "<p><span class='status2'>$status</span></p>";
 	}
-	require_once 'create_html.php';
-	$design = new Create_HTML();
-	$design->con = $we->con;
-	$design->idu = $we->idu;
+	class FormCliente extends DesignFunctions {
+		use Dados_webenquetes;
+		public $idu;
+		public function __construct($idu, $con) {
+			$this->idu = $idu;
+			$this->con = $con;
+		}
+		public function form_cliente() {
+			$sql = "select idCliente, nome, empresa, site, logo, logoReduzida, data_cadastro, usuario from cliente where idCliente = $this->idu";
+			$select = array($sql, "form");
+			if ($this->idu !== 0) {
+				$select[5] = true;
+			}
+			
+			$this->formGeral ($_SESSION, $this->formTabela6, array(), array(), $select, true);
+		}
+
+	}
+	$design = new FormCliente($we->con, $we->idu);
 	$design->formTabela6 = Dados_webenquetes::$formTabela6;
 	$design->form_cliente();
 	?>
