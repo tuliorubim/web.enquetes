@@ -208,7 +208,7 @@ include "bd.php";
 			echo "<script language='javascript'>$('#status').html('<font color=red>$status</font>');</script>";
 		}
 		if ($_POST['pollcode'] === $code) {
-			$we->processa_voto_remoto($idEnquete);
+			$result->processa_voto_remoto($idEnquete);
 		}
 		
 		if (!$hide_results || $we->idu === $cd_usuario) {
@@ -228,7 +228,7 @@ include "bd.php";
 			$maxlengths = array("", "", "", "2048", "");
 			$tabela = "comentario";
 			$formTabela = array($variaveis, $tipos, NULL, NULL, NULL, $tabela, $maxlengths);
-			$we->createTable($formTabela, 1);
+			$result->createTable($formTabela, 1);
 		?>
 		<div id='novo_comentario'>
 		<br><br>
