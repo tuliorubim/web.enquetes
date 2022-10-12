@@ -1,8 +1,6 @@
 <?php
 require_once "funcoes/funcoesAdministrativas.php";
-require_once "dados_webenquetes.php";
 class Webenquetes extends AdminFunctions {
-	use Dados_webenquetes;
 	private const IDMYPOLL = 10008;
 	public $con;
 	public $logged_in = false;

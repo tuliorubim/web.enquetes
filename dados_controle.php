@@ -12,7 +12,7 @@ include "dados_modelo.php";
     <div class="col-md-7">
 	<?php
 	class AdminUser extends AdminFunctions {
-		use Dados_webenquetes;
+		use Dados_webenquetes2;
 		public function __construct($con) {
 			$this->con = $con;
 		}
@@ -40,7 +40,7 @@ include "dados_modelo.php";
 	$adm = new AdminUser($we->con);
 	$valid = $adm->valida_cliente();
 	if (is_bool($valid) && ($cdu === NULL || $cdu == $we->idu)) {
-		$adm->formTabela6 = Dados_webenquetes::$formTabela6;
+		$adm->formTabela6 = Dados_webenquetes2::$formTabela6;
 		$adm->crud_cliente();
 	} elseif (is_string($valid)) {
 		$status = $valid;

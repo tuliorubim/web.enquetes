@@ -14,6 +14,7 @@ include "bd.php";
         <!-- INICIO / AQUI É O ESPAÇO AONDE VOCÊ IRA COLOCAR O CONTÉUDO DAS OUTRAS PAGINAS INTERNAS QUE VAI APARECER NA COLUNA ESQUERDA -->
  	<form name="form" method="post">
     <?php
+	require_once "funcoes/funcoesDesign.php";
 	class Result extends DesignFunctions {
 		public $idu;
 		public $con;
@@ -202,7 +203,7 @@ include "bd.php";
 	$we->select("select e.cd_usuario, e.disponivel, e.hide_results, cl.cd_servico from enquete e inner join cliente cl on e.cd_usuario = cl.idCliente where idEnquete = $idEnquete", array("cd_usuario", "disponivel", "hide_results", "cd_servico"));
 	$we->select("select code from enquete where idEnquete = $idEnquete", array("code"), true);
 	if (true) {
-		$result = new Result($we->con, $we->idu, $idEnquete);
+		$result = new Result($we->idu, $we->con, $idEnquete);
 		if (!$disponivel) {
 			$status = "Enquete encerrada.";
 			echo "<script language='javascript'>$('#status').html('<font color=red>$status</font>');</script>";

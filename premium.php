@@ -15,6 +15,7 @@ require_once "funcoes/funcoesDesign.php";
         <!-- INICIO / AQUI É O ESPAÇO AONDE VOCÊ IRA COLOCAR O CONTÉUDO DAS OUTRAS PAGINAS INTERNAS QUE VAI APARECER NA COLUNA ESQUERDA -->
     <h1>Nossos Servi&ccedil;os</h1>
 	<?php
+	require_once "funcoes/funcoesDesign.php";
 	class Premium extends DesignFunctions {
 		public function our_services() {
 			$header = array();

@@ -26,6 +26,7 @@ include "header.php";
 	<div class="fb-like" data-href="https://www.facebook.com/WebEnquetesEPesquisas/" data-width="100" data-layout="standard" data-action="like" data-size="small" style='margin: 3px;' data-show-faces="true" data-share="false">
 	</div>
 	<?php
+	require_once "funcoes/funcoesDesign.php";
 	class CriarEnquete extends DesignFunctions {
 		use Dados_webenquetes;
 		public $select;
@@ -249,7 +250,7 @@ include "header.php";
 	}
 	if (!isset($idEnquete)) $idEnquete = $_GET['ide'];
 	$idc = (isset($_POST['cd_categoria'])) ? $_POST['cd_categoria'] : $_GET['idc'];
-	$design = new CriarEnquete($idEnquete, $idc, $we->con, $we->idu);
+	$design = new CriarEnquete($idEnquete, $idc, $we->idu, $we->con);
 	$design->select("select cd_usuario from enquete where idEnquete = $idEnquete", array("cdu"));
 	if ($idEnquete === NULL || $cdu == $design->idu) {
 		$design->formTabela1 = Dados_webenquetes::$formTabela1;

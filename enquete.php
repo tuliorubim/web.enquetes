@@ -22,6 +22,7 @@ include "bd.php";
 		$we->select("select disponivel, cd_usuario from enquete where idEnquete = $ide", array('disponivel', 'cd_usuario'));
 	}
 	if ($disponivel || $cd_usuario == $we->idu) {
+		require_once "funcoes/funcoesDesign.php";
 		class Enquete extends DesignFunctions {
 			public $idu;
 			private $idEnquete;
@@ -293,7 +294,7 @@ include "bd.php";
 				$this->html = $html;
 			}
 		}
-		$poll_html = new Create_HTML($idu, $ide, $con);
+		$poll_html = new Enquete($we->idu, $ide, $we->con);
 		$poll_html->create_poll_header($disponivel, $cd_usuario);
 	?>
 	<div class="fb-like" data-href="https://www.facebook.com/WebEnquetesEPesquisas/" data-width="100" data-layout="standard" data-action="like" data-size="small" style='margin: 3px;' data-show-faces="true" data-share="false"></div>

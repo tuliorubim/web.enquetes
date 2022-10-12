@@ -1,6 +1,6 @@
 <?php
 	include "bd.php";
-	
+	require_once "dados_webenquetes.php";
 	Dados_webenquetes::setFormTabela1();
 	Dados_webenquetes::setFormTabela2();
 	Dados_webenquetes::setFormTabela3();

@@ -30,6 +30,7 @@ include "header.php";
 	if ($status != '') {
 		echo "<p><span class='status2'>$status</span></p>";
 	}
+	require_once "funcoes/funcoesDesign.php";
 	class MinhasEnquetes extends DesignFunctions {
 		public $idu;
 		public function __construct($idu, $con) {

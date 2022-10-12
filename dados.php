@@ -29,8 +29,9 @@ include "dados_modelo.php";
 	if ($status != '') {
 		echo "<p><span class='status2'>$status</span></p>";
 	}
+	require_once "funcoes/funcoesDesign.php";
 	class FormCliente extends DesignFunctions {
-		use Dados_webenquetes;
+		use Dados_webenquetes2;
 		public $idu;
 		public function __construct($idu, $con) {
 			$this->idu = $idu;
@@ -47,8 +48,8 @@ include "dados_modelo.php";
 		}
 
 	}
-	$design = new FormCliente($we->con, $we->idu);
-	$design->formTabela6 = Dados_webenquetes::$formTabela6;
+	$design = new FormCliente($we->idu, $we->con);
+	$design->formTabela6 = Dados_webenquetes2::$formTabela6;
 	$design->form_cliente();
 	?>
 	<br>

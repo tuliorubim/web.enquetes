@@ -25,6 +25,7 @@ include "header.php";
 	<h2>Meu Plano</h2>
 	<div id="meu_plano">
 	<?php
+	require_once "funcoes/funcoesDesign.php";
 	class MeuPlano extends DesignFunctions {
 		public $idu;
 		public function __construct($idu, $con) {

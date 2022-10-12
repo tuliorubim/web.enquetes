@@ -38,7 +38,7 @@ include "bd.php";
 			}
 		}
 	}
-	$adm = new SendPassword($con);
+	$adm = new SendPassword($we->con);
 	$adm->enviar_senha();
 	?>
 	
