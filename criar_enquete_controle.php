@@ -217,7 +217,7 @@ include "criar_enquete_modelo.php";
 	$SESSION = $_SESSION;
 	$ide = $POST["idEnquete"];
 	$status = '';
-	if (strlen($POST['tempo_teste']) > 0)
+	//if (strlen($POST['tempo_teste']) > 0)
 		//$POST['tempo_teste'] .= ':00';
 	$adm = new AdminPoll($we->con);
 	$valid = $adm->valida_enquete2();
