@@ -121,6 +121,7 @@ include "bd.php";
 		public function create_results ($cd_servico) {
 			$idEnquete = $this->idEnquete;
 			$html = $this->html;
+			$idu = $this->idu;
 			$sql = "select p.idPergunta, p.pergunta, p.multipla_resposta, p.valor, p.cd_resposta_certa, r.idResposta, r.resposta, count(v.dt_voto) as votos from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta left join voto v on r.idResposta = v.cd_resposta where p.cd_enquete = $idEnquete group by r.idResposta order by p.idPergunta, count(v.dt_voto) desc, r.idResposta";
 			$args = $this->select($sql);
 			$args1 = $this->select("select count(idPergunta) as num_quest from pergunta where cd_enquete = $idEnquete");
@@ -135,7 +136,7 @@ include "bd.php";
 					$show_result = $this->show_result($idP, $cd_resposta_certa); 
 					if ($show_result) $html .= "<div class='pergunta'>".$args[$i]["pergunta"]."</div>";
 					$args2 = $this->select("select count(dt_voto) as votos_pergunta from voto where cd_pergunta = $idP");
-					$minha_resposta = $this->select("select cd_resposta from voto where cd_pergunta = $idP");
+					$minha_resposta = $this->select("select cd_resposta from voto where cd_pergunta = $idP and cd_usuario = $idu");
 					$j++;
 				}
 				if ($show_result) {
@@ -178,6 +179,45 @@ include "bd.php";
 			$args3 = $this->select("select count(dt_voto) as votos_enquete from voto where cd_enquete = $idEnquete");
 			$html .= "<p><span class='resposta' id='ve' style='font-weight:600;'>Total de respostas: ".$args3[0]['votos_enquete']."</span></p>";
 			$this->html = $html;
+		}
+		public function create_results2 () {
+			$idEnquete = $this->idEnquete;
+			$html = $this->html;
+			$idu = $this->idu;
+			$sql = "select p.idPergunta, p.pergunta, p.valor, p.cd_resposta_certa, r.idResposta, r.resposta from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta where p.cd_enquete = $idEnquete and (p.cd_resposta_certa > 0 and p.idPergunta = (select v.cd_pergunta from voto v where v.cd_pergunta = p.idPergunta and v.cd_usuario = $idu))";
+			$args = $this->select($sql);
+			if (count($args) === 0) {
+				$status = "Agradecemos o seu voto. Ele foi corretamente computado.";
+				die ("<script language='javascript'>$('#status').html('<font color=green>$status</font>');</script>");
+			}
+			$idP = 0;
+			$j = -1;
+			$cd_resposta_certa = 0;
+			for ($i = 0; $args[$i][0] !== NULL; $i++) {
+				if ($idP != $args[$i]["idPergunta"]) {
+					$cd_resposta_certa = $args[$i]['cd_resposta_certa'];
+					$idP = $args[$i]["idPergunta"];
+					$html .= "<div class='pergunta'>".$args[$i]["pergunta"]."</div>";
+					$minha_resposta = $this->select("select cd_resposta from voto where cd_pergunta = $idP and cd_usuario = $idu");
+					$j++;
+				}
+				$html .= "<p id='resposta_$i'>".$args[$i]["resposta"]."&nbsp;&nbsp;&nbsp;";
+				if (isset($minha_resposta[0]['cd_resposta'])) {
+					$fundo_verde = "<script language='javascript'>\$(function () {\$('#resposta_$i').css('background-color', 'green');});</script>";
+					$fundo_vermelho = "<script language='javascript'>\$(function () {\$('#resposta_$i').css('background-color', 'red');});</script>";
+					if ($args[$i]['idResposta'] == $cd_resposta_certa && $args[$i]['idResposta'] == $minha_resposta[0]['cd_resposta']) {
+						$html .= "Voc&ecirc; acertou ";
+						echo $fundo_verde;
+					} elseif ($args[$i]['idResposta'] == $cd_resposta_certa) {
+						$html .= "Resposta certa ";
+						echo $fundo_verde;
+					} elseif ($args[$i]['idResposta'] == $minha_resposta[0]['cd_resposta']) {
+						$html .= "Sua resposta ";
+						echo $fundo_vermelho;
+					}
+				}
+				$html = "</p>";
+			}
 		}
 		public function print_comments() {
 			$idEnquete = $this->idEnquete;
@@ -246,8 +286,7 @@ include "bd.php";
 		</div>
 	<?php		
 		} else {
-			$status = "Agradecemos o seu voto. Ele foi corretamente computado.";
-			echo "<script language='javascript'>$('#status').html('<font color=green>$status</font>');</script>";
+			$result->create_results2();
 		}
 	} else {
 		$status = "Os resultados parciais desta enquete n&atilde;o est&atilde;o dispon&iacute;veis no momento.";
