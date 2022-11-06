@@ -169,10 +169,15 @@ include "bd.php";
 								echo $fundo_vermelho;
 							}
 						}
+						$args4 = $this->select("select p.valor, count(v.dt_voto) as total, (select count(dt_voto) from voto where cd_pergunta = p.idPergunta and cd_resposta = $cd_resposta_certa) as certas from pergunta p inner join voto v on p.idPergunta = v.cd_pergunta where p.idPergunta = $idP");
+						$media_pontos = $args4[0]['valor']*$args4[0]['certas']/$args4[0]['total'];
+						$porcentagem_acertos = 100*$args4[0]['certas']/$args4[0]['total'];
+						
 					}
 					$html .= "<span id='votos$i' style='font-weight:600;'>$votos_resposta votos, $porcentagem %</span></p>";
 					if ($idP != $args[$i+1]["idPergunta"]) {
-						$html .= "<p><span class='resposta' id='vp$j' style='font-weight:600;'>Total de votos: $votos_pergunta</span></p>";
+						$html .= "<p><span class='resposta' id='vp$j' style='font-weight:600;'>Total de votos: $votos_pergunta";
+						if ($cd_resposta_certa > 0) $html .= ", Pontua&ccedil;&atilde;o m&eacute;dia das pessoas: ".round($media_pontos, 2).", Porcentagem de acertos: ".round($porcentagem_acertos, 1)." %</span></p>";
 					}
 				}
 			}

@@ -113,6 +113,7 @@ include "bd.php";
 					$select[5] = true;
 					$idp = 0;
 					$h = '';
+					$num_questions = 0;
 					for ($i = 0; $args[$i][0]; $i++) {
 						if ($idp !== $args[$i][0]) {
 							$args4 = $this->select("SELECT count(idResposta) as cont from resposta where cd_Pergunta = ".$args[$i][0]);
@@ -122,8 +123,9 @@ include "bd.php";
 						$idp = $args[$i][0];
 						$crc = $args[$i]["cd_resposta_certa"];
 						if ($this->show_question ($idp, $crc)) {
+							$num_questions++;
 							$select[0] = "select p.*, r.idResposta, r.cd_pergunta, concat(r.letra, ')'), r.resposta from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta where idPergunta = $idp order by r.idResposta";
-							$formTabela1[8] =  $i+1;
+							$formTabela1[8] =  $num_questions;
 							$crc = $args[$i]["cd_resposta_certa"];
 							if ($crc > 0) {
 								$formTabela1[2][2] = "Teste: ";
@@ -154,9 +156,9 @@ include "bd.php";
 							}
 							if ($args[$i][2] > 0) {
 								$h .= "<style type='text/css'>";
-								$h .= "#l_valor".($i+1)." {float: left; margin-right: 5px}\n";
+								$h .= "#l_valor".($num_questions)." {float: left; margin-right: 5px}\n";
 								for ($j = 0; $j < $cont; $j++) {
-									$h .= "#d_letra".($i+1)."_$j {float: left; margin-right: 5px}\n";
+									$h .= "#d_letra".($num_questions)."_$j {float: left; margin-right: 5px}\n";
 								}
 								$h .= "</style>";
 							}
@@ -195,7 +197,7 @@ include "bd.php";
 							for ($j = 0; $j < $i; $j++) {
 								$h .= "mr[$j] = ".$args[$j][1]."; ";
 							}
-							$h .= "var num_questions = $i;</script>";
+							$h .= "var num_questions = $num_questions;</script>";
 							if ($cross) {
 								$h .= "<script language='javascript'>
 								var cd_enquete = $ide;
