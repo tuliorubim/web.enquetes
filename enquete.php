@@ -411,11 +411,11 @@ $(document).ready(function () {
 				},
 				success: function (result) {
 					$("#status").html(result['status']);
-					if (result['status'] == '') {
+					if (q < num_questions) {
 						q++;
 						selectQuestion(q);
-					} else if (result['status'].indexOf("sucesso") != -1) {
-						alert(result['status']);
+					} else {
+						alert((result['status'].indexOf("sucesso") != -1) ? result['status'] : "Suas respostas foram processadas com sucesso.");
 						window.location.href = "resultados_parciais.php?ide="+cd_enquete;
 					} 
 				},
