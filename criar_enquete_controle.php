@@ -116,6 +116,22 @@ include "criar_enquete_modelo.php";
 			unset($this->formTabela4[0][4]);
 			
 			$this->adminPage ($POST, $_FILES, $_SESSION, $this->formTabela3, $this->formTabela4, array());
+			
+			if ($POST['enquete_ou_teste'] == '1') {
+				if (isset($POST['cd_resposta'])) {
+					if ($POST['idPergunta'] == NULL) {
+						$limit = (int) $POST['cd_resposta'];
+						$arg1 = $this->select("select max(idPergunta) from pergunta where cd_enquete = $ide");
+						$arg2 = $this->select("select max(idResposta) from (select idResposta from resposta where cd_pergunta = ".$arg1[0][0]." order by idResposta limit $limit) r");
+						mysqli_query($con, "update pergunta set cd_resposta_certa = ".$arg2[0][0]." where idPergunta = ".$arg1[0][0]);
+					} else {
+						$limit = ((int) $POST['cd_resposta'])+1;
+						$arg2 = $this->select("select max(idResposta) from (select idResposta from resposta where cd_pergunta = ".$POST['idPergunta']." order by idResposta limit $limit) r");
+						if ($POST['cd_resposta_certa'] != $arg2[0][0])
+							mysqli_query($con, "update pergunta set cd_resposta_certa = ".$arg2[0][0]." where idPergunta = ".$POST['idPergunta']);
+					}
+				} else $status = "Voc&ecirc; n&atilde;o especificou uma reposta certa para este teste.";
+			}
 			$class = 'st';
 			if ($POST['enquete_ou_prova'] != $_POST['enq_ou_prova']) {
 				if ($_POST['enq_ou_prova'] != '3') {
@@ -165,21 +181,6 @@ include "criar_enquete_modelo.php";
 			if (!empty($status)) $status .= "<br><br>";
 			$this->write_status($class);
 			$status = '';
-			if ($POST['enquete_ou_teste'] == '1') {
-				if (isset($POST['cd_resposta'])) {
-					if ($POST['idPergunta'] == NULL) {
-						$limit = (int) $POST['cd_resposta'];
-						$arg1 = $this->select("select max(idPergunta) from pergunta where cd_enquete = $ide");
-						$arg2 = $this->select("select max(idResposta) from (select idResposta from resposta where cd_pergunta = ".$arg1[0][0]." order by idResposta limit $limit) r");
-						mysqli_query($con, "update pergunta set cd_resposta_certa = ".$arg2[0][0]." where idPergunta = ".$arg1[0][0]);
-					} else {
-						$limit = ((int) $POST['cd_resposta'])+1;
-						$arg2 = $this->select("select max(idResposta) from (select idResposta from resposta where cd_pergunta = ".$POST['idPergunta']." order by idResposta limit $limit) r");
-						if ($POST['cd_resposta_certa'] != $arg2[0][0])
-							mysqli_query($con, "update pergunta set cd_resposta_certa = ".$arg2[0][0]." where idPergunta = ".$POST['idPergunta']);
-					}
-				} else $status = "Voc&ecirc; n&atilde;o especificou uma reposta certa para este teste.";
-			}
 			if (strpos ($status, "sucesso") !== FALSE) {
 				if (strpos ($status, "salvo") !== FALSE) {
 					$status = "Pergunta foi criada ou atualizada corretamente.";

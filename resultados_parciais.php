@@ -86,7 +86,7 @@ include "bd.php";
 			}
 			$this->idu = $idu;
 		}
-				public function create_result_header ($cd_servico, $cd_usuario, $hide_results) {
+		public function create_result_header ($cd_servico, $cd_usuario, $hide_results) {
 			global $service_data;
 			$idEnquete = $_GET['ide'];
 			$args = $this->select("select e.enquete, e.usar_logo, cl.logo from enquete e inner join cliente cl on e.cd_usuario = cl.idCliente where idEnquete = $idEnquete");
@@ -221,8 +221,9 @@ include "bd.php";
 						echo $fundo_vermelho;
 					}
 				}
-				$html = "</p>";
+				$html .= "</p>";
 			}
+			$this->html = $html;
 		}
 		public function print_comments() {
 			$idEnquete = $this->idEnquete;
@@ -292,6 +293,13 @@ include "bd.php";
 	<?php		
 		} else {
 			$result->create_results2();
+			if (!empty($result->html)) {
+	?>	
+				<h2>Resultado do teste</h2>
+				<a href="enquete.php?ide=<?php echo $idEnquete;?>">Voltar</a>
+	<?php	
+				echo $result->html;		
+			}	
 		}
 	} else {
 		$status = "Os resultados parciais desta enquete n&atilde;o est&atilde;o dispon&iacute;veis no momento.";
