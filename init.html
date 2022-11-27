@@ -57,7 +57,7 @@ function validateForm (form, conditions) {
 						break;
 					}	
 				}
-			} else if (f.type === "radio" && f.value == null) {
+			} else if (f.type === "radio" && f.value == '') {
 				f2.before("<div style='color: #FF0000;' id='erro'>Escolha uma op&ccedil;&atilde;o em "+$("label[for='"+key+"']").html()+".</div>");
 				valid = false;
 				f.focus();

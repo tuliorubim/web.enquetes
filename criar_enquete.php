@@ -166,9 +166,11 @@ include "header.php";
 			<input type="radio" name="enquete_ou_teste" id="enquete_ou_teste0" value="0" checked="checked"/> <b>Enquete</b><br />
 			<input type="radio" name="enquete_ou_teste" id="enquete_ou_teste1" value="1" /> <b>Teste</b>
 			</div>
+			<div id="teste3"></div>
 			<script language="javascript">
 			function EnableDisableTest(d) {
 				$("#d_valor").css("display", d);
+				$("#d_multipla_resposta").css("display", (d == "") ? "none" : "");
 				for (var i = 0; i <= 200; i++) {
 					$("#d_cd_resposta"+i).css("display", d);
 				}
@@ -197,13 +199,14 @@ include "header.php";
 					id = rid.substring(11);
 					$(this).val(id);
 				}); 
-				$("textarea").on("keydown", function () {
+				$("textarea").on("keyup", function () {
 					if ($("#enquete_ou_teste1").prop("checked")) {
 						if ($(this).attr('name').indexOf("resposta") > -1) {
 							i = Number($(this).attr("name").substring(8));
 							ord = (!document.form.resposta0) ? i+96 : i+97;
 							char = String.fromCharCode(ord);
 							$("input[name='letra"+i+"']").val(($(this).val().length > 0) ? char : '');
+							//$("#teste3").html($("input[name='letra"+i+"']").val());
 						}
 					}	
 				});
@@ -425,6 +428,9 @@ $(document).ready(function () {
 	$("input[name='salvar']").click(function () {
 		ep1 = $("input[name='enquete_ou_prova']").val();
 		ep2 = $("input[name='enq_ou_prova']").val();
+		if ($("#enquete_ou_teste1").prop("checked")) {
+			conditions['cd_resposta'] = 'true';	
+		}
 		valid = validateForm (document.form, conditions);
 		if (valid) {
 			ValidaGravacao();
