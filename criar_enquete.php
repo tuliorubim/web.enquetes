@@ -429,7 +429,7 @@ $(document).ready(function () {
 		ep1 = $("input[name='enquete_ou_prova']").val();
 		ep2 = $("input[name='enq_ou_prova']").val();
 		if ($("#enquete_ou_teste1").prop("checked")) {
-			conditions['cd_resposta'] = 'true';	
+			conditions['cd_resposta'] = 10;	
 		}
 		valid = validateForm (document.form, conditions);
 		if (valid) {
