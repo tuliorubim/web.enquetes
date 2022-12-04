@@ -87,7 +87,7 @@ if ($idu > 0) {
 				$args3 = $db->select("select p.valor, count(v.dt_voto) as total, (select count(dt_voto) from voto where cd_pergunta = p.idPergunta and cd_resposta = $cd_resposta_certa $and_sel_ans2) as certas from pergunta p inner join voto v on p.idPergunta = v.cd_pergunta where p.idPergunta = $idP $and_sel_ans");
 				$media_pontos = $args3[0]['valor']*$args3[0]['certas']/$args3[0]['total'];
 				$porcentagem_acertos = 100*$args3[0]['certas']/$args3[0]['total'];
-				$test_stats = ", Pontua&ccedil;&atilde;o m&eacute;dia das pessoas: ".round($media_pontos, 2).", Porcentagem de acertos: ".round($porcentagem_acertos, 1)." %";
+				$test_stats = utf8_encode(", Pontuação média das pessoas: ").round($media_pontos, 2).", Porcentagem de acertos: ".round($porcentagem_acertos, 1)." %";
 			}
 			$pdf->ezText("<b>Total de votos nesta pergunta: ".$votos_pergunta.$test_stats."</b>\n\n", 12, array('justification' => 'left'));
 			$idP = $args[$i]['idPergunta'];

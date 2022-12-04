@@ -22,7 +22,7 @@ if ($cds == 0) {
 $selected_answers .= $where.')';
 $i = 0;
 $conteudo = array();
-$sql = "select p.idPergunta, r.idResposta, count(v.dt_voto) from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta left join voto v on r.idResposta = v.cd_resposta where p.cd_enquete = $ide group by r.idResposta order by p.idPergunta, count(v.dt_voto) desc, r.idResposta";
+$sql = "select p.idPergunta, p.cd_resposta_certa, r.idResposta, count(v.dt_voto) from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta left join voto v on r.idResposta = v.cd_resposta where p.cd_enquete = $ide group by r.idResposta order by p.idPergunta, count(v.dt_voto) desc, r.idResposta";
 $rs = mysqli_query($con, $sql);
 $i = 0;
 $j = -1;
@@ -41,7 +41,15 @@ do {
 		$db->select ($sql, array("votos_pergunta"));
 		$j++;
 		$vp[$j] = $votos_pergunta;
-		$json .= '"vp'.$j.'" : "Total de votos: '.$votos_pergunta.'", ';
+		$test_stats = '';
+		$cd_resposta_certa = $row['cd_resposta_certa'];
+		if ($cd_resposta_certa > 0) {
+			$args = $db->select("select p.valor, count(v.dt_voto) as total, (select count(dt_voto) from voto where cd_pergunta = p.idPergunta and cd_resposta = $cd_resposta_certa and cd_usuario in $selected_answers) as certas from pergunta p inner join voto v on p.idPergunta = v.cd_pergunta where p.idPergunta = $idP and v.cd_usuario in $selected_answers");
+			$media_pontos = $args[0]['valor']*$args[0]['certas']/$args[0]['total'];
+			$porcentagem_acertos = 100*$args[0]['certas']/$args[0]['total'];
+			$test_stats = ", Pontua&ccedil;&atilde;o m&eacute;dia das pessoas: ".round($media_pontos, 2).", Porcentagem de acertos: ".round($porcentagem_acertos, 1)." %";
+		}
+		$json .= '"vp'.$j.'" : "Total de votos: '.$votos_pergunta.$test_stats.'", ';
 		if ($votos_pergunta == 0) $votos_pergunta = 1;
 	}
 	$idR = $row["idResposta"];
