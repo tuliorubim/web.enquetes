@@ -30,9 +30,9 @@ if ($idu > 0) {
 			$selected_answers .= $where.')';
 			$selected_answers2 .= $where2;
 		}
-		$and_sel_ans = '';
-		if (strlen($selected_answers) > 0) $and_sel_ans = "and v.cd_usuario in $selected_answers";
-		$sql = "select p.idPergunta, p.pergunta, r.idResposta, r.resposta, count(v.dt_voto) as num_votos, 100*count(v.dt_voto)/(select count(dt_voto) from voto where cd_pergunta = p.idPergunta $and_sel_ans) as porcentagem from pergunta p left join resposta r on p.idPergunta = r.cd_pergunta left join voto v on r.idResposta = v.cd_resposta where p.cd_enquete = $ide group by r.idResposta order by p.idPergunta, count(v.dt_voto) desc, r.idResposta";
+		$votos_porcentagem = (strlen($selected_answers) === 0) ? ", count(v.dt_voto) as num_votos, 100*count(v.dt_voto)/(select count(dt_voto) from voto where cd_pergunta = p.idPergunta) as porcentagem" : '';
+		$and_sel_ans = (strlen($selected_answers) === 0) ? '' : "and v.cd_usuario in $selected_answers";
+		$sql = "select p.idPergunta, p.pergunta, p.cd_resposta_certa, r.idResposta, r.resposta$votos_porcentagem from pergunta p left join resposta r on p.idPergunta = r.cd_pergunta left join voto v on r.idResposta = v.cd_resposta where p.cd_enquete = $ide group by r.idResposta order by p.idPergunta, count(v.dt_voto) desc, r.idResposta";
 		$args = $db->select($sql, array(), true);
 		include 'pdf-php/src/Cezpdf.php';
 		class Creport extends Cezpdf
@@ -70,6 +70,7 @@ if ($idu > 0) {
 		for ($i = 0; $args[$i][0] !== NULL; $i++) {
 			$pdf->ezText("<b>$j) ".$args[$i]['pergunta']."</b>\n", 15, array('justification' => 'left'));
 			$db->select("select count(v.dt_voto) from voto v where v.cd_pergunta = $idP $and_sel_ans", array("votos_pergunta"));
+			$cd_resposta_certa = $args[$i]['cd_resposta_certa'];
 			while ($args[$i]['idPergunta'] === $idP) {
 				if (strlen($selected_answers) > 0) {
 					$db->select("select count(v.dt_voto) from voto v where v.cd_resposta = ".$args[$i]['idResposta']." $and_sel_ans", array("votos"));
@@ -80,7 +81,15 @@ if ($idu > 0) {
 				$pdf->ezText($ans_result, 12, array('justification' => 'left'));
 				$i++;
 			}
-			$pdf->ezText("<b>Total de votos nesta pergunta: ".$votos_pergunta."</b>\n\n", 12, array('justification' => 'left'));
+			$test_stats = '';
+			if ($cd_resposta_certa > 0) {
+				$and_sel_ans2 = (strlen($selected_answers) === 0) ? '' : "and cd_usuario in $selected_answers";
+				$args3 = $db->select("select p.valor, count(v.dt_voto) as total, (select count(dt_voto) from voto where cd_pergunta = p.idPergunta and cd_resposta = $cd_resposta_certa $and_sel_ans2) as certas from pergunta p inner join voto v on p.idPergunta = v.cd_pergunta where p.idPergunta = $idP $and_sel_ans");
+				$media_pontos = $args3[0]['valor']*$args3[0]['certas']/$args3[0]['total'];
+				$porcentagem_acertos = 100*$args3[0]['certas']/$args3[0]['total'];
+				$test_stats = ", Pontua&ccedil;&atilde;o m&eacute;dia das pessoas: ".round($media_pontos, 2).", Porcentagem de acertos: ".round($porcentagem_acertos, 1)." %";
+			}
+			$pdf->ezText("<b>Total de votos nesta pergunta: ".$votos_pergunta.$test_stats."</b>\n\n", 12, array('justification' => 'left'));
 			$idP = $args[$i]['idPergunta'];
 			$j++;
 			$i--;
