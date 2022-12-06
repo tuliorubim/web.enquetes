@@ -46,7 +46,7 @@ if ($idu > 0) {
 		//$pdf->targetEncoding = "UTF-8";
 		$pdf->ezSetMargins(30, 30, 30, 30);
 		$pdf->selectFont('Helvetica');
-		$db->select("select enquete from enquete where idEnquete = $ide", array("enquete"), array(), true);
+		$db->select("select enquete from enquete where idEnquete = $ide", array("enquete"), true);
 		$pdf->ezText("<b>Resultados da enquete: $enquete</b>", 18, array('justification' => 'left'));
 		if (!empty($selected_answers2)) {
 			$args2 = $db->select($selected_answers2, array(), true);
