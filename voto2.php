@@ -55,10 +55,6 @@ if (true) {// || $end_date == '0000-00-00' || strtotime(date('Y-m-d')) <= strtot
 	}
 	if (mysqli_error($con)) $status .= "Erro: ".mysqli_error($con);
 	else {
-		require_once "create_html.php";
-		$poll_html = new Create_HTML($ide);
-		$poll_html->con = $con;
-		$poll_html->mudou();
 		$db->select("select max(idPergunta) from pergunta where cd_enquete = $ide", array("cdp"));
 		if ($cdp === $idp) {
 			if (!$replace_vote) $status = "Suas respostas foram processadas com sucesso.";

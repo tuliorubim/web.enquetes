@@ -25,22 +25,22 @@
 	if ($disponivel) {
 		$db->select("select e.cd_usuario, e.enquete, e.introducao, e.dt_criacao, e.duracao, e.hide_results from enquete e where idEnquete = $ide", array('cd_usuario', 'enquete', 'introducao', 'dt_criacao', 'duracao', 'hide_results'));
 		$db->select("select code from enquete where idEnquete = $ide", array("pollcode"), true);
-		$variaveis = array("idPergunta", "cd_enquete", "pergunta", "multipla_resposta");
-		$tipos = array("integer", "integer", "varchar", "boolean");
+		$variaveis = array("idPergunta", "cd_enquete", "pergunta", "multipla_resposta", "valor", "cd_resposta_certa");
+		$tipos = array("integer", "integer", "varchar", "boolean", "decimal", "integer");
 		$labels = array();
-		$inputs = array("hidden", "hidden", "html", "hidden");
-		$maxlengths = array("", "", "1024", "");
+		$inputs = array("hidden", "hidden", "html", "hidden", "hidden", "hidden");
+		$maxlengths = array("", "", "1024", "", "4,2", "");
 		$properties = NULL;
 		$tabela = "pergunta";
 		$enderecos = array();
 		
 		$formTabela1 = array($variaveis, $tipos, $labels, $inputs, $enderecos, $tabela, $maxlengths, $properties);
 		
-		$variaveis2 = array("idResposta", "cd_pergunta", "resposta");
-		$tipos2 = array("integer", "integer", "varchar");
+		$variaveis2 = array("idResposta", "cd_pergunta", "letra", "resposta");
+		$tipos2 = array("integer", "integer", "char", "varchar");
 		$labels2 = array();
-		$inputs2 = array("hidden", "hidden", "radio");
-		$maxlengths2 = array("", "", "1024");
+		$inputs2 = array("hidden", "hidden", "hidden", "radio");
+		$maxlengths2 = array("", "", "1", "1024");
 		$tabela2 = "resposta";
 		$enderecos2 = array();
 		
@@ -48,7 +48,7 @@
 		
 		$inds = array(0, 0);
 		$select = array('', 'form', 'no_print');
-		$args = $db->select("select idPergunta, multipla_resposta from pergunta where cd_enquete = $ide order by idPergunta");
+		$args = $db->select("select idPergunta, multipla_resposta, cd_resposta_certa, valor from pergunta where cd_enquete = $ide order by idPergunta");
 		$select[5] = true;
 		$idp = 0;
 		$h = '';
@@ -60,14 +60,41 @@
 			$idp = $args[$i][0];
 			$select[0] = "select p.*, r.* from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta where idPergunta = $idp order by r.idResposta";
 			$formTabela1[8] =  $i+1;
-			if ($args[$i][1]) {
-				$formTabela2[3][2] = "checkbox";
-				for ($j = 0; $j < $cont; $j++) {
-					$formTabela2[7][$j] = array('', '', "onclick='this.value=this.checked;'");		
+			$crc = $args[$i]["cd_resposta_certa"];
+			if ($crc > 0) {
+				$formTabela1[2][2] = "Teste: ";
+				$valor = $args[$i]["valor"];
+				if ($valor > 0) {
+					$formTabela1[2][4] = "Valor do teste: ";
+					$formTabela1[3][4] = "html";
+					$formTabela2[3][2] = "html";
+				} else {
+					$formTabela1[2][4] = "";
+					$formTabela1[3][4] = "hidden";
+					$formTabela2[3][2] = "hidden";
 				}
 			} else {
-				$formTabela2[3][2] = "radio";
+				$formTabela1[2][2] = "";
+				$formTabela1[2][4] = "";
+				$formTabela1[3][4] = "hidden";
+				$formTabela2[3][2] = "hidden";
+			}
+			if ($args[$i][1]) {
+				$formTabela2[3][3] = "checkbox";
+				for ($j = 0; $j < $cont; $j++) {
+					$formTabela2[7][$j] = array('', '', '', "onclick='this.value=this.checked;'");		
+				}
+			} else {
+				$formTabela2[3][3] = "radio";
 				$formTabela2[7] = array();
+			}
+			if ($args[$i][2] > 0) {
+				$h .= "<style type='text/css'>";
+				$h .= "#l_valor".($i+1)." {float: left; margin-right: 5px}\n";
+				for ($j = 0; $j < $cont; $j++) {
+					$h .= "#d_letra".($i+1)."_$j {float: left; margin-right: 5px}\n";
+				}
+				$h .= "</style>";
 			}
 			/*if ($i === 1)
 				$select[4] = "no_print";*/
@@ -167,7 +194,7 @@ function getCookie(cname) {
 						selectQuestion(q);
 					} else if (result['status'].indexOf('sucesso') != -1) {
 						alert(result['status']);
-						window.open(url+'resultados_parciais2.php?ide='+cd_enquete, 'Resultados Parciais', 'width=800 height=400');
+						window.open(url+'resultados_parciais.php?ide='+cd_enquete, 'Resultados Parciais', 'width=800 height=400');
 					} 
 				},
 				error: function (xhr, s, e) {

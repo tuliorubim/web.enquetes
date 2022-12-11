@@ -26,9 +26,9 @@ class Webenquetes extends AdminFunctions {
 		$cookie_url = $this->cookie_url; 
 		$this->cookie_https = FALSE;
 		$cookie_https = $this->cookie_https;
-		/*$this->cookie_url = "webenquetes.com.br";
-		$cookie_url = $this->cookie_url; 
-		$cookie_https = $this->cookie_https;*/
+		//$this->cookie_url = "webenquetes.com.br";
+		//$cookie_url = $this->cookie_url; 
+		//$cookie_https = $this->cookie_https;
 		if ($_GET['login'] === "off") {
 			setcookie($idSession, '', time()-10, '/', $cookie_url, $cookie_https);
 			$this->logout();

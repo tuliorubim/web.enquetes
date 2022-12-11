@@ -75,7 +75,7 @@ if ($idu > 0) {
 				if (strlen($selected_answers) > 0) {
 					$db->select("select count(v.dt_voto) from voto v where v.cd_resposta = ".$args[$i]['idResposta']." $and_sel_ans", array("votos"));
 					$args[$i]['num_votos'] = $votos;
-					$args[$i]['porcentagem'] = 100*$votos/$votos_pergunta;
+					$args[$i]['porcentagem'] = 100*$votos/(($votos_pergunta != 0) ? $votos_pergunta : 1);
 				} 
 				$ans_result = $args[$i]['resposta']."  \t".$args[$i]['num_votos']." votos, ".round($args[$i]['porcentagem'], 1)." %\n";
 				$pdf->ezText($ans_result, 12, array('justification' => 'left'));
