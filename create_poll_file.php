@@ -58,7 +58,7 @@
 				$formTabela2[8] = $cont-1;
 			}
 			$idp = $args[$i][0];
-			$select[0] = "select p.*, r.* from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta where idPergunta = $idp order by r.idResposta";
+			$select[0] = "select p.*, r.idResposta, r.cd_pergunta, concat(r.letra, ')'), r.resposta from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta where idPergunta = $idp order by r.idResposta";
 			$formTabela1[8] =  $i+1;
 			$crc = $args[$i]["cd_resposta_certa"];
 			if ($crc > 0) {
@@ -194,7 +194,7 @@ function getCookie(cname) {
 						selectQuestion(q);
 					} else if (result['status'].indexOf('sucesso') != -1) {
 						alert(result['status']);
-						window.open(url+'resultados_parciais.php?ide='+cd_enquete, 'Resultados Parciais', 'width=800 height=400');
+						window.open(url+'resultados_parciais.php?ide='+cd_enquete+'&from=cross', 'Resultados Parciais', 'width=800 height=400');
 					} 
 				},
 				error: function (xhr, s, e) {

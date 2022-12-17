@@ -249,10 +249,13 @@ include "bd.php";
 	$we->select("select e.cd_usuario, e.disponivel, e.hide_results, cl.cd_servico from enquete e inner join cliente cl on e.cd_usuario = cl.idCliente where idEnquete = $idEnquete", array("cd_usuario", "disponivel", "hide_results", "cd_servico"));
 	$we->select("select code from enquete where idEnquete = $idEnquete", array("code"), true);
 	if (true) {
-		/*$we->select("select max(cd_usuario) from voto where cd_enquete = $idEnquete", array('id'));
-		if ($we->idu != $id) {
-			$we->idu = $id;
-		}*/
+		if ($_GET['from'] == 'cross') {
+			$we->select("select max(cd_usuario) from voto where cd_enquete = $idEnquete", array('id'));
+			if ($we->idu != $id) {
+				$we->idu = $id;
+				$_SESSION[$we->idSession] = $id;
+			}
+		}
 		$result = new Result($we->idu, $we->con, $idEnquete);
 		if (!$disponivel) {
 			$status = "Enquete encerrada.";
