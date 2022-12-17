@@ -126,9 +126,9 @@ class Service extends DBFunctions{
 				$months_gone = $this->months_gone($args[0]['dt_aquisicao']);																											
 				if (floor($free_months) > floor($months_gone)) {
 					$free_months = floor($free_months);
-					if ($free_months == $args[0]['meses_gratis']+1) {
+					if ($free_months > $args[0]['meses_gratis']) {
 						mysqli_query($con, "update aquisicao_servico set meses_gratis = $free_months where cd_usuario = $cdu");	
-						$this->status = "Parab&eacute;ns! Voc&ecirc; acaba de ganhar mais um m&ecirc;s gratuito porque suas enquetes acabam de atingir $num_votes respostas antes de terminarem ".$args[0]['meses_gratis']." meses desde que voc&ecirc; adquiriu gratuitamente os benef&iacute;cios destinados a assinantes. Aproveite!";
+						$this->status = "Parab&eacute;ns! Voc&ecirc; acaba de ganhar mais ".($free_months - $args[0]['meses_gratis'])." meses gratuito porque suas enquetes acabam de atingir $num_votes respostas antes de terminarem ".$args[0]['meses_gratis']." meses desde que voc&ecirc; adquiriu gratuitamente os benef&iacute;cios destinados a assinantes. Aproveite!";
 					}
 				} elseif (round(self::MES*($months_gone-$args[0]['meses_gratis'])) > 10) {
 					mysqli_query($con, "update aquisicao_servico set em_vigor = 0 where cd_usuario = $cdu");
