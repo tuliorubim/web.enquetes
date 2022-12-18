@@ -176,9 +176,11 @@ include "header.php";
 				}
 			}
 			$(function () {
-				d = ($("#cd_resposta_certa").val() == 0) ? 'none' : '';
-				if ($("input[name='enquete_ou_prova']").val() == '')
-					EnableDisableTest(d);
+				//nulo = [0, null];
+				d = ($("#cd_resposta_certa").val() == 0 && q != 2) ? 'none' : '';
+				//if ($("input[name='enquete_ou_prova']").val() == '') {
+				EnableDisableTest(d);
+				//}
 				if (d == '') {
 					$("#enquete_ou_teste1").prop("checked", true);
 					for (i = 0; $("#idResposta"+i).val() != null; i++) {
