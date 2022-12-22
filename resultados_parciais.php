@@ -297,6 +297,18 @@ include "bd.php";
 			$result->print_comments();
 	?>
 		</div>
+		<script language="javascript">
+		$(function () {
+			comments = $("#comentarios").html();
+			offset = 0;
+			url_pos = comments.indexOf("https://", offset);
+			var regExp = new RegExp('^[,\\.;]$');
+			while (url_pos != -1) {
+				url = comments.substring(url_pos, comments.indexOf(' ', url_pos)-url_pos);
+				url_last_char = ''+url.charAt(url.length-1);
+			}
+		});
+		</script>
 	<?php		
 		} else {
 			$result->create_results2();
