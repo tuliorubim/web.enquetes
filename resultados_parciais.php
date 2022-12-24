@@ -304,9 +304,21 @@ include "bd.php";
 			url_pos = comments.indexOf("https://", offset);
 			var regExp = new RegExp('^[,\\.;]$');
 			while (url_pos != -1) {
-				url = comments.substring(url_pos, comments.indexOf(' ', url_pos)-url_pos);
+				pos_br = comments.indexOf('<br>', url_pos);
+				pos_space = comments.indexOf(' ', url_pos);
+				fim = (pos_br < pos_space) ? pos_br : pos_space;
+				url = comments.substring(url_pos, fim);
 				url_last_char = ''+url.charAt(url.length-1);
+				if (url_last_char.search(regExp) != -1) {
+					url = url.substring(0, url.length-1);
+				}
+				url_tag = "<a href='"+url+"' target='_blank'>";
+				comments = Insere(comments, url_tag, url_pos);
+				offset = url_pos+url_tag.length+5;
+				comments = Insere(comments, "</a>", offset-5+url.length);
+				url_pos = comments.indexOf("https://", offset);
 			}
+			$("#comentarios").html(comments);
 		});
 		</script>
 	<?php		
