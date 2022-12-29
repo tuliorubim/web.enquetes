@@ -306,13 +306,17 @@ include "bd.php";
 			while (url_pos != -1) {
 				pos_br = comments.indexOf('<br>', url_pos);
 				pos_space = comments.indexOf(' ', url_pos);
-				fim = (pos_br < pos_space) ? pos_br : pos_space;
+				fim = (pos_br < pos_space || pos_space == -1) ? pos_br : pos_space;
 				url = comments.substring(url_pos, fim);
+				//alert(url_pos+' '+fim+' '+url);
 				url_last_char = ''+url.charAt(url.length-1);
 				if (url_last_char.search(regExp) != -1) {
 					url = url.substring(0, url.length-1);
 				}
 				url_tag = "<a href='"+url+"' target='_blank'>";
+				if (url.indexOf("webenquetes.com.br/enquete.php?ide=") != -1) {
+					url_tag = "<span style='font-size: 18px; font-weight: 800'>VOTE NA ENQUETE: </span>"+url_tag;
+				}
 				comments = Insere(comments, url_tag, url_pos);
 				offset = url_pos+url_tag.length+5;
 				comments = Insere(comments, "</a>", offset-5+url.length);
