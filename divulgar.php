@@ -13,11 +13,12 @@ include "bd.php";
         
         <!-- INICIO / AQUI É O ESPAÇO AONDE VOCÊ IRA COLOCAR O CONTÉUDO DAS OUTRAS PAGINAS INTERNAS QUE VAI APARECER NA COLUNA ESQUERDA -->
     <h1>Como conseguir bastantes votos</h1>
+	<p><span style="color:#990000">ATUALIZADO EM 29/12/2022</span></p>
     <p>
     <?php
 	echo htmlentities("Criar uma enquete e simplesmente deixá-la lá sem divulgá-la não irá atrair votos para ela. Temos dado dicas de como divulgar sua enquete e você receber respostas das pessoas nela. Temos falado sobre divulgar no Youtube, Facebook e outras redes sociais, mas, com o passar dos anos, os mecanismos anti-spam dessas redes sociais estão cada vez mais sofisticados, de modo que divulgar sua enquete em páginas, posts e vídeos de redes sociais como o Youtube e Facebook não está mais dando resultado. Se você não é uma pessoa influente, não sendo líder de uma multidão para levá-la a responder às suas enquetes e/ou testes, você precisa colar os links delas em vários lugares da Internet para que elas sejam bem respondidas, mas infelizmente a cruzada dos grandes sites de redes sociais tem sido implacáveis contra esse tipo de divulgação.", ENT_NOQUOTES, 'ISO-8859-1', true); 
 	?></p>
-	<p>
+	<p><b>NOVIDADE => </b>
     <?php
 	echo htmlentities("Hoje já temos uma alternativa de divulgação ampla dentro do site da Web Enquetes. Já havedo milhares de enquetes criadas aqui nesta plataforma, você pode colar o link da sua enquete como comentário de resultados parciais de enquetes da mesma categoria que a sua. Você pode colar esse link como comentário de qualquer enquete, mas você terá os melhores resultados se o fizer nos resultados parciais de enquetes de mesma categoria que a sua enquete ou teste. Quando você posta esse link nos resultados parciais de outras enquetes, ele se transforma de fato em um link que é precedido com os dizeres \"VOTE NA ENQUETE: \" para chamar a atenção de quem vê seu comentário. Assim, pessoas que acham no Google as enquetes onde você postou o link da sua eventualmente clicarão nelas e verão o anúncio da sua enquete nos comentários de seus resultados parciais e poderão ainda clicar na sua enquete e votar nela. Isso fará com que sua enquete seja continuamente votada, até que você encerre a votação nela, se for o caso. Estamos aprimorando essa forma de anunciar enquetes na Web Enquetes para que tais anúncios tenham o máximo de impacto possível.", ENT_NOQUOTES, 'ISO-8859-1', true); 
 	?></p>
