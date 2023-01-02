@@ -3,14 +3,28 @@ include "ajax_header.php";
 $json = '';
 $status = '';
 $ide = $_GET['cd_enquete'];
+$novo_voto = $_GET['novo_voto'];
 //select("select end_date from enquete where idEnquete = $ide", array('end_date'));
 if (true) {// || $end_date == '0000-00-00' || strtotime(date('Y-m-d')) <= strtotime($end_date)) {
 	$data = date("$dateformat $timeformat");
+	$db->select("select cd_usuario from enquete where idEnquete = $ide", array("cdu"));
 	if ($idu == 0) {
 		$db->save('cliente', array('data_cadastro'), array('datetime'), array($data));
 		$db->select("select max(idCliente) from cliente", array("last_user"));
 		$_SESSION['user'] = $last_user;
 		$idu = $last_user;
+	} elseif ($idu === $cdu) {
+		if ($novo_voto == '1') {
+			$votou = $db->select("select cd_usuario from voto where cd_usuario = $cdu and cd_enquete = $ide");
+			if (!empty($votou)) {
+				$db->save('cliente', array('data_cadastro'), array('datetime'), array($data));
+				$db->select("select max(idCliente) from cliente", array("last_user"));
+				$_SESSION['user2'] = $last_user;
+				$idu = $last_user;
+			} 
+		} elseif (isset($_SESSION['user2'])) {
+			$idu = $_SESSION['user2'];
+		}
 	}
 	$idp = $_GET['cd_pergunta'];
 	$idr = $_GET['cd_resposta'];

@@ -110,10 +110,11 @@ include "bd.php";
 			}
 		}
 		public function show_result ($idPergunta, $cd_resposta_certa) {
-			if ($cd_resposta_certa == 0) {
+			$cdu = $this->select("select cd_usuario from enquete where idEnquete = $this->idEnquete");
+			$idu = $this->idu;
+			if ($cd_resposta_certa == 0 || $idu == $cdu[0][0]) {
 				return true;
 			} else {
-				$idu = $this->idu;
 				$args = $this->select("select cd_resposta from voto where cd_usuario = $idu and cd_pergunta = $idPergunta");
 				return !empty($args[0][0]);
 			}

@@ -64,10 +64,11 @@ include "bd.php";
 			}
 		}
 		public function show_question ($idPergunta, $cd_resposta_certa) {
-			if ($cd_resposta_certa == 0) {
+			$cdu = $this->select("select cd_usuario from enquete where idEnquete = $this->idEnquete");
+			$idu = $this->idu;
+			if ($cd_resposta_certa == 0 || $idu == $cdu[0][0]) {
 				return true;
 			} else {
-				$idu = $this->idu;
 				$args = $this->select("select cd_resposta from voto where cd_usuario = $idu and cd_pergunta = $idPergunta");
 				return empty($args[0][0]);
 			}
@@ -348,7 +349,7 @@ include "bd.php";
 </div>
 <script language="javascript">
 var cd_enquete = <?php echo (!empty($ide)) ? $ide : 0; ?>;
-
+var novo_voto = 1;
 function selectQuestion (n) {
 	if (num_questions > 1)
 		$("#question_num").html("Quest&atilde;o "+n+":");
@@ -405,12 +406,14 @@ $(document).ready(function () {
 				type: 'GET',
 				dataType: 'jsonp',
 				data: {
+					novo_voto: novo_voto,
 					cd_enquete: cd_enquete,
 					cd_pergunta: $("#idPergunta"+q).val(),
 					cd_resposta: cd_resposta
 				},
 				success: function (result) {
 					$("#status").html(result['status']);
+					novo_voto = 0;
 					if (q < num_questions) {
 						q++;
 						selectQuestion(q);
