@@ -14,7 +14,7 @@
     </div>
     <div class="col-md-4">
     <ul class="menu-footer">
-		<li><a href="why_create_poll.php">Por que criar enquetes?</a></li>
+		<li><a href="enquetes.php?m=true">Enquetes modelo</a></li>
         <li><a <?php
 			if ($we->idu === 0)
 				echo "href='' data-toggle='modal' data-target='.bs-example-modal-sm'";

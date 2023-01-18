@@ -200,6 +200,8 @@ include "criar_enquete_modelo.php";
 			<p><a href="criar_enquete.php?ide=<?php echo $ide;?>&np=true">Voltar e editar ou criar nova pergunta para a enquete.</a></p>
 			<br>
 			<p><a href="enquete.php?ide=<?php echo $ide;?>">Ir para a enquete.</a></p>
+			<br>
+			<p><a href="divulgar.php">Conhe&ccedil;a nossas ferramentas para divulgar enquetes.</a></p>
 		<?php 
 			if (empty($service_data)) {
 		?>
