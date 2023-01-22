@@ -1,23 +1,19 @@
 <?php
-session_start();
 include "bd.php";
-class Email {
-	private $auth;
-	private $ini_date;
-	private $end_date;
-	public function __construct($auth, $ini_date, $end_date) {
-		$this->auth = $auth;
-		$this->ini_date = $ini_date;
-		$this->end_date = $end_date;
+class Email extends AdminFunctions {
+	public $con;
+	public function __construct($con) {
+		$this->con = $con;
 	}
 	public function send_marketing () {
 		global $status;
-		global $con;
-		$sql = "select c.usuario from cliente c inner join enquete e on c.idCliente = e.cd_usuario inner join pergunta p on e.idEnquete = p.cd_enquete left join voto v on e.idEnquete = v.cd_enquete where date(e.dt_criacao) between '$this->ini_date' and '$this->end_date' and p.pergunta <> '' group by e.idEnquete having count(v.dt_voto) < 10 order by e.idEnquete";
-		$args = select($sql);
+		$con = $this->con;
+		$post = $_POST;
+		$sql = $post['emails'];
+		$args = $this->select($sql);
 		$i = 0;
-		//echo count($args)%25;
-		while ($i < count($args)) {
+		//echo count($args)%25;   "select c.usuario from cliente c inner join enquete e on c.idCliente = e.cd_usuario inner join pergunta p on e.idEnquete = p.cd_enquete left join voto v on e.idEnquete = v.cd_enquete where date(e.dt_criacao) between '$this->ini_date' and '$this->end_date' and p.pergunta <> '' group by e.idEnquete having count(v.dt_voto) < 10 order by e.idEnquete"
+		while (is_string($args[$i]['usuario'])) {
 			$recipients = array();
 			$max = 25;
 			if ($i === 0) $max = count($args)%25+1;
@@ -28,22 +24,23 @@ class Email {
 				} else $inc++;
 			}
 			if ($i === 0 && $max < 25) $recipients[$j] = "tfrubim@gmail.com";
-			$post = $_POST;
-			$post['email'] = 'webenquetes@webenquetes.com.br';
+			$post['email'] = 'tfrubim@gmail.com';
 			$post['name'] = "Web Enquetes";
-			sendEmail ($post, $recipients, $this->auth);
-			if (strpos($status, "success") !== FALSE) {
+			//$post['subject'] = htmlentities($post['subject'], ENT_NOQUOTES, 'UTF-8', true); 
+			$post['message'] = htmlentities($post['message'], ENT_NOQUOTES, 'UTF-8', true); 
+			$this->sendEmail ($post, $recipients);
+			if (strpos($status, "sucesso") !== FALSE) {
 				$recip = implode(", ", $recipients);
 				mysqli_query($con, "insert into enviados (email, recipients, subject, message) values ('".$post['email']."', '$recip', '".$post['subject']."', '".$post['message']."')");
 			}
-			write_status();
+			$this->write_status();
 			$i += $max;
 		} 
 		echo $i;
 	}
 }
-if ($idu == 55291) {
-	$e = new Email(array('webenquetes@webenquetes.com.br', '%@,_#?{.66$('), $_POST["ini_date"], $_POST["end_date"]);
+if ($we->idu == 55291) {
+	$e = new Email($we->con);
 	$e->send_marketing();
 }
 ?>

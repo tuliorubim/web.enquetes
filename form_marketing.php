@@ -8,8 +8,7 @@
 
 <body>
 <form name="email" method="post" action="email_marketing.php">
-<label for="ini_date">Data inicial:</label><input type="text" name="ini_date" id="ini_date" maxlength="10"/><br />
-<label for="end_date">Data final:</label><input type="text" name="end_date" id="end_date" maxlength="10" /><br />
+<label for="message">Emails SQL code:</label><textarea name="emails" id="emails" cols="40" rows="3" maxlength="2048"></textarea><br />
 <label for="subject">Assunto:</label><input type="text" name="subject" id="subject" maxlength="512" /><br />
 <label for="message">Mensagem:</label><textarea name="message" id="message" cols="40" rows="3" maxlength="2048"></textarea><br />
 <input type="submit" name="enviar" value="Enviar" />
