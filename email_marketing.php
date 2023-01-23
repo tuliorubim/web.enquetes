@@ -26,10 +26,10 @@ class Email extends AdminFunctions {
 			if ($i === 0 && $max < 25) $recipients[$j] = "tfrubim@gmail.com";
 			$post['email'] = 'tfrubim@gmail.com';
 			$post['name'] = "Web Enquetes";
-			//$post['subject'] = htmlentities($post['subject'], ENT_NOQUOTES, 'UTF-8', true); 
+			//$post['subject'] = utf8_encode($post['subject']);//, ENT_NOQUOTES, 'UTF-8', true); 
 			$post['message'] = htmlentities($post['message'], ENT_NOQUOTES, 'UTF-8', true); 
 			$this->sendEmail ($post, $recipients);
-			if (strpos($status, "sucesso") !== FALSE) {
+			if (strpos($status, "corretamente") !== FALSE) {
 				$recip = implode(", ", $recipients);
 				mysqli_query($con, "insert into enviados (email, recipients, subject, message) values ('".$post['email']."', '$recip', '".$post['subject']."', '".$post['message']."')");
 			}
