@@ -10,7 +10,7 @@
 <form name="email" method="post" action="email_marketing.php">
 <label for="message">Emails SQL code:</label><textarea name="emails" id="emails" cols="40" rows="3" maxlength="2048"></textarea><br />
 <label for="subject">Assunto:</label><input type="text" name="subject" id="subject" maxlength="512" /><br />
-<label for="message">Mensagem:</label><textarea name="message" id="message" cols="40" rows="3" maxlength="2048"></textarea><br />
+<label for="message">Mensagem:</label><textarea name="message" id="message" cols="40" rows="6"></textarea><br />
 <input type="submit" name="enviar" value="Enviar" />
 </form>
 </body>
