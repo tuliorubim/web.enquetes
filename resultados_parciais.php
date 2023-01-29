@@ -122,7 +122,7 @@ include "bd.php";
 		public function create_results ($cd_servico) {
 			$idEnquete = $this->idEnquete;
 			$html = $this->html;
-			$idu = $this->idu;
+			$idu = (!isset($_SESSION['user2'])) ? $this->idu : $_SESSION['user2'];
 			$sql = "select p.idPergunta, p.pergunta, p.multipla_resposta, p.valor, p.cd_resposta_certa, r.idResposta, r.resposta, count(v.dt_voto) as votos from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta left join voto v on r.idResposta = v.cd_resposta where p.cd_enquete = $idEnquete group by r.idResposta order by p.idPergunta, count(v.dt_voto) desc, r.idResposta";
 			$args = $this->select($sql);
 			$args1 = $this->select("select count(idPergunta) as num_quest from pergunta where cd_enquete = $idEnquete");
@@ -189,7 +189,7 @@ include "bd.php";
 		public function create_results2 () {
 			$idEnquete = $this->idEnquete;
 			$html = $this->html;
-			$idu = $this->idu;
+			$idu = (!isset($_SESSION['user2'])) ? $this->idu : $_SESSION['user2'];
 			$sql = "select p.idPergunta, p.pergunta, p.valor, p.cd_resposta_certa, r.idResposta, r.resposta from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta where p.cd_enquete = $idEnquete and (p.cd_resposta_certa > 0 and p.idPergunta = (select v.cd_pergunta from voto v where v.cd_pergunta = p.idPergunta and v.cd_usuario = $idu))";
 			$args = $this->select($sql);
 			if (count($args) === 0) {
