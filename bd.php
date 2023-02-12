@@ -1,6 +1,6 @@
 <?php
 $ips = explode (' ', file_get_contents('ipsss.txt'));
-if (in_array($_SERVER['REMOTE_ADDR'], $ips)) exit;
+if (in_array($_SERVER['REMOTE_ADDR'], $ips)) exit();
 //session_save_path("/tmp");
 session_start();
 //if ($_SERVER['SERVER_PORT'] == 80)
@@ -12,13 +12,14 @@ require_once "webenquetes.php";
 <script>var novo_usuario = false;</script>
 <?php
 $we = new WebEnquetes();
+$GET = $we->array_keys_assign(array('ide'), $_GET);
 $we->Connect_WE();
 $we->create_session();
-if (strpos($_SERVER['REQUEST_URI'], 'criar_enquete.php') !== FALSE && $_POST["button"] != NULL) {
+if (strpos($_SERVER['REQUEST_URI'], 'criar_enquete.php') !== FALSE && array_key_exists("button", $_POST) && $_POST["button"] != NULL) {
 	$idEnquete = $we->cria_enquete();
 } 
 $we->new_user();
-$page = ($_GET['ide'] == NULL) ? 0 :$_GET['ide'];
+$page = ($GET['ide'] == NULL) ? 0 :$GET['ide'];
 $we->contagem ('cont_geral', true, $we->idu, $page);
 $we->set_title_and_keywords();
 

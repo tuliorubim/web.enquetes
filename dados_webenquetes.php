@@ -63,4 +63,7 @@ trait Dados_webenquetes {
 		}
 	}
 }
+class Data_webenquetes {
+	use Dados_webenquetes;
+}
 ?>

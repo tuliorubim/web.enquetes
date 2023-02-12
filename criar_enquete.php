@@ -33,18 +33,23 @@ include "header.php";
 		public $idc;
 		public $idEnquete;
 		public $idu;
-		public function __construct($ide, $idc, $idu, $con) {
+		public function __construct($ide, $idc, $idu, $con, $ft1, $ft2, $ft3, $ft4, $ft5) {
 			$this->idEnquete = $ide;
 			$this->idc = $idc;
 			$this->idu = $idu;
 			$this->con = $con;
+			self::$formTabela1 = $ft1;
+			self::$formTabela2 = $ft2;
+			self::$formTabela3 = $ft3;
+			self::$formTabela4 = $ft4;
+			self::$formTabela5 = $ft5;
 		}
 		public function form_categorias () {
 			$sql = "select * from categoria order by categoria";
 			$select = array($sql, "select");
 			$select[5] = true;
 			
-			$inds = $this->formGeral ($_SESSION, $this->formTabela1, array(), array(), $select, false, array(0, 0), true);
+			$inds = $this->formGeral ($_SESSION, self::$formTabela1, array(), array(), $select, false, array(0, 0), true);
 			$idc = $this->idc;
 			$idEnquete = $this->idEnquete;
 			if ($idc === NULL) $idc = 0;
@@ -114,7 +119,7 @@ include "header.php";
 			});
 			</script>
 	<?php			
-			$inds = $this->formGeral ($_SESSION, $this->formTabela2, array(), array(), $select, false, $inds);
+			$inds = $this->formGeral ($_SESSION, self::$formTabela2, array(), array(), $select, false, $inds);
 			echo "<script>$('#d_tempo_teste').css('display', 'none');</script>";
 			$this->addForeignKey("enquete", "cd_categoria", "categoria", "idCategoria");
 			$this->addForeignKey("enquete", "cd_usuario", "usuario", "idUsuario");
@@ -128,7 +133,7 @@ include "header.php";
 			if ($cd_servico > 0) {
 				$select[0] = "select idCliente, logo, logoReduzida from cliente where idCliente = $idu";
 				$select[5] = true;
-				$inds = $this->formGeral ($_SESSION, $this->formTabela5, array(), array(), $select, false, $inds);
+				$inds = $this->formGeral ($_SESSION, self::$formTabela5, array(), array(), $select, false, $inds);
 			}
 			?>
 			<script language="javascript">
@@ -215,7 +220,7 @@ include "header.php";
 			});
 			</script>
 	<?php
-			$inds = $this->formGeral ($_SESSION, $this->formTabela3, $this->formTabela4, array(), $select, false, $inds);
+			$inds = $this->formGeral ($_SESSION, self::$formTabela3, self::$formTabela4, array(), $select, false, $inds);
 			$this->select = $select;
 			return array($inds, $excluir);
 		}
@@ -253,17 +258,17 @@ include "header.php";
 	if ($status != '') {
 		echo "<p><span class='status2'>$status</span></p>";
 	}
-	if (!isset($idEnquete)) $idEnquete = $_GET['ide'];
-	$idc = (isset($_POST['cd_categoria'])) ? $_POST['cd_categoria'] : $_GET['idc'];
-	$design = new CriarEnquete($idEnquete, $idc, $we->idu, $we->con);
-	$design->select("select cd_usuario from enquete where idEnquete = $idEnquete", array("cdu"));
+	$GET = $we->array_keys_assign(array('ide', 'idc'), $_GET);
+	if (!isset($idEnquete)) $idEnquete = $GET['ide'];
+	$idc = (isset($_POST['cd_categoria'])) ? $_POST['cd_categoria'] : $GET['idc'];
+	$ft1 = Data_webenquetes::$formTabela1;
+	$ft2 = Data_webenquetes::$formTabela2;
+	$ft3 = Data_webenquetes::$formTabela3;
+	$ft4 = Data_webenquetes::$formTabela4;
+	$ft5 = Data_webenquetes::$formTabela5;
+	$design = new CriarEnquete($idEnquete, $idc, $we->idu, $we->con, $ft1, $ft2, $ft3, $ft4, $ft5);
+	$design->select("select cd_usuario from enquete where idEnquete = ".((isset($idEnquete)) ? $idEnquete : 0), array("cdu"));
 	if ($idEnquete === NULL || $cdu == $design->idu) {
-		$design->formTabela1 = Dados_webenquetes::$formTabela1;
-		$design->formTabela2 = Dados_webenquetes::$formTabela2;
-		$design->formTabela3 = Dados_webenquetes::$formTabela3;
-		$design->formTabela4 = Dados_webenquetes::$formTabela4;
-		$design->formTabela5 = Dados_webenquetes::$formTabela5;
-		
 		$inds = $design->form_categorias();
 		$inds = $design->form_enquete($inds);
 		$inds = $design->upload_ad($inds, $cd_servico);

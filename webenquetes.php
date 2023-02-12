@@ -29,7 +29,7 @@ class Webenquetes extends AdminFunctions {
 		//$this->cookie_url = "webenquetes.com.br";
 		//$cookie_url = $this->cookie_url; 
 		//$cookie_https = $this->cookie_https;
-		if ($_GET['login'] === "off") {
+		if (array_key_exists("login", $_GET) && $_GET['login'] === "off") {
 			setcookie($idSession, '', time()-10, '/', $cookie_url, $cookie_https);
 			$this->logout();
 		}
@@ -39,7 +39,7 @@ class Webenquetes extends AdminFunctions {
 		if ($_COOKIE[$idSession] !== NULL && $_SESSION[$idSession] !== $_COOKIE[$idSession]) {
 			$_SESSION[$idSession] = $_COOKIE[$idSession];	
 		}
-		if ($_GET['login'] === "off") {
+		if (array_key_exists("login", $_GET) && $_GET['login'] === "off") {
 			$_SESSION[$idSession] = NULL;
 		}
 		$idu = $this->idu;
@@ -159,7 +159,7 @@ class Webenquetes extends AdminFunctions {
 	public function set_title_and_keywords() {
 		$title = htmlentities("Adquira o CONHECIMENTO que você deseja criando e divulgando enquetes de maneira FÁCIL e RÁPIDA agora mesmo!", ENT_NOQUOTES, 'ISO-8859-1', true);
 		$description = htmlentities("criar, fazer, elaborar, modelo, site, pergunta, perguntas, formulário, questionário, inquérito, enquete, pesquisa, mercado, satisfação, opinião, política, esportes, religião, atualidades, ciência, economia, entretenimento, filmes, jogos, livros, música, televisão, internet, informática, cliente, funcionário, interno", ENT_NOQUOTES, 'ISO-8859-1', true);
-		if ($_GET['ide'] !== NULL) {
+		if (array_key_exists('ide', $_GET) && $_GET['ide'] !== NULL) {
 			$ide = $_GET['ide'];
 			$description = $this->poll_keywords($ide);
 			$title = (strlen($description) > 130) ? "Enquete: ".substr($description, 0, strpos($description, ' ', 130)).'...' : "Enquete: ".$description;
