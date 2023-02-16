@@ -53,6 +53,7 @@ include "header.php";
 			$idc = $this->idc;
 			$idEnquete = $this->idEnquete;
 			if ($idc === NULL) $idc = 0;
+			$args = [];
 			if ($idc !== 0 || $idEnquete !== NULL) {
 				if ($idEnquete !== NULL) {
 					$sql = "select c.idCategoria, c.categoria from categoria c left join enquete e on c.idCategoria = e.cd_categoria where e.idEnquete = $idEnquete";

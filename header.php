@@ -189,7 +189,7 @@ $(document).ready(function(){
     <div class="col-md-12">
 		<div id="status">
 		<?php
-		if (strpos($status, "incorreto") !== FALSE) {
+		if (isset($status) && strpos($status, "incorreto") !== FALSE) {
 			$status = "O e-mail ou a senha est&atilde;o incorretos.";
 			$we->write_status();
 		}
