@@ -66,7 +66,7 @@ include "header.php";
 				</script>
 			<?php	
 			}
-			$this->idc = $args[0]['idc'];
+			$this->idc = (!empty($args)) ? $args[0]['idc'] : 0;
 			$this->select = $select;
 			return $inds;
 		}
