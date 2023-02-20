@@ -56,7 +56,7 @@ trait Dados_webenquetes {
 			$tipos = array("integer", "blob", "blob");
 			$labels = array("", "An&uacute;ncio em imagem: ", "");
 			$inputs = array("hidden", "file", "hidden");
-			$maxlengths= array('', '512', '');
+			$maxlengths= array('', '512', '512');
 			$tabela = "cliente";
 			$enderecos = array("logos", "logosReduzidas");
 			self::$formTabela5 = array($variaveis, $tipos, $labels, $inputs, $enderecos, $tabela, $maxlengths, array());

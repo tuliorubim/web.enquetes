@@ -34,9 +34,9 @@ include "header.php";
 		public $idEnquete;
 		public $idu;
 		public function __construct($ide, $idc, $idu, $con, $ft1, $ft2, $ft3, $ft4, $ft5) {
-			$this->idEnquete = $ide;
-			$this->idc = $idc;
-			$this->idu = $idu;
+			$this->idEnquete = (!isset($ide)) ? 0 : $ide;
+			$this->idc = (!isset($idc)) ? 0 : $idc;
+			$this->idu = (!isset($idu)) ? 0 : $idu;
 			$this->con = $con;
 			self::$formTabela1 = $ft1;
 			self::$formTabela2 = $ft2;
