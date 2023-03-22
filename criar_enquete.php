@@ -226,8 +226,8 @@ include "header.php";
 			return array($inds, $excluir);
 		}
 		public function poll_for_editing () {	
-			$idEnquete = $this->idEnquete;
-			if ($_GET['np'] === "true" || $this->select[5] || $idEnquete !== NULL) {
+			$idEnquete = (!empty($this->idEnquete)) ? $this->idEnquete : -1;
+			if ($_GET['np'] === "true" || $this->select[5] || $idEnquete != -1) {
 				$banco = 'enquetes';
 				$fields = "select p.pergunta, r.resposta from pergunta p left join resposta r on p.idPergunta = r.cd_pergunta where p.cd_enquete = $idEnquete order by p.idPergunta, r.idResposta";
 				$i = 0;
