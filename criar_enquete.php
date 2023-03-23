@@ -150,9 +150,9 @@ include "header.php";
 			$select = $this->select;
 			$idEnquete = $this->idEnquete;
 			$indEdit = 0;
-			if ($_GET['np'] == "true") {
+			if (array_key_exists('np', $_GET) && $_GET['np'] == "true") {
 				$select[5] = false;
-			} elseif (isset($_GET['idp'])) {
+			} elseif (array_key_exists('idp', $_GET) && isset($_GET['idp'])) {
 				$indEdit = $_GET['idp'];
 			} elseif ($idEnquete > 0) {
 				$rs = mysqli_query($this->con, "select idPergunta from pergunta where cd_enquete = $idEnquete order by idPergunta");
@@ -227,7 +227,7 @@ include "header.php";
 		}
 		public function poll_for_editing () {	
 			$idEnquete = (!empty($this->idEnquete)) ? $this->idEnquete : -1;
-			if ($_GET['np'] === "true" || $this->select[5] || $idEnquete != -1) {
+			if ((array_key_exists('np', $_GET) && $_GET['np'] === "true") || $this->select[5] || $idEnquete != -1) {
 				$banco = 'enquetes';
 				$fields = "select p.pergunta, r.resposta from pergunta p left join resposta r on p.idPergunta = r.cd_pergunta where p.cd_enquete = $idEnquete order by p.idPergunta, r.idResposta";
 				$i = 0;
