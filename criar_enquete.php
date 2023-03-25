@@ -282,7 +282,7 @@ include "header.php";
 		<script language="javascript">
 		$(function () {
 		<?php
-		$quantTabela2 = $design->formTabela4[8];
+		$quantTabela2 = $ft4[8];
 		for ($i = $ini; $i <= $quantTabela2; $i++) {
 		?>
 			$("#resposta<?php echo $i;?>").focus(function () {

@@ -147,8 +147,8 @@ class Webenquetes extends AdminFunctions {
 		$result = '';
 		if ($args[0]['disponivel'] /*&& ($args[0]['cd_usuario'] == 1 || $args[0]['cd_usuario'] == 55291)*/) {
 			$result = $args[0]['enquete'].' '.$args[0]['introducao'].' ';
-			for ($i = 0; $args[$i]['enquete'] !== NULL; $i++) {
-				if ($args[$i]['pergunta'] != $args[$i-1]['pergunta']) {
+			for ($i = 0; array_key_exists($i, $args); $i++) {
+				if ($i == 0 || $args[$i]['pergunta'] != $args[$i-1]['pergunta']) {
 					$result .= $args[$i]['pergunta'].' ';
 				}
 				$result .= $args[$i]['resposta'].' ';
@@ -169,7 +169,7 @@ class Webenquetes extends AdminFunctions {
 				$description = '';
 				$i = 0;
 				$j = 0;
-				while ($j < 80 && is_string($desc[$i])) {
+				while ($j < 80 && array_key_exists($i, $desc) && is_string($desc[$i]) && strlen($desc[$i]) > 0) {
 					$last = strlen($desc[$i])-1;
 					if (!in_array($desc[$i][$last], array(',', '.', ';', '?', '!'))) {
 						if (!preg_match('/^[(ao?s?)(com)(de)(d?|n?a|os?)(em?)(às?)]$/', strtolower($desc[$i]))) {
