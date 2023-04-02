@@ -21,8 +21,13 @@ include "criar_enquete_modelo.php";
 	<?php
 	class AdminPoll extends AdminFunctions {
 		use Dados_webenquetes;
-		public function __construct($con) {
+		public function __construct($con, $ft1, $ft2, $ft3, $ft4, $ft5) {
 			$this->con = $con;
+			self::$formTabela1 = $ft1;
+			self::$formTabela2 = $ft2;
+			self::$formTabela3 = $ft3;
+			self::$formTabela4 = $ft4;
+			self::$formTabela5 = $ft5;
 		}
 		public function valida_enquete2 () {
 			$conditions = array();
@@ -59,7 +64,7 @@ include "criar_enquete_modelo.php";
 			if ($POST['butPres'] === 'Save') {
 				$POST["cd_usuario"] = $_SESSION[$this->idSession];
 				$POST["cd_categoria"] = $_POST["idCategoria"];
-				if ($ide == NULL) $POST["dt_criacao"] = date("$dateformat $timeformat");
+				if ($ide == -1) $POST["dt_criacao"] = date("$dateformat $timeformat");
 				if ($POST['code'] == NULL) $POST['code'] = $this->codeGenerator();
 				if ($POST['acima_de_cem'] == NULL) $POST['acima_de_cem'] = 0;
 				if ($POST['tempo_teste'] == NULL) $POST['tempo_teste'] = 0;
@@ -67,9 +72,9 @@ include "criar_enquete_modelo.php";
 					$POST['enquete_ou_prova'] = $_POST['enq_ou_prova'];
 				} 
 				$POST["disponivel"] = 1;
-				if ($ide != NULL) mysqli_query($this->con, "update poll_html set mudou = 1 where cd_enquete = $ide and is_poll = true");
+				if ($ide != -1) mysqli_query($this->con, "update poll_html set mudou = 1 where cd_enquete = $ide and is_poll = true");
 			}
-			$this->adminPage ($POST, $_FILES, $_SESSION, $this->formTabela2, array(), array());
+			$this->adminPage ($POST, $_FILES, $_SESSION, self::$formTabela2, array(), array());
 			$class = 'status';
 			if (strpos ($status, "sucesso") !== FALSE) {
 				if (strpos ($status, "salvo") !== FALSE) {
@@ -91,7 +96,7 @@ include "criar_enquete_modelo.php";
 					$POST['logoReduzida'] = $_FILES['logo'];
 					$POST['logoReduzida']['name'] = 'thumb'.$POST['logoReduzida']['name'];
 				}
-				$this->adminPage ($POST, $_FILES, $_SESSION, $this->formTabela5, array(), array());
+				$this->adminPage ($POST, $_FILES, $_SESSION, self::$formTabela5, array(), array());
 			}
 		}
 		public function crud_pergunta_respostas($ide) {
@@ -115,7 +120,7 @@ include "criar_enquete_modelo.php";
 			}
 			unset($this->formTabela4[0][4]);
 			
-			$this->adminPage ($POST, $_FILES, $_SESSION, $this->formTabela3, $this->formTabela4, array());
+			$this->adminPage ($POST, $_FILES, $_SESSION, self::$formTabela3, self::$formTabela4, array());
 			
 			if ($POST['enquete_ou_teste'] == '1') {
 				if (isset($POST['cd_resposta'])) {
@@ -218,28 +223,27 @@ include "criar_enquete_modelo.php";
 	$POST = $_POST;
 	$FILES = $_FILES;
 	$SESSION = $_SESSION;
-	$ide = $POST["idEnquete"];
+	$ide = (!empty($POST["idEnquete"])) ? $POST['idEnquete'] : -1;
 	$status = '';
 	//if (strlen($POST['tempo_teste']) > 0)
 		$POST['tempo_teste'] = '00:00:00';
-	$adm = new AdminPoll($we->con);
+	$ft1 = Data_webenquetes::$formTabela1;
+	$ft2 = Data_webenquetes::$formTabela2;
+	$ft3 = Data_webenquetes::$formTabela3;
+	$ft4 = Data_webenquetes::$formTabela4;
+	$ft5 = Data_webenquetes::$formTabela5;
+	$adm = new AdminPoll($we->con, $ft1, $ft2, $ft3, $ft4, $ft5);
 	$valid = $adm->valida_enquete2();
-	
 	$adm->select("select cd_usuario from enquete where idEnquete = $ide", array("cdu"));
-	if (is_bool($valid) && ($ide == NULL || $cdu == $we->idu)) {
-		$adm->formTabela1 = Dados_webenquetes::$formTabela1;
-		$adm->formTabela2 = Dados_webenquetes::$formTabela2;
-		$adm->formTabela3 = Dados_webenquetes::$formTabela3;
-		$adm->formTabela4 = Dados_webenquetes::$formTabela4;
-		$adm->formTabela5 = Dados_webenquetes::$formTabela5;
+	if (is_bool($valid) && ($ide == -1 || $cdu == $we->idu)) {
 		if ($POST['del'] == "Excluir Pergunta") $POST['butPres'] = NULL;
 		$edit = true;
-		if ($POST['butPres'] === 'Delete' && $ide !== NULL) {
+		if ($POST['butPres'] === 'Delete' && $ide !== -1) {
 			$adm->delete_enquete($ide);
 			$edit = false;
 		} else {
 			$adm->crud_enquete($ide);
-			if ($ide == NULL) $we->select("select max(idEnquete) from enquete where cd_usuario = $we->idu", array('ide'));
+			if ($ide == -1) $we->select("select max(idEnquete) from enquete where cd_usuario = $we->idu", array('ide'));
 			$adm->crud_logo($cd_servico);
 		}
 		
