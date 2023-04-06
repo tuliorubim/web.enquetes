@@ -103,11 +103,11 @@ include "criar_enquete_modelo.php";
 			global $POST;
 			global $status;
 			$con = $this->con;
-			if ($POST['del'] == "Excluir Pergunta" && $POST['idPergunta'] !== NULL) {
+			if ($POST['del'] == "Excluir Pergunta" && !empty($POST['idPergunta'])) {
 				$POST['butPres'] = $_POST['butPres'];
 				mysqli_query($con, "delete from voto where cd_pergunta = ".$POST['idPergunta']);
 			}
-			if ($POST['idPergunta'] !== NULL) {
+			if (!empty($POST['idPergunta'])) {
 				$rs = mysqli_query($con, "select idResposta from resposta where cd_pergunta = ".$POST['idPergunta']);
 				$er = $this->ValorSelecionado ($POST, $rs, "idResposta", "delete", "Delete");
 				if ($er[1]) {
