@@ -118,7 +118,7 @@ include "criar_enquete_modelo.php";
 			if ($POST["multipla_resposta"] == NULL || $POST["multipla_resposta"] == false) {
 				$POST["multipla_resposta"] = 0;
 			}
-			unset($this->formTabela4[0][4]);
+			unset(self::$formTabela4[0][4]);
 			
 			$this->adminPage ($POST, $_FILES, $_SESSION, self::$formTabela3, self::$formTabela4, array());
 			
