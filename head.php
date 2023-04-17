@@ -26,9 +26,10 @@
 		$service2 = new Service($cdu);
 		$service2->con = $we->con;
 		$service_data2 = $service2->get_acquired_service();
-		$period = $service_data2[0]['periodo_pagamento'];
-		$em_vigor = $service_data2[0]['em_vigor'];
-		$gratis = $service_data2[0]['gratis'];
+		$no_service = !array_key_exists(0, $service_data2);
+		$period = ($no_service) ? 0 : $service_data2[0]['periodo_pagamento'];
+		$em_vigor = ($no_service) ? false : $service_data2[0]['em_vigor'];
+		$gratis = ($no_service) ? true : $service_data2[0]['gratis'];
 		$num_votos = $service2->get_num_votos();
 		$limit1 = $service2::LIM_VOTES_NO_ADS1;
 		$limit2 = $service2::LIM_VOTES_NO_ADS2;

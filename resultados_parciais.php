@@ -130,7 +130,7 @@ include "bd.php";
 			$j = -1;
 			$show_result = true;
 			$cd_resposta_certa = 0;
-			for ($i = 0; $args[$i][0] !== NULL; $i++) {
+			for ($i = 0; array_key_exists($i, $args); $i++) {
 				if ($idP != $args[$i]["idPergunta"]) {
 					$cd_resposta_certa = $args[$i]['cd_resposta_certa'];
 					$idP = $args[$i]["idPergunta"];
@@ -176,7 +176,7 @@ include "bd.php";
 						
 					}
 					$html .= "<span id='votos$i' style='font-weight:600;'>$votos_resposta votos, $porcentagem %</span></p>";
-					if ($idP != $args[$i+1]["idPergunta"]) {
+					if (!array_key_exists($i+1, $args) || $idP != $args[$i+1]["idPergunta"]) {
 						$html .= "<p><span class='resposta' id='vp$j' style='font-weight:600;'>Total de votos: $votos_pergunta";
 						if ($cd_resposta_certa > 0) $html .= ", Pontua&ccedil;&atilde;o m&eacute;dia das pessoas: ".round($media_pontos, 2).", Porcentagem de acertos: ".round($porcentagem_acertos, 1)." %</span></p>";
 					}
@@ -231,7 +231,7 @@ include "bd.php";
 			$sql = "select c.nome, c.usuario, c.idCliente, co.* from cliente c inner join comentario co on c.idCliente = co.cd_cliente where cd_enquete = $idEnquete order by idComentario desc";
 			$args = $this->select($sql);
 			$r = '';
-			for ($i = 0; $args[$i][3] != NULL; $i++) {
+			for ($i = 0; array_key_exists($i, $args); $i++) {
 				if (!empty($args[$i][0])) {
 					if (strpos($args[$i][0], ' ') !== FALSE)
 						$r .= substr($args[$i][0], 0, strpos($args[$i][0], ' ')) ;
@@ -250,7 +250,7 @@ include "bd.php";
 	$we->select("select e.cd_usuario, e.disponivel, e.hide_results, cl.cd_servico from enquete e inner join cliente cl on e.cd_usuario = cl.idCliente where idEnquete = $idEnquete", array("cd_usuario", "disponivel", "hide_results", "cd_servico"));
 	$we->select("select code from enquete where idEnquete = $idEnquete", array("code"), true);
 	if (true) {
-		if ($_GET['from'] == 'cross') {
+		if (array_key_exists('from', $_GET) && $_GET['from'] == 'cross') {
 			$we->select("select max(cd_usuario) from voto where cd_enquete = $idEnquete", array('id'));
 			if ($we->idu != $id) {
 				$we->idu = $id;
@@ -262,7 +262,7 @@ include "bd.php";
 			$status = "Enquete encerrada.";
 			echo "<script language='javascript'>$('#status').html('<font color=red>$status</font>');</script>";
 		}
-		if ($_POST['pollcode'] === $code) {
+		if (array_key_exists('pollcode', $_POST) && $_POST['pollcode'] === $code) {
 			$result->processa_voto_remoto($idEnquete);
 		}
 		
@@ -272,7 +272,7 @@ include "bd.php";
 			<a href="enquete.php?ide=<?php echo $idEnquete;?>">Voltar</a>
 			<p><div class="fb-like" data-href="https://www.facebook.com/WebEnquetesEPesquisas/" data-width="100" data-layout="standard" data-action="like" data-size="small" style='margin: 3px;' data-show-faces="true" data-share="false"></div></p>
 		<?php
-			$site = $_GET['site'];
+			$site = (!array_key_exists('site', $_GET)) ? NULL : $_GET['site'];
 			if ($site === 'true' && $cd_usuario == $we->idu) {
 				echo "<p><font color='red'>Caro $nome, se voc&ecirc; quer que a enquete no seu site mostre uma pergunta de cada vez, ocupando menos espa&ccedil;o no seu site, e quer que a marca da Web Enquetes seja removida, fa&ccedil;a <a href='premium.php'>aqui</a> sua assinatura e adquira tamb&eacute;m outras vantagens al&eacute;m dessas, como assinante. Ap&oacute;s adquirir a assinatura, fa&ccedil;a o download do novo HTML da sua enquete e cole-o no lugar do HTML antigo da mesma em seu site, para que voc&ecirc; obtenha os benef&iacute;cios acima citados. Somente voc&ecirc; pode ver esta mensagem.</font></p>";
 			}

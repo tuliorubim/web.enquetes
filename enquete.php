@@ -114,7 +114,7 @@ include "bd.php";
 				$idp = 0;
 				$h = '';
 				$num_questions = 0;
-				for ($i = 0; $args[$i][0]; $i++) {
+				for ($i = 0; array_key_exists($i, $args); $i++) {
 					if ($idp !== $args[$i][0]) {
 						$args4 = $this->select("SELECT count(idResposta) as cont from resposta where cd_Pergunta = ".$args[$i][0]);
 						$cont = $args4[0]['cont'];
