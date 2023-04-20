@@ -44,7 +44,7 @@ if (true) {// || $end_date == '0000-00-00' || strtotime(date('Y-m-d')) <= strtot
 	$values[4] = $data;
 	if (!empty($idr)) {
 		if (is_array($idr)) {
-			for ($i = 0; $idr[$i]; $i++) {
+			for ($i = 0; array_key_exists($i, $idr); $i++) {
 				$values[3] = $idr[$i];
 				$db->save('voto', $variaveis, $tipos, $values);
 			}
