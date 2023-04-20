@@ -40,7 +40,7 @@ include "header.php";
 		public function minhas_enquetes () {
 			$sql = "select * from enquete where cd_usuario = $this->idu order by idEnquete";
 			$args = $this->select($sql);
-			for ($i = 0; $args[$i][0] !== NULL; $i++) {
+			for ($i = 0; array_key_exists($i, $args); $i++) {
 				$html = "<div class='minha_enquete'>".$args[$i]['enquete']."</div><div class='minha_enquete'><a href='criar_enquete.php?ide=".$args[$i]['idEnquete']."'>Editar e Gerenciar</a></div><div class='minha_enquete'><a href='enquete.php?ide=".$args[$i]['idEnquete']."' target='_top'>Visualizar</a></div>";
 				echo $html;
 			}
