@@ -66,7 +66,7 @@ include "header.php";
 				</script>
 			<?php	
 			}
-			$this->idc = (!empty($args)) ? $args[0]['idc'] : 0;
+			$this->idc = (!empty($args)) ? $args[0]['idCategoria'] : 0;
 			$this->select = $select;
 			return $inds;
 		}
@@ -110,6 +110,7 @@ include "header.php";
 			} 
 			
 			$(function () {
+				$("#categoria").change(function () {alert($("input[name='idCategoria']").val());});
 				q = $("input[name='enquete_ou_prova']").val();
 				q = (q == '') ? '3' : q;
 				$("#enquete_ou_prova"+q).prop("checked", true);
@@ -157,7 +158,7 @@ include "header.php";
 			} elseif ($idEnquete > 0) {
 				$rs = mysqli_query($this->con, "select idPergunta from pergunta where cd_enquete = $idEnquete order by idPergunta");
 				$row = mysqli_fetch_array($rs);
-				$indEdit = (!empty($row['idResposta'])) ? $row['idPergunta'] : 0;
+				$indEdit = (!empty($row['idPergunta'])) ? $row['idPergunta'] : 0;
 			}
 			$select[0] = "select p.*, r.* from pergunta p left join resposta r on p.idPergunta = r.cd_pergunta where p.cd_enquete = $idEnquete and p.idPergunta = $indEdit order by r.idResposta";
 			$args = $this->select("select count(dt_voto) as dez from voto where cd_enquete = $idEnquete");
