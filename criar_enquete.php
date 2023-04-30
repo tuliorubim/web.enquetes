@@ -59,12 +59,14 @@ include "header.php";
 					$sql = "select c.idCategoria, c.categoria from categoria c left join enquete e on c.idCategoria = e.cd_categoria where e.idEnquete = $idEnquete";
 				} else $sql = "select idCategoria, categoria from categoria where idCategoria = $idc";	
 				$args = $this->select($sql, array(), true);
+				if (!empty($args)) {
 			?>
 				<script language="javascript">
 					$("input[name='idCategoria']").val('<?php echo $args[0]['idCategoria']; ?>');
 					$("#categoria").val("<?php echo $args[0]['categoria']; ?>");
 				</script>
-			<?php	
+			<?php
+				}	
 			}
 			$this->idc = (!empty($args)) ? $args[0]['idCategoria'] : 0;
 			$this->select = $select;
@@ -110,7 +112,14 @@ include "header.php";
 			} 
 			
 			$(function () {
-				$("#categoria").change(function () {alert($("input[name='idCategoria']").val());});
+				/*$("#categoria").change(function () {
+					try {
+						seleciona($(this).val(), 1, 2, 0, 0);
+					} catch (e) {
+						alert(e.message);
+					}
+					alert($(this).val());
+				});*/
 				q = $("input[name='enquete_ou_prova']").val();
 				q = (q == '') ? '3' : q;
 				$("#enquete_ou_prova"+q).prop("checked", true);
