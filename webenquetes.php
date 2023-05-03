@@ -194,7 +194,7 @@ class Webenquetes extends AdminFunctions {
 			$IPs = $this->open_file($dest);
 			$IPs2 = $this->select("select ip from cliente where ip <> '' group by ip having count(idCliente) > 50 order by max(data_cadastro) desc");
 			$content = '';
-			for ($i = 0; $IPs2[$i]['ip'] != NULL; $i++) {
+			for ($i = 0; array_key_exists($i, $IPs2); $i++) {
 				$content .= " ".$IPs2[$i]['ip'];
 			}
 			$content = substr($content, 1);

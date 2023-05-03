@@ -346,7 +346,7 @@ include "bd.php";
 	ide = <?php echo $idEnquete;?>;
 	idu = <?php echo $we->idu;?>;
 	cds = <?php echo $cd_servico;?>;
-	data_lim = '<?php echo $data_lim;?>';
+	data_lim = '<?php echo '';//$data_lim;?>';
 	var idr = null;
 	$(document).ready( function () {
 		$(".resposta").click(function () {

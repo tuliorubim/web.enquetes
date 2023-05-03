@@ -1,7 +1,7 @@
 <?php
 include "ajax_header.php";
 $ide = $_POST['ide'];
-$idr = $_POST['idr'];
+$idr = (array_key_exists('idr', $_POST)) ? $_POST['idr'] : [];
 $cds = $_POST['cds'];
 $data_lim = $_POST['data_lim'];
 /*if (strpos($idr, ',') !== FALSE) {
