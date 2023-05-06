@@ -52,7 +52,7 @@
 		$select[5] = true;
 		$idp = 0;
 		$h = '';
-		for ($i = 0; $args[$i][0]; $i++) {
+		for ($i = 0; array_key_exists($i, $args); $i++) {
 			if ($idp !== $args[$i][0]) {
 				$db->select("SELECT count(idResposta) from resposta where cd_Pergunta = ".$args[$i][0], array('cont'));
 				$formTabela2[8] = $cont-1;

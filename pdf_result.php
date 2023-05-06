@@ -67,7 +67,7 @@ if ($idu > 0) {
 		$pdf->ezText("\n", 18, array('justification' => 'left'));
 		$idP = $args[0]['idPergunta'];
 		$j = 1;
-		for ($i = 0; $args[$i][0] !== NULL; $i++) {
+		for ($i = 0; array_key_exists($i, $args); $i++) {
 			$pdf->ezText("<b>$j) ".$args[$i]['pergunta']."</b>\n", 15, array('justification' => 'left'));
 			$db->select("select count(v.dt_voto) from voto v where v.cd_pergunta = $idP $and_sel_ans", array("votos_pergunta"));
 			$cd_resposta_certa = $args[$i]['cd_resposta_certa'];

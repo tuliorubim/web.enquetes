@@ -54,8 +54,10 @@ class Webenquetes extends AdminFunctions {
 			} 
 		}
 		$usuario = $this->select("select nome, usuario from cliente where idCliente = $idu");
-		$this->nome = $usuario[0][0];
-		$this->usuario = $usuario[0][1];
+		if (!empty($usuario)) {
+			$this->nome = $usuario[0][0];
+			$this->usuario = $usuario[0][1];
+		}
 		$this->idu = $idu;
 		if ($_SESSION[$idSession] !== NULL && !empty($this->usuario)) $this->logged_in = true;
 	}
@@ -236,7 +238,7 @@ class Webenquetes extends AdminFunctions {
 				$mypoll = $this->select("select p.idPergunta, p.pergunta, r.idResposta, r.resposta from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta where p.cd_enquete = $idMypoll");
 				echo "<input type='hidden' name='idPergunta' value='".$mypoll[0][0]."'>";
 				echo $mypoll[0][1];
-				for ($i = 0; $mypoll[$i][2] !== NULL; $i++) {
+				for ($i = 0; array_key_exists($i, $mypoll); $i++) {
 					echo "&nbsp;&nbsp;&nbsp;<button name='answer$i' id=".$mypoll[$i][2]." class='btn btn-primary estilo-modal'>".$mypoll[$i][3]."</button>";
 				}
 				?>

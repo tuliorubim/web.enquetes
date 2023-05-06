@@ -79,6 +79,7 @@ include "bd.php";
 			$dateformat = $this->dateformat;
 			$timeformat = $this->timeformat;
 			$html = $this->html;
+			$h = '';
 			if (!empty($ide)) {
 				$args1 = $this->select("select disponivel from enquete where idEnquete = $ide");
 			}
@@ -112,7 +113,6 @@ include "bd.php";
 				$args = $this->select("select idPergunta, multipla_resposta, cd_resposta_certa, valor from pergunta where cd_enquete = $ide order by idPergunta");
 				$select[5] = true;
 				$idp = 0;
-				$h = '';
 				$num_questions = 0;
 				for ($i = 0; array_key_exists($i, $args); $i++) {
 					if ($idp !== $args[$i][0]) {
