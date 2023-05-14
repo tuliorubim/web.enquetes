@@ -33,9 +33,10 @@ include "dados_modelo.php";
 	class FormCliente extends DesignFunctions {
 		use Dados_webenquetes2;
 		public $idu;
-		public function __construct($idu, $con) {
+		public function __construct($idu, $con, $ft6) {
 			$this->idu = $idu;
 			$this->con = $con;
+			self::$formTabela6 = $ft6;
 		}
 		public function form_cliente() {
 			$sql = "select idCliente, nome, empresa, site, logo, logoReduzida, data_cadastro, usuario from cliente where idCliente = $this->idu";
@@ -44,12 +45,12 @@ include "dados_modelo.php";
 				$select[5] = true;
 			}
 			
-			$this->formGeral ($_SESSION, $this->formTabela6, array(), array(), $select, true);
+			$this->formGeral ($_SESSION, self::$formTabela6, array(), array(), $select, true);
 		}
 
 	}
-	$design = new FormCliente($we->idu, $we->con);
-	$design->formTabela6 = Dados_webenquetes2::$formTabela6;
+	$ft6 = Data_webenquetes2::$formTabela6;
+	$design = new FormCliente($we->idu, $we->con, $ft6);
 	$design->form_cliente();
 	?>
 	<br>

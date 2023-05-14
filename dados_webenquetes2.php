@@ -26,4 +26,7 @@ trait Dados_webenquetes2 {
 		self::$formTabela6 = array($variaveis1, $tipos1, $labels1, $inputs1, $enderecos1, $tabela1, $maxlengths1, $properties1);		
 	}	
 }
+class Data_webenquetes2 {
+	use Dados_webenquetes2;
+}
 ?>
