@@ -11,16 +11,16 @@ trait Dados_webenquetes2 {
 		$tabela1 = "cliente";
 		$maxlengths1 = array("", "50", "45", "60", '512', '512', '', "256", "12", "12");
 		if ($idu !== 0) {
-			$variaveis1[8] = NULL;
-			$variaveis1[9] = NULL;
-			$tipos1[8] = NULL;
-			$tipos1[9] = NULL;
-			$labels1[8] = NULL;
-			$labels1[9] = NULL;
-			$inputs1[8] = NULL;
-			$inputs1[9] = NULL;
-			$maxlengths1[8] = NULL;
-			$maxlengths1[9] = NULL;
+			unset($variaveis1[8]);
+			unset($variaveis1[9]);
+			unset($tipos1[8]);
+			unset($tipos1[9]);
+			//$labels1[8] = true;
+			//unset($labels1[9]);
+			unset($inputs1[8]);
+			unset($inputs1[9]);
+			unset($maxlengths1[8]);
+			unset($maxlengths1[9]);
 		}
 		$properties1 = "class='form-control input-lg'";
 		self::$formTabela6 = array($variaveis1, $tipos1, $labels1, $inputs1, $enderecos1, $tabela1, $maxlengths1, $properties1);		
