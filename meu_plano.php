@@ -40,7 +40,7 @@ include "header.php";
 			$args[0][0] = "Data de aquisi&ccedil;&atilde;o do plano";
 			$args[0][1] = $this->std_date_create($service_data[0]['dt_aquisicao']);
 			$votos_enquetes = $this->select("select e.enquete, count(v.dt_voto) as votos from enquete e inner join voto v on e.idEnquete = v.cd_enquete where e.cd_usuario = $idu group by e.idEnquete");
-			for ($i = 0; $votos_enquetes[$i]["enquete"] !== NULL; $i++) {
+			for ($i = 0; array_key_exists($i, $votos_enquetes); $i++) {
 				$args[$i+1][0] = "Quantidade de votos na enquete \"".$votos_enquetes[$i]["enquete"]."\"";
 				$args[$i+1][1] = $votos_enquetes[$i]["votos"];
 			}

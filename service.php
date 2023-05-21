@@ -21,7 +21,7 @@ class Service extends DBFunctions{
 	}
 	public function get_num_votos() {
 		$args = $this->select("select count(v.dt_voto) from cliente c inner join enquete e on c.idCliente = e.cd_usuario inner join voto v on e.idEnquete = v.cd_enquete where c.idCliente = $this->cd_usuario");
-		return $args[0][0];
+		return (!empty($args)) ? $args[0][0] : 0;
 	}
 	public function paid_plan_data($periodo_pagamento) {
 		$this->status = '';
@@ -119,7 +119,7 @@ class Service extends DBFunctions{
 		$this->status = '';
 		$cdu = $this->cd_usuario;	
 		$args = $this->get_acquired_service();
-		if ($args[0]['em_vigor']) {
+		if (!empty($args) && $args[0]['em_vigor']) {
 			if ($args[0]['gratis']) {
 				$num_votes = $this->get_num_votos();
 				$free_months = $num_votes/self::VOTES_FREE_MONTHS+1;

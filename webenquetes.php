@@ -33,6 +33,8 @@ class Webenquetes extends AdminFunctions {
 			setcookie($idSession, '', time()-10, '/', $cookie_url, $cookie_https);
 			$this->logout();
 		}
+		if (!array_key_exists($idSession, $_SESSION)) $_SESSION[$idSession] = NULL;
+		if (!array_key_exists($idSession, $_COOKIE)) $_COOKIE[$idSession] = NULL;
 		if ($_SESSION[$idSession] !== NULL && $_SESSION[$idSession] !== $_COOKIE[$idSession]) {
 			setcookie($idSession, $_SESSION[$idSession], time()+(86400*365*10), '/', $cookie_url, $cookie_https);
 		}

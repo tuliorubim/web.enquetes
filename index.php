@@ -1,6 +1,6 @@
 <?php
 include "bd.php";
-$we->contagem2 ('contador', true, $_GET['from']);
+$we->contagem2 ('contador', true, ((array_key_exists("from", $_GET)) ? $_GET['from'] : NULL));
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
