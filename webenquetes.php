@@ -13,7 +13,7 @@ class Webenquetes extends AdminFunctions {
 	public $description;
 	
 	public function Connect_WE () {
-		//$this->con = $this->Connect('localhost', 'webenque_enquetes', 'root', '5hondee5WBa0');
+		//$this->con = $this->Connect('localhost', 'webenque_enquetes', 'root', 'HhK4aiJPtwy9');
 		$this->con = $this->Connect('localhost', 'webenque_enquetes', 'root', ''); 
 		$con = $this->con;
 		mysqli_query($con, "SET NAMES 'utf8'");
@@ -306,7 +306,7 @@ class Webenquetes extends AdminFunctions {
 	}
 	public function listar_categorias () {
 		$args = $this->select("select idCategoria, categoria from categoria order by categoria");
-		for ($i = 0; $args[$i][1] !== NULL; $i++) {
+		for ($i = 0; array_key_exists($i, $args); $i++) {
 			echo "<option value=".$args[$i][0].">".$args[$i][1]."</option>";
 		}
 	}

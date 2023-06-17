@@ -19,7 +19,8 @@
 	<?php
 	if (!isset($_GET['ide'])) {
 	?>
-		<!--<script data-ad-client="ca-pub-7212330127162982" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>-->
+		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7212330127162982"
+     crossorigin="anonymous"></script>
 	<?php 
 	} else {
 		$we->select("select c.idCliente from cliente c inner join enquete e on c.idCliente = e.cd_usuario where e.idEnquete = ".$_GET['ide'], array("cdu"));
@@ -35,7 +36,8 @@
 		$limit2 = $service2::LIM_VOTES_NO_ADS2;
 		if (!$em_vigor || $gratis || ($period == 1 && $num_votos > $limit1) || ($period == 3 && $num_votos > $limit2)) {
 	?>
-			<!--<script data-ad-client="ca-pub-7212330127162982" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>-->
+			<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7212330127162982"
+     crossorigin="anonymous"></script>
 	<?php }} ?>
 	<!-- Global site tag (gtag.js) - Google Ads: 948860159 
 	<script async src="https://www.googletagmanager.com/gtag/js?id=AW-948860159"></script>

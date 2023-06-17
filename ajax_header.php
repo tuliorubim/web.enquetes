@@ -6,7 +6,7 @@ require_once "funcoes/funcoesAdministrativas.php";
 
 $db = new DBFunctions();
 
-//$con = $db->Connect('localhost', 'webenque_enquetes', 'root', '5hondee5WBa0');
+//$con = $db->Connect('localhost', 'webenque_enquetes', 'root', 'HhK4aiJPtwy9');
 $con = $db->Connect('localhost', 'webenque_enquetes', 'root', ''); 
 mysqli_query($con, "SET NAMES 'utf8'");
 mysqli_query($con, 'SET character_set_connection=utf8');

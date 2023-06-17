@@ -6,7 +6,7 @@
 	
 	$db = new DBFunctions();
 	
-	//$con = $db->Connect('localhost', 'webenque_enquetes', 'root', '5hondee5WBa0');
+	//$con = $db->Connect('localhost', 'webenque_enquetes', 'root', 'HhK4aiJPtwy9');
 	$con = $db->Connect('localhost', 'webenque_enquetes', 'root', ''); 
 	mysqli_query($con, "SET NAMES 'utf8'");
 	mysqli_query($con, 'SET character_set_connection=utf8');
@@ -15,8 +15,8 @@
 	$idu = ($_SESSION['user'] !== NULL) ? $_SESSION['user'] : $_POST['cd_usuario'];
 	$dateformat = "d/m/Y";
 	$timeformat = "H:i:s";
-	$ide = $_POST['ide'];
-	$cd_servico = $_POST['cds'];
+	$ide = (int) $_POST['ide'];
+	$cd_servico = (int) $_POST['cds'];
 	$pollcode = '';
 	$json = '{ "status" : ';
 	if (!empty($ide)) {
@@ -105,7 +105,7 @@
 		}
 		if ($cd_usuario !== NULL && $cd_usuario == $idu) {
 			if ($cd_servico == 0) {
-				$h = "<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>\n<form name='enquete' method='post' action='https://www.webenquetes.com.br/resultados_parciais.php?ide=$ide'>\n<input type='hidden' name='pollcode' value='$pollcode'>\n<a href='https://www.webenquetes.com.br/'><img src='https://www.webenquetes.com.br/img/logo-web-enquetes.png' width='120'></a>\n<p><a href='https://www.webenquetes.com.br/resultados_parciais.php?ide=$ide&site=true' id='result'>Ver resultados parciais. </a></p>\n".$h."<div id='botao_votar'><input type='submit' name='votar' id='responder' value='Votar' /></div></form>";
+				$h = "<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>\n<form name='enquete' method='post' action='https://webenquetes.com.br/resultados_parciais.php?ide=$ide'>\n<input type='hidden' name='pollcode' value='$pollcode'>\n<a href='https://www.webenquetes.com.br/'><img src='https://www.webenquetes.com.br/img/logo-web-enquetes.png' width='120'></a>\n<p><a href='https://www.webenquetes.com.br/resultados_parciais.php?ide=$ide&site=true' id='result'>Ver resultados parciais. </a></p>\n".$h."<div id='botao_votar'><input type='submit' name='votar' id='responder' value='Votar' /></div></form>";
 			} else {
 				$htm = $h;
 			 	$h = "<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>\n";
@@ -173,7 +173,7 @@ function getCookie(cname) {
 					}
 				}
 			}
-			url = 'https://www.webenquetes.com.br/';
+			url = 'https://webenquetes.com.br/';
 			\$.ajax({
 				url: url+'voto2.php',
 				type: 'GET',
@@ -206,7 +206,8 @@ function getCookie(cname) {
 });
 </script>";
 			}
-			$db->save_file ($h, $ide.'.txt', 'w');
+			//file_put_contents($ide.'.txt', $h);
+			$db->save_file ($h, "/opt/bitnami/apache/htdocs/".$ide.'.txt', 'w');
 		}
 		if (file_exists($ide.'.txt')) {
 			$json .= ' "success" }';

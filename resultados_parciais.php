@@ -245,7 +245,8 @@ include "bd.php";
 			echo $r;
 		}
 	}
-	$idEnquete = $_GET['ide'];
+	//var_dump($_POST);
+	$idEnquete = (array_key_exists('ide', $_GET)) ? $_GET['ide'] : $_POST['ide'];
 	$esconder = false;
 	$we->select("select e.cd_usuario, e.disponivel, e.hide_results, cl.cd_servico from enquete e inner join cliente cl on e.cd_usuario = cl.idCliente where idEnquete = $idEnquete", array("cd_usuario", "disponivel", "hide_results", "cd_servico"));
 	$we->select("select code from enquete where idEnquete = $idEnquete", array("code"), true);
@@ -316,7 +317,7 @@ include "bd.php";
 				}
 				url_tag = "<a href='"+url+"' target='_blank'>";
 				if (url.indexOf("webenquetes.com.br/enquete.php?ide=") != -1) {
-					url_tag = "<span style='font-size: 18px; font-weight: 800'>VOTE NA ENQUETE: </span>"+url_tag;
+					url_tag = "<span style='font-size: 18px; font-weight: 800; color: #006600;'>COMENT&Aacute;RIO EM DESTAQUE: </span>"+url_tag;
 				}
 				comments = Insere(comments, url_tag, url_pos);
 				offset = url_pos+url_tag.length+5;

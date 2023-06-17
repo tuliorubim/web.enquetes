@@ -77,7 +77,7 @@ include "header.php";
 				$months_gone = $service->months_gone($service_data[0]['dt_aquisicao']);
 				for ($j = 0; $j < $months_gone; $j += $period) {}
 				$months_acq_date = strtotime($service_data[0]['dt_aquisicao'])/($service::MES*86400);
-				$next_pay_date = date($this->dateformat, ($months_acq_date+$j)*$service::MES*86400);
+				$next_pay_date = date($this->dateformat, (int) (($months_acq_date+$j)*$service::MES*86400));
 				$args[$i+4][0] = "Pr&oacute;xima data em que ser&aacute; cobrada sua assinatura para mais $period meses de benef&iacute;cios avan&ccedil;ados.";
 				$args[$i+4][1] = $next_pay_date;
 				$plano = $plan_data[5];

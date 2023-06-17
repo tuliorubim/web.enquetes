@@ -472,7 +472,7 @@ $(document).ready(function () {
 				}
 			},
 			error: function (xhr, s, e) {
-				alert(xhr.responseText);
+				alert(e);
 			}
 		});
 	});
