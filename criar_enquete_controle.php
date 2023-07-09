@@ -207,6 +207,8 @@ include "criar_enquete_modelo.php";
 			<p><a href="enquete.php?ide=<?php echo $ide;?>">Ir para a enquete.</a></p>
 			<br>
 			<p><a href="divulgar.php">Conhe&ccedil;a nossas ferramentas para divulgar enquetes.</a></p>
+			<br>
+			<p>Sua enquete &eacute; para qualquer pessoa em qualquer lugar responder? Solicite para ela uma <a href="divulgar_para_todos.php?ide=<?php echo $ide;?>">divulga&ccedil;&atilde;o geral.</a></p>
 		<?php 
 			if (empty($service_data)) {
 		?>
