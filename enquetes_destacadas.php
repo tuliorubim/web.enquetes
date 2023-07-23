@@ -19,7 +19,15 @@ class EnquetesDestacadas extends DBFunctions {
 	public function escreve_enquetes($enquetes) {
 		$respostas = [];
 		foreach ($enquetes as $e) {
-			if (array_key_exists('pergunta', $e) {
+			if (array_key_exists('pergunta', $e)) {
+				if (strlen($e['pergunta']) > 60) {
+					$dot_positions = $this->str_positions('.', $e['pergunta']);
+					$last = count($dot_positions)-1;
+					if ($last > -1) {
+						$last_dot = $dot_positions[$last]+2;
+						$e['pergunta'] = substr($e['pergunta'], $last_dot, strpos($e['pergunta'], '?', $last_dot)-$last_dot); 
+					} 
+				}
 				$respostas[] = $this->select("select resposta from resposta where cd_pergunta = ".$e['idPergunta']." order by idResposta");
 			} else break;
 		}
