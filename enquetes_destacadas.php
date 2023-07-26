@@ -8,15 +8,12 @@ class EnquetesDestacadas extends DBFunctions {
 	}
 	public function enquetes_destacadas() {
 		$idu = $this->idu;
-		$enquetes = $this->select("select e.idEnquete, p.idPergunta, p.pergunta from enquete e inner join pergunta p on e.idEnquete = p.cd_enquete where p.idPergunta = (select min(idPergunta) from pergunta where cd_enquete = e.idEnquete and idPergunta not in (select cd_pergunta from voto where cd_usuario = $idu)) and e.status_divulgacao = 2 order by rand() limit 6");
+		$enquetes = $this->select("select e.idEnquete, p.pergunta, p.idPergunta from enquete e inner join pergunta p on e.idEnquete = p.cd_enquete where p.idPergunta = (select min(idPergunta) from pergunta where cd_enquete = e.idEnquete and idPergunta not in (select cd_pergunta from voto where cd_usuario = $idu)) and e.status_divulgacao = 2 order by rand() limit 6");
 		$count_polls = count($enquetes);
 		if ($count_polls < 6) {
 			$aux = $this->select("select e.idEnquete, e.enquete, count(v.dt_voto) from enquete e inner join voto v on e.idEnquete = v.cd_enquete group by e.idEnquete order by count(v.dt_voto) desc limit ".(6-$count_polls));
 			$enquetes = array_merge($enquetes, $aux); 
 		}
-		return $enquetes;	
-	}
-	public function escreve_enquetes($enquetes) {
 		$respostas = [];
 		foreach ($enquetes as $e) {
 			if (array_key_exists('pergunta', $e)) {
@@ -28,7 +25,8 @@ class EnquetesDestacadas extends DBFunctions {
 						$e['pergunta'] = substr($e['pergunta'], $last_dot, strpos($e['pergunta'], '?', $last_dot)-$last_dot); 
 					} 
 				}
-				$respostas[] = $this->select("select resposta from resposta where cd_pergunta = ".$e['idPergunta']." order by idResposta");
+				$r = $this->select("select resposta from resposta where cd_pergunta = ".$e['idPergunta']." order by idResposta");
+				$respostas[] = $r;
 			} else break;
 		}
 	}
