@@ -25,8 +25,14 @@ class EnquetesDestacadas extends DBFunctions {
 						$e['pergunta'] = substr($e['pergunta'], $last_dot, strpos($e['pergunta'], '?', $last_dot)-$last_dot); 
 					} 
 				}
-				$r = $this->select("select resposta from resposta where cd_pergunta = ".$e['idPergunta']." order by idResposta");
-				$respostas[] = $r;
+				$resp = $this->select("select resposta from resposta where cd_pergunta = ".$e['idPergunta']." order by idResposta");
+				$aux = "<p>".$e['pergunta'].'</p>';
+				$aux .= "<ul>";
+				foreach ($resp as $r) {
+					$aux .= "<li>$r</li>";
+				}
+				$aux .= "</ul>";
+				$respostas[] = $aux;
 			} else break;
 		}
 	}
