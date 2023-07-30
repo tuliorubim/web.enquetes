@@ -9,6 +9,22 @@
 		<div><button type="button" id="search" value="Search" class="ir"><span class="glyphicon glyphicon-search"></span></button></div>
 	</form>
 	<script language="javascript">
+	function Respostas(mr, q) {
+		cd_resposta = [];
+		if (mr[q-1] == 0) {
+			cd_resposta[0] = eval("document.form.resposta"+q+"_.value");
+		}
+		else {
+			i = 0;
+			for (j = 0; $('#idResposta'+q+'_'+j).val() != null; j++) {
+				if ($('#resposta'+q+'_'+j).prop('checked')) {
+					cd_resposta[i] = $('#idResposta'+q+'_'+j).val();
+					i++;
+				}
+			}
+		}
+		return cd_resposta;
+	}
 	$(document).ready(function () {
 		$("#search").click(function () {
 			var conditions = [];
@@ -17,6 +33,9 @@
 				document.search_form.ir.value = "Ir";
 				document.search_form.submit();
 			}
+		});
+		$("input[name='resposta0_']").click(function () {
+			
 		});
 	});
 	</script>

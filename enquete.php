@@ -387,20 +387,8 @@ $(document).ready(function () {
 	});
 	$("#responder").click(function () {
 		if (cd_enquete !== 0) {
-			cd_resposta = [];
 			i = 0;
-			if (mr[q-1] == 0) {
-				cd_resposta[0] = eval("document.form.resposta"+q+"_.value");
-			}
-			else {
-				i = 0;
-				for (j = 0; $('#idResposta'+q+'_'+j).val() != null; j++) {
-					if ($('#resposta'+q+'_'+j).prop('checked')) {
-						cd_resposta[i] = $('#idResposta'+q+'_'+j).val();
-						i++;
-					}
-				}
-			}
+			cd_resposta = Respostas(mr, q);
 			$.ajax({
 				url: 'voto.php',
 				type: 'GET',

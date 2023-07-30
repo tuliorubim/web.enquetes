@@ -8,32 +8,45 @@ class EnquetesDestacadas extends DBFunctions {
 	}
 	public function enquetes_destacadas() {
 		$idu = $this->idu;
-		$enquetes = $this->select("select e.idEnquete, p.pergunta, p.idPergunta from enquete e inner join pergunta p on e.idEnquete = p.cd_enquete where p.idPergunta = (select min(idPergunta) from pergunta where cd_enquete = e.idEnquete and idPergunta not in (select cd_pergunta from voto where cd_usuario = $idu)) and e.status_divulgacao = 2 order by rand() limit 6");
+		$enquetes = $this->select("select e.idEnquete, p.pergunta, p.idPergunta, p.multipla_resposta from enquete e inner join pergunta p on e.idEnquete = p.cd_enquete where p.idPergunta = (select min(idPergunta) from pergunta where cd_enquete = e.idEnquete and idPergunta not in (select cd_pergunta from voto where cd_usuario = $idu)) and e.status_divulgacao = 2 order by rand() limit 6");
 		$count_polls = count($enquetes);
 		if ($count_polls < 6) {
-			$aux = $this->select("select e.idEnquete, e.enquete, count(v.dt_voto) from enquete e inner join voto v on e.idEnquete = v.cd_enquete group by e.idEnquete order by count(v.dt_voto) desc limit ".(6-$count_polls));
+			$aux = $this->select("select e.idEnquete, e.enquete, count(v.dt_voto) as votos from enquete e inner join voto v on e.idEnquete = v.cd_enquete group by e.idEnquete order by count(v.dt_voto) desc limit ".(6-$count_polls));
 			$enquetes = array_merge($enquetes, $aux); 
 		}
 		$respostas = [];
-		foreach ($enquetes as $e) {
-			if (array_key_exists('pergunta', $e)) {
-				if (strlen($e['pergunta']) > 60) {
-					$dot_positions = $this->str_positions('.', $e['pergunta']);
+		for ($i = 0; $i < 6; $i++) {
+			if (array_key_exists('pergunta', $enquetes[$i])) {
+				$pergunta = $enquetes[$i]['pergunta'];
+				if (strlen($pergunta) > 60) {
+					$dot_positions = $this->str_positions('.', $pergunta);
 					$last = count($dot_positions)-1;
 					if ($last > -1) {
 						$last_dot = $dot_positions[$last]+2;
-						$e['pergunta'] = substr($e['pergunta'], $last_dot, strpos($e['pergunta'], '?', $last_dot)-$last_dot); 
+						$enquetes[$i]['pergunta'] = substr($pergunta, $last_dot, strpos($pergunta, '?', $last_dot)-$last_dot); 
 					} 
 				}
-				$resp = $this->select("select resposta from resposta where cd_pergunta = ".$e['idPergunta']." order by idResposta");
-				$aux = "<p>".$e['pergunta'].'</p>';
+				$resp = $this->select("select idResposta, resposta from resposta where cd_pergunta = ".$e['idPergunta']." order by idResposta");
+				$aux = "<p>$pergunta</p>";
 				$aux .= "<ul>";
+				$j = 0;
+				$mr = $enquete[$i]['multipla_resposta'];
 				foreach ($resp as $r) {
-					$aux .= "<li>$r</li>";
+					if (!$mr) {
+						$aux .= "<li><input type='radio' name='resposta0_' value='".$r['idResposta']."'>".$r['resposta']."</li>";
+					} else {
+						$aux .= "<li><input type='hidden' id='idResposta0_$j' value='".$r['idResposta']."'><input type='checkbox' id='resposta0_$j'>".$r['resposta']."</li>";
+					}
+					$j++;
 				}
+				if ($mr) {
+					$aux .= '<br><button type="button" class="btn btn-primary estilo-modal" name="resposta0_">RESPONDER</button>';
+				]
 				$aux .= "</ul>";
-				$respostas[] = $aux;
-			} else break;
+				$respostas[$i] = $aux;
+			} elseif (array_key_exists('enquete', $e)) {
+				$respostas[$i] = "Esta enquete tem ".$enquetes[$i]['votos']." votos.";
+			}
 		}
 	}
 }
