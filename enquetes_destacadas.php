@@ -27,7 +27,9 @@ class EnquetesDestacadas extends DBFunctions {
 					} 
 				}
 				$resp = $this->select("select idResposta, resposta from resposta where cd_pergunta = ".$e['idPergunta']." order by idResposta");
-				$aux = "<p>$pergunta</p>";
+				$aux = "<form name='pergunta' method='post' action='enquete.php'>";
+				$aux .= "<input type='hidden' name='idEnquete' value='".$enquetes[$i]['idEnquete']."'>";
+				$aux .= "<p>$pergunta</p><input type='hidden' name='idPergunta' value='".$enquetes[$i]['idPergunta']."'>";
 				$aux .= "<ul>";
 				$j = 0;
 				$mr = $enquete[$i]['multipla_resposta'];
@@ -42,12 +44,20 @@ class EnquetesDestacadas extends DBFunctions {
 				if ($mr) {
 					$aux .= '<br><button type="button" class="btn btn-primary estilo-modal" name="resposta0_">RESPONDER</button>';
 				]
-				$aux .= "</ul>";
+				$aux .= "</ul></form>";
 				$respostas[$i] = $aux;
 			} elseif (array_key_exists('enquete', $e)) {
 				$respostas[$i] = "Esta enquete tem ".$enquetes[$i]['votos']." votos.";
 			}
 		}
+		?>
+		<script language="javascript">
+			$(document).ready(function () {
+				$("input[name='resposta0_']").click(function () {
+					document.pergunta.submit();
+				});
+			});
+		<?php
 	}
 }
 ?>
