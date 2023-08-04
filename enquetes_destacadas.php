@@ -26,20 +26,18 @@ class EnquetesDestacadas extends DBFunctions {
 						$enquetes[$i]['pergunta'] = substr($pergunta, $last_dot, strpos($pergunta, '?', $last_dot)-$last_dot); 
 					} 
 				}
-				$resp = $this->select("select idResposta, resposta from resposta where cd_pergunta = ".$e['idPergunta']." order by idResposta");
+				$r = $this->select("select idResposta, resposta from resposta where cd_pergunta = ".$e['idPergunta']." order by idResposta");
 				$aux = "<form name='pergunta' method='post' action='enquete.php'>";
 				$aux .= "<input type='hidden' name='idEnquete' value='".$enquetes[$i]['idEnquete']."'>";
 				$aux .= "<p>$pergunta</p><input type='hidden' name='idPergunta' value='".$enquetes[$i]['idPergunta']."'>";
 				$aux .= "<ul>";
-				$j = 0;
 				$mr = $enquete[$i]['multipla_resposta'];
-				foreach ($resp as $r) {
+				for ($j = 0; array_key_exists($j, $r); $j++) {
 					if (!$mr) {
-						$aux .= "<li><input type='radio' name='resposta0_' value='".$r['idResposta']."'>".$r['resposta']."</li>";
+						$aux .= "<li><input type='radio' name='resposta0_' value='".$r[$j]['idResposta']."'>".$r[$j]['resposta']."</li>";
 					} else {
-						$aux .= "<li><input type='hidden' id='idResposta0_$j' value='".$r['idResposta']."'><input type='checkbox' id='resposta0_$j'>".$r['resposta']."</li>";
+						$aux .= "<li><input type='hidden' name='idResposta0_$j' value='".$r[$j]['idResposta']."'><input type='checkbox' id='resposta0_$j'>".$r[$j]['resposta']."</li>";
 					}
-					$j++;
 				}
 				if ($mr) {
 					$aux .= '<br><button type="button" class="btn btn-primary estilo-modal" name="resposta0_">RESPONDER</button>';
@@ -57,6 +55,7 @@ class EnquetesDestacadas extends DBFunctions {
 					document.pergunta.submit();
 				});
 			});
+		</script>
 		<?php
 	}
 }

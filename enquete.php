@@ -30,6 +30,64 @@ include "bd.php";
 			$this->idEnquete = $ide;
 			$this->con = $con;
 		}
+		public function processa_voto_pergunta() {
+			$idu = $this->idu;
+			$con = $this->con;
+			$idEnquete = $this->idEnquete;
+			$tabela = "voto";	
+			$idP = $_POST['idPergunta'];
+			$args = $this->select("select cd_usuario, cd_enquete, cd_pergunta from $tabela where cd_usuario = $idu and cd_enquete = $idEnquete and cd_pergunta = $idP limit 1");
+			$cdu = $args[0]['cd_usuario'];
+			$cde = $args[0]['cd_enquete'];
+			$condicao = ($cdu !== NULL && $cde !== NULL && $idP !== NULL);
+			if ($condicao) {
+				mysqli_query($con, "delete from $tabela where cd_usuario = $cdu and cd_enquete = $cde and cd_pergunta = $idP");
+			}
+			$data = date('Y-m-d H:i:s');
+			if ($idu === 0) {
+				mysqli_query($con, "insert into cliente (data_cadastro) values ('$data')");
+				$last_user = $this->select("select max(idCliente) from cliente");
+				$_SESSION[$idSession] = $last_user[0][0];
+				$idu = $last_user[0][0];
+			}
+			$j = 0;
+			$sucesso = false;
+			if ($_POST["resposta0_"] !== 'RESPONDER') {
+				$idR = $_POST["resposta0_"];
+				if (!empty($idR)) {
+					$sql = "insert into $tabela (cd_usuario, cd_enquete, cd_pergunta, cd_resposta, dt_voto) values ($idu, $idEnquete, $idP, $idR, '$data') ";
+					mysqli_query($con, $sql);
+					if (!mysqli_error($con)) $sucesso = true;
+					else {
+						echo "Ocorreu um erro";
+						$sucesso = false;
+						break;
+					}
+				}
+			}
+			else {
+				while ($_POST["idResposta".$i."_$j"]  !== NULL) {
+					if ($_POST["resposta".$i."_$j"] != NULL) {
+						$idR = $_POST["idResposta".$i."_$j"];
+						$sql = "insert into $tabela (cd_usuario, cd_enquete, cd_pergunta, cd_resposta, dt_voto) values ($idu, $idEnquete, $idP, $idR, '$data')";
+						mysqli_query($con, $sql);
+						if (!mysqli_error($con)) $sucesso = true;
+						else {
+							echo "Ocorreu um erro.";
+							$sucesso = false;
+							break;
+						}
+					}
+					$j++;
+				}
+			}
+			if ($sucesso && !$condicao) {
+				echo "<font color='green'><b>Voto efetuado com sucesso.</b></font><br>";	
+			} elseif ($sucesso) {
+				echo "<font color='green'><b>Voc&ecirc; alterou suas respostas com sucesso.</b></font><br>";
+			}
+			$this->idu = $idu;
+		}
 		public function create_poll_header($disponivel, $cd_usuario) {
 			global $status;
 			global $service_data;
