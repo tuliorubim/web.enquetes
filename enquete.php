@@ -34,6 +34,7 @@ include "bd.php";
 			$idu = $this->idu;
 			$con = $this->con;
 			$idEnquete = $this->idEnquete;
+			$idSession = $this->idSession;
 			$tabela = "voto";	
 			$idP = $_POST['idPergunta'];
 			$args = $this->select("select cd_usuario, cd_enquete, cd_pergunta from $tabela where cd_usuario = $idu and cd_enquete = $idEnquete and cd_pergunta = $idP limit 1");
@@ -66,9 +67,9 @@ include "bd.php";
 				}
 			}
 			else {
-				while ($_POST["idResposta".$i."_$j"]  !== NULL) {
-					if ($_POST["resposta".$i."_$j"] != NULL) {
-						$idR = $_POST["idResposta".$i."_$j"];
+				while (array_key_exists("idResposta0_$j", $_POST)) {
+					if ($_POST["resposta0_$j"] != NULL) {
+						$idR = $_POST["idResposta0_$j"];
 						$sql = "insert into $tabela (cd_usuario, cd_enquete, cd_pergunta, cd_resposta, dt_voto) values ($idu, $idEnquete, $idP, $idR, '$data')";
 						mysqli_query($con, $sql);
 						if (!mysqli_error($con)) $sucesso = true;
@@ -81,12 +82,15 @@ include "bd.php";
 					$j++;
 				}
 			}
-			if ($sucesso && !$condicao) {
-				echo "<font color='green'><b>Voto efetuado com sucesso.</b></font><br>";	
-			} elseif ($sucesso) {
-				echo "<font color='green'><b>Voc&ecirc; alterou suas respostas com sucesso.</b></font><br>";
-			}
+			$last_question = $this->select("select max(idPergunta) from pergunta where cd_enquete = $idEnquete");
 			$this->idu = $idu;
+			if ($idP == $last_question) {
+				echo "<meta HTTP-EQUIV='Refresh' CONTENT='0;URL=resultados_parciais.php?ide=$idEnquete'>";
+			} else {
+				$idPergunta = $this->select("select idPergunta from pergunta where cd_enquete = $idEnquete order by idPergunta");
+				$ordem = array_keys($idPergunta, $idP);
+				return $ordem[0]+1;
+			}
 		}
 		public function create_poll_header($disponivel, $cd_usuario) {
 			global $status;
@@ -354,8 +358,13 @@ include "bd.php";
 			$this->html = $html;
 		}
 	}
+	$ordem = 1;
 	if ($disponivel || $cd_usuario == $we->idu) {
+		
 		$poll_html = new Enquete($we->idu, $ide, $we->con);
+		if ($disponivel && array_key_exists('resposta0_', $_POST) && !empty($_POST['resposta0_'])) {
+			$ordem = $poll_html->processa_voto_pergunta();
+		}
 		$poll_html->create_poll_header($disponivel, $cd_usuario);
 	?>
 	<div class="fb-like" data-href="https://www.facebook.com/WebEnquetesEPesquisas/" data-width="100" data-layout="standard" data-action="like" data-size="small" style='margin: 3px;' data-show-faces="true" data-share="false"></div>
@@ -420,7 +429,7 @@ function selectQuestion (n) {
 	if (n == 2) $("#previous").prop("disabled", false);
 }
 $(document).ready(function () {
-	var q = 1;
+	var q = <?php echo isset($ordem) ? $ordem : 1;?>;
 	selectQuestion(q);
 	for (i = 1; $('#d_pergunta'+i).html() != null; i++) {
 		$('#d_pergunta'+i).css({"font-size" : "18px", "font-weight" : "800"});

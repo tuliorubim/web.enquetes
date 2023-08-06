@@ -27,6 +27,9 @@ include "service.php";
 $service = new Service($we->idu);
 $service->con = $we->con;
 $service_data = $service->get_acquired_service();
+
+include "enquetes_destacadas.php";
+$ed = new EnquetesDestacadas($we->idu, $we->con);
 ?>
 <script src="jquery-3.5.1.min.js"></script>
 <script src="funcoes/JSFunctions.js" type="text/javascript"></script>

@@ -1,6 +1,6 @@
 <!-- ULTIMAS ENQUETES -->
 <?php
-$args = $we->enquetes_mais_procuradas();
+$args = $ed->enquetes_destacadas();
 ?>
 <div class="container">
 	<div class="row">
@@ -15,8 +15,8 @@ $args = $we->enquetes_mais_procuradas();
 	?>
 	<div class="col-md-4">
 	<div class="ult-enquetes">
-	<h2><?php echo $args[$i][1];?></h2>
-	<a href="enquete.php?ide=<?php echo $args[$i][0];?>" class="btn btn-success btn-lg">ENQUETE COMPLETA</a>
+	<h2><?php echo $args[0][$i][1];?><span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='bottom' title='<?php echo $args[1][$i];?>'></span></h2>
+	<a href="enquete.php?ide=<?php echo $args[0][$i][0];?>" class="btn btn-success btn-lg">ENQUETE COMPLETA</a>
 	</div>
 	</div>
 	<?php } ?>
@@ -29,8 +29,8 @@ $args = $we->enquetes_mais_procuradas();
 	?>
 	<div class="col-md-4">
 	<div class="ult-enquetes">
-	<h2><?php echo $args[$i][1];?></h2>
-	<a href="enquete.php?ide=<?php echo $args[$i][0];?>" class="btn btn-success btn-lg">ENQUETE COMPLETA</a>
+	<h2><?php echo $args[0][$i][1];?><span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='bottom' title='<?php echo $args[1][$i];?>'></span></h2>
+	<a href="enquete.php?ide=<?php echo $args[0][$i][0];?>" class="btn btn-success btn-lg">ENQUETE COMPLETA</a>
 	</div>
 	</div>
     <?php } ?>

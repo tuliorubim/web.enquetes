@@ -27,6 +27,7 @@ include "bd.php";
 		public function processa_voto_remoto($idEnquete) {
 			$idu = $this->idu;
 			$con = $this->con;
+			$idSession = $this->idSession;
 			$tabela = "voto";	
 			$i = 1;
 			$data = date('Y-m-d H:i:s');

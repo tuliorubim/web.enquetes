@@ -36,12 +36,12 @@ class EnquetesDestacadas extends DBFunctions {
 					if (!$mr) {
 						$aux .= "<li><input type='radio' name='resposta0_' value='".$r[$j]['idResposta']."'>".$r[$j]['resposta']."</li>";
 					} else {
-						$aux .= "<li><input type='hidden' name='idResposta0_$j' value='".$r[$j]['idResposta']."'><input type='checkbox' id='resposta0_$j'>".$r[$j]['resposta']."</li>";
+						$aux .= "<li><input type='hidden' name='idResposta0_$j' value='".$r[$j]['idResposta']."'><input type='checkbox' name='resposta0_$j'>".$r[$j]['resposta']."</li>";
 					}
 				}
 				if ($mr) {
 					$aux .= '<br><button type="button" class="btn btn-primary estilo-modal" name="resposta0_">RESPONDER</button>';
-				]
+				}
 				$aux .= "</ul></form>";
 				$respostas[$i] = $aux;
 			} elseif (array_key_exists('enquete', $e)) {
@@ -57,6 +57,7 @@ class EnquetesDestacadas extends DBFunctions {
 			});
 		</script>
 		<?php
+		return [$enquetes, $respostas];
 	}
 }
 ?>

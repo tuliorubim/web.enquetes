@@ -9,9 +9,9 @@
     <h2>Destaques do momento</h2>
     <ul class="list-lateral">
 	<?php
-	$e = $we->enquetes_mais_procuradas();
+	$e = $ed->enquetes_destacadas();
 	for ($i = 0; $i < 6; $i++)
-		echo "<li><a href='enquete.php?ide=".$e[$i][0]."'>".$e[$i][1]."</a></li>";
+		echo "<li><a href='enquete.php?ide=".$e[0][$i][0]."'>".$e[0][$i][1]."<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='bottom' title='".$e[1][$i]."'></span></a></li>";
 	?>
     </ul>
     </div>
