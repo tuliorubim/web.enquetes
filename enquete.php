@@ -62,7 +62,6 @@ include "bd.php";
 					else {
 						echo "Ocorreu um erro";
 						$sucesso = false;
-						break;
 					}
 				}
 			}

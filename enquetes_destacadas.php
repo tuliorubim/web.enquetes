@@ -2,7 +2,7 @@
 class EnquetesDestacadas extends DBFunctions {
 	const MAX_ENQUETES_DESTACADAS = 30;
 	public $idu;
-	public function __contruct($idu, $con) {
+	public function __construct($idu, $con) {
 		$this->idu = $idu;
 		$this->con = $con;
 	}
@@ -26,12 +26,12 @@ class EnquetesDestacadas extends DBFunctions {
 						$enquetes[$i]['pergunta'] = substr($pergunta, $last_dot, strpos($pergunta, '?', $last_dot)-$last_dot); 
 					} 
 				}
-				$r = $this->select("select idResposta, resposta from resposta where cd_pergunta = ".$e['idPergunta']." order by idResposta");
+				$r = $this->select("select idResposta, resposta from resposta where cd_pergunta = ".$enquetes[$i]['idPergunta']." order by idResposta");
 				$aux = "<form name='pergunta' method='post' action='enquete.php'>";
 				$aux .= "<input type='hidden' name='idEnquete' value='".$enquetes[$i]['idEnquete']."'>";
 				$aux .= "<p>$pergunta</p><input type='hidden' name='idPergunta' value='".$enquetes[$i]['idPergunta']."'>";
 				$aux .= "<ul>";
-				$mr = $enquete[$i]['multipla_resposta'];
+				$mr = $enquetes[$i]['multipla_resposta'];
 				for ($j = 0; array_key_exists($j, $r); $j++) {
 					if (!$mr) {
 						$aux .= "<li><input type='radio' name='resposta0_' value='".$r[$j]['idResposta']."'>".$r[$j]['resposta']."</li>";
@@ -44,7 +44,7 @@ class EnquetesDestacadas extends DBFunctions {
 				}
 				$aux .= "</ul></form>";
 				$respostas[$i] = $aux;
-			} elseif (array_key_exists('enquete', $e)) {
+			} elseif (array_key_exists('enquete', $enquetes[$i])) {
 				$respostas[$i] = "Esta enquete tem ".$enquetes[$i]['votos']." votos.";
 			}
 		}

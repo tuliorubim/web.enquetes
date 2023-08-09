@@ -11,7 +11,7 @@
 	<?php
 	$e = $ed->enquetes_destacadas();
 	for ($i = 0; $i < 6; $i++)
-		echo "<li><a href='enquete.php?ide=".$e[0][$i][0]."'>".$e[0][$i][1]."<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='bottom' title='".$e[1][$i]."'></span></a></li>";
+		echo "<li><a href='enquete.php?ide=".$e[0][$i][0]."'>".$e[0][$i][1]."</a><span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-html='true' data-placement='bottom' title='".$e[1][$i]."'></span></li>";
 	?>
     </ul>
     </div>
