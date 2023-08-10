@@ -15,7 +15,7 @@ $args = $ed->enquetes_destacadas();
 	?>
 	<div class="col-md-4">
 	<div class="ult-enquetes">
-	<h2><?php echo $args[0][$i][1];?><span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-html='true' data-placement='bottom' title='<?php echo $args[1][$i];?>'></span></h2>
+	<h2><?php echo $args[0][$i][1];?><div class="dropdown"><a href="#" class='dropdown-toggle' data-toggle='dropdown'><span class='glyphicon glyphicon-question-sign qf'></span></a><?php echo $args[1][$i];?></div></h2>
 	<a href="enquete.php?ide=<?php echo $args[0][$i][0];?>" class="btn btn-success btn-lg">ENQUETE COMPLETA</a>
 	</div>
 	</div>
@@ -29,7 +29,7 @@ $args = $ed->enquetes_destacadas();
 	?>
 	<div class="col-md-4">
 	<div class="ult-enquetes">
-	<h2><?php echo $args[0][$i][1];?><span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='bottom' title='<?php echo $args[1][$i];?>'></span></h2>
+	<h2><?php echo $args[0][$i][1];?><div class="dropdown"><a href="#" class='dropdown-toggle' data-toggle='dropdown'><span class='glyphicon glyphicon-question-sign qf'></span></a><?php echo $args[1][$i];?></div></h2>
 	<a href="enquete.php?ide=<?php echo $args[0][$i][0];?>" class="btn btn-success btn-lg">ENQUETE COMPLETA</a>
 	</div>
 	</div>

@@ -30,7 +30,7 @@ class EnquetesDestacadas extends DBFunctions {
 				$aux = "<form name='pergunta' method='post' action='enquete.php'>";
 				$aux .= "<input type='hidden' name='idEnquete' value='".$enquetes[$i]['idEnquete']."'>";
 				$aux .= "<p>$pergunta</p><input type='hidden' name='idPergunta' value='".$enquetes[$i]['idPergunta']."'>";
-				$aux .= "<ul>";
+				$aux .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">';
 				$mr = $enquetes[$i]['multipla_resposta'];
 				for ($j = 0; array_key_exists($j, $r); $j++) {
 					if (!$mr) {
