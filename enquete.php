@@ -16,7 +16,7 @@ include "bd.php";
 	<div id='status'></div>
 	<form name="form" method="post">
     <?php
-	$ide = $_GET['ide'];
+	$ide = (array_key_exists('ide', $_GET)) ? $_GET['ide'] : $_POST['idEnquete'];
 	//$multipla_resposta = 0;
 	if (!empty($ide)) {
 		$we->select("select disponivel, cd_usuario from enquete where idEnquete = $ide", array('disponivel', 'cd_usuario'));
@@ -83,7 +83,7 @@ include "bd.php";
 			}
 			$last_question = $this->select("select max(idPergunta) from pergunta where cd_enquete = $idEnquete");
 			$this->idu = $idu;
-			if ($idP == $last_question) {
+			if ($idP == $last_question[0][0]) {
 				echo "<meta HTTP-EQUIV='Refresh' CONTENT='0;URL=resultados_parciais.php?ide=$idEnquete'>";
 			} else {
 				$idPergunta = $this->select("select idPergunta from pergunta where cd_enquete = $idEnquete order by idPergunta");

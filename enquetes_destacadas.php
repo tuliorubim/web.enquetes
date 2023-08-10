@@ -27,22 +27,22 @@ class EnquetesDestacadas extends DBFunctions {
 					} 
 				}
 				$r = $this->select("select idResposta, resposta from resposta where cd_pergunta = ".$enquetes[$i]['idPergunta']." order by idResposta");
-				$aux = "<form name='pergunta' method='post' action='enquete.php'>";
+				$aux = "<div class='dropdown-menu'><form name='pergunta' method='post' action='enquete.php'>";
 				$aux .= "<input type='hidden' name='idEnquete' value='".$enquetes[$i]['idEnquete']."'>";
 				$aux .= "<p>$pergunta</p><input type='hidden' name='idPergunta' value='".$enquetes[$i]['idPergunta']."'>";
-				$aux .= '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">';
+				$aux .= '<ul>';
 				$mr = $enquetes[$i]['multipla_resposta'];
 				for ($j = 0; array_key_exists($j, $r); $j++) {
 					if (!$mr) {
-						$aux .= "<li><input type='radio' name='resposta0_' value='".$r[$j]['idResposta']."'>".$r[$j]['resposta']."</li>";
+						$aux .= "<li><input type='radio' name='resposta0_' value='".$r[$j]['idResposta']."'> ".$r[$j]['resposta']."</li>";
 					} else {
-						$aux .= "<li><input type='hidden' name='idResposta0_$j' value='".$r[$j]['idResposta']."'><input type='checkbox' name='resposta0_$j'>".$r[$j]['resposta']."</li>";
+						$aux .= "<li><input type='hidden' name='idResposta0_$j' value='".$r[$j]['idResposta']."'><input type='checkbox' name='resposta0_$j'> ".$r[$j]['resposta']."</li>";
 					}
 				}
 				if ($mr) {
 					$aux .= '<br><button type="button" class="btn btn-primary estilo-modal" name="resposta0_">RESPONDER</button>';
 				}
-				$aux .= "</ul></form>";
+				$aux .= "</ul></form></div>";
 				$respostas[$i] = $aux;
 			} elseif (array_key_exists('enquete', $enquetes[$i])) {
 				$respostas[$i] = "Esta enquete tem ".$enquetes[$i]['votos']." votos.";
@@ -52,7 +52,11 @@ class EnquetesDestacadas extends DBFunctions {
 		<script language="javascript">
 			$(document).ready(function () {
 				$("input[name='resposta0_']").click(function () {
-					document.pergunta.submit();
+					try {
+						$("form[name='pergunta']").submit();
+					} catch (e) {
+						alert(e.message);
+					}
 				});
 			});
 		</script>
