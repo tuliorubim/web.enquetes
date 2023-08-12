@@ -8,10 +8,10 @@ class EnquetesDestacadas extends DBFunctions {
 	}
 	public function enquetes_destacadas() {
 		$idu = $this->idu;
-		$enquetes = $this->select("select e.idEnquete, p.pergunta, p.idPergunta, p.multipla_resposta from enquete e inner join pergunta p on e.idEnquete = p.cd_enquete where p.idPergunta = (select min(idPergunta) from pergunta where cd_enquete = e.idEnquete and idPergunta not in (select cd_pergunta from voto where cd_usuario = $idu)) and e.status_divulgacao = 2 order by rand() limit 6");
+		$enquetes = $this->select("select e.idEnquete, p.pergunta, p.idPergunta, p.multipla_resposta from enquete e inner join pergunta p on e.idEnquete = p.cd_enquete where p.idPergunta = (select min(idPergunta) from pergunta where cd_enquete = e.idEnquete and idPergunta not in (select cd_pergunta from voto where cd_usuario = $idu)) and e.status_divulgacao = 2 and disponivel = 1 order by rand() limit 6");
 		$count_polls = count($enquetes);
 		if ($count_polls < 6) {
-			$aux = $this->select("select e.idEnquete, e.enquete, count(v.dt_voto) as votos from enquete e inner join voto v on e.idEnquete = v.cd_enquete group by e.idEnquete order by count(v.dt_voto) desc limit ".(6-$count_polls));
+			$aux = $this->select("select e.idEnquete, e.enquete, count(v.dt_voto) as votos from enquete e inner join voto v on e.idEnquete = v.cd_enquete where disponivel = 1 group by e.idEnquete order by count(v.dt_voto) desc limit ".(6-$count_polls));
 			$enquetes = array_merge($enquetes, $aux); 
 		}
 		$respostas = [];
@@ -27,20 +27,20 @@ class EnquetesDestacadas extends DBFunctions {
 					} 
 				}
 				$r = $this->select("select idResposta, resposta from resposta where cd_pergunta = ".$enquetes[$i]['idPergunta']." order by idResposta");
-				$aux = "<div class='dropdown-menu'><form name='pergunta' method='post' action='enquete.php'>";
-				$aux .= "<input type='hidden' name='idEnquete' value='".$enquetes[$i]['idEnquete']."'>";
+				$aux = "<div class='dropdown-menu'><form id='form_pergunta$i' method='post' action='enquete.php?ide=".$enquetes[$i]['idEnquete']."'>";
+				//$aux .= "<input type='hidden' name='idEnquete' value='".$enquetes[$i]['idEnquete']."'>";
 				$aux .= "<p>$pergunta</p><input type='hidden' name='idPergunta' value='".$enquetes[$i]['idPergunta']."'>";
 				$aux .= '<ul>';
 				$mr = $enquetes[$i]['multipla_resposta'];
 				for ($j = 0; array_key_exists($j, $r); $j++) {
 					if (!$mr) {
-						$aux .= "<li><input type='radio' name='resposta0_' value='".$r[$j]['idResposta']."'> ".$r[$j]['resposta']."</li>";
+						$aux .= "<li><input type='radio' name='resposta0_' value='".$r[$j]['idResposta']."' onclick='document.getElementById(\"form_pergunta$i\").submit()'> ".$r[$j]['resposta']."</li>";
 					} else {
-						$aux .= "<li><input type='hidden' name='idResposta0_$j' value='".$r[$j]['idResposta']."'><input type='checkbox' name='resposta0_$j'> ".$r[$j]['resposta']."</li>";
+						$aux .= "<li><input type='hidden' name='idResposta0_$j'><input type='checkbox' name='resposta0_$j' value='".$r[$j]['idResposta']."'> ".$r[$j]['resposta']."</li>";
 					}
 				}
 				if ($mr) {
-					$aux .= '<br><button type="button" class="btn btn-primary estilo-modal" name="resposta0_">RESPONDER</button>';
+					$aux .= "<br><input type='submit' class='btn btn-primary estilo-modal' name='resposta0_' value='RESPONDER'>";
 				}
 				$aux .= "</ul></form></div>";
 				$respostas[$i] = $aux;
@@ -48,19 +48,6 @@ class EnquetesDestacadas extends DBFunctions {
 				$respostas[$i] = "Esta enquete tem ".$enquetes[$i]['votos']." votos.";
 			}
 		}
-		?>
-		<script language="javascript">
-			$(document).ready(function () {
-				$("input[name='resposta0_']").click(function () {
-					try {
-						$("form[name='pergunta']").submit();
-					} catch (e) {
-						alert(e.message);
-					}
-				});
-			});
-		</script>
-		<?php
 		return [$enquetes, $respostas];
 	}
 }

@@ -16,7 +16,7 @@ include "bd.php";
 	<div id='status'></div>
 	<form name="form" method="post">
     <?php
-	$ide = (array_key_exists('ide', $_GET)) ? $_GET['ide'] : $_POST['idEnquete'];
+	$ide = $_GET['ide'];
 	//$multipla_resposta = 0;
 	if (!empty($ide)) {
 		$we->select("select disponivel, cd_usuario from enquete where idEnquete = $ide", array('disponivel', 'cd_usuario'));
@@ -68,7 +68,7 @@ include "bd.php";
 			else {
 				while (array_key_exists("idResposta0_$j", $_POST)) {
 					if ($_POST["resposta0_$j"] != NULL) {
-						$idR = $_POST["idResposta0_$j"];
+						$idR = $_POST["resposta0_$j"];
 						$sql = "insert into $tabela (cd_usuario, cd_enquete, cd_pergunta, cd_resposta, dt_voto) values ($idu, $idEnquete, $idP, $idR, '$data')";
 						mysqli_query($con, $sql);
 						if (!mysqli_error($con)) $sucesso = true;
@@ -87,8 +87,9 @@ include "bd.php";
 				echo "<meta HTTP-EQUIV='Refresh' CONTENT='0;URL=resultados_parciais.php?ide=$idEnquete'>";
 			} else {
 				$idPergunta = $this->select("select idPergunta from pergunta where cd_enquete = $idEnquete order by idPergunta");
-				$ordem = array_keys($idPergunta, $idP);
-				return $ordem[0]+1;
+				
+				for ($ordem = 0; array_key_exists($ordem, $idPergunta) && $idPergunta[$ordem][0] != "$idP"; $ordem++) {}
+				return $ordem+2;
 			}
 		}
 		public function create_poll_header($disponivel, $cd_usuario) {
