@@ -45,7 +45,7 @@ class EnquetesDestacadas extends DBFunctions {
 				$aux .= "</ul></form></div>";
 				$respostas[$i] = $aux;
 			} elseif (array_key_exists('enquete', $enquetes[$i])) {
-				$respostas[$i] = "Esta enquete tem ".$enquetes[$i]['votos']." votos.";
+				$respostas[$i] = "<div class='dropdown-menu'>Esta enquete tem ".$enquetes[$i]['votos']." votos.</div>";
 			}
 		}
 		return [$enquetes, $respostas];
