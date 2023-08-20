@@ -4,7 +4,7 @@ $args = $ed->enquetes_destacadas();
 ?>
 <div class="container">
 	<div class="row">
-    <div class="col-lg-12"><h1 class="titu-enquetes">Destaques do momento</h1>
+    <div class="col-lg-12"><h1 class="titu-enquetes">Enquetes para VOC&Ecirc;</h1>
     </div>
     </div>
     <div class="row">

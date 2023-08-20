@@ -6,7 +6,7 @@
 	?>
     </div> 
     <div class="box1">
-    <h2>Destaques do momento</h2>
+    <h2>Enquetes para VOC&Ecirc;</h2>
     <ul class="list-lateral">
 	<?php
 	$e = $ed->enquetes_destacadas();
