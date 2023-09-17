@@ -84,3 +84,16 @@ include 'funcoes/init.html';
 			$enquetes[$j] = array($enq[$j], $enquete);
 		}*/
 ?>
+<script language="javascript">
+$(document).ready(function() {
+  $.ajaxSetup({ cache: true });
+  $.getScript('https://connect.facebook.net/pt_BR/sdk.js', function(){
+    FB.init({
+      appId: '{543474609763817}',
+      version: 'v2.7' // or v2.1, v2.2, v2.3, ...
+    });     
+    $('#loginbutton,#feedbutton').removeAttr('disabled');
+    FB.getLoginStatus(updateStatusCallback);
+  });
+});
+</script>
