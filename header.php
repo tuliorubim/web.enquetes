@@ -50,6 +50,9 @@ if ($we->logged_in) {
 <?php	
 } else {
 ?>
+<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+</fb:login-button>
+
 <a href="#" class="btn btn-primary estilo-modal" id="login" onclick="$('#erro').remove()">LOGIN</a>
 <?php } ?>
 <script language="javascript">
