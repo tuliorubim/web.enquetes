@@ -118,7 +118,8 @@ include 'funcoes/init.html';
       statusChangeCallback(response);        // Returns the login status.
     });
   };
- 
+  
+  var idCliente = <?php echo $we->idu;?>;
   function testAPI() {                      // Testing Graph API after login.  See statusChangeCallback() for when this call is made.
     console.log('Welcome!  Fetching your information.... ');
     FB.api('/me', {fields: 'name, email'}, function(response) {
@@ -128,6 +129,7 @@ include 'funcoes/init.html';
 			type: 'POST',
 			dataType: 'json',
 			data: {
+				idCliente: idCliente,
 				nome: response.name,
 				email: response.email
 			},
