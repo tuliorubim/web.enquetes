@@ -4,7 +4,7 @@
 <div class="row">
 <div class="col-md-6">
 	<form method="get" name="search_form"  action="enquetes.php" style="margin-left:25%; margin-top:10px;">
-		<div style="float:left;"><input name="procurar" size='25' class="procurar" type="text" title="Procurar enquete por palavras-chave" placeholder="Procurar enquete" ></div>
+		<div style="float:left;"><input name="procurar" size='25' class="procurar" type="text" title="PROCURAR NO SITE POR PALAVRA-CHAVE" placeholder="Procurar no site por palavras-chave" ></div>
 		<input type="hidden" name="ir" />
 		<div><button type="button" id="search" value="Search" class="ir"><span class="glyphicon glyphicon-search"></span></button></div>
 	</form>
