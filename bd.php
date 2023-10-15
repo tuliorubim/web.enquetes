@@ -90,7 +90,7 @@ include 'funcoes/init.html';
     console.log('statusChangeCallback');
     console.log(response);                   // The current login status of the person.
     if (response.status === 'connected') {   // Logged into your webpage and Facebook.
-      testAPI();  
+      testAPI(response.status);  
     } else {                                 // Not logged into your webpage or we are unable to tell.
       document.getElementById('status').innerHTML = 'Please log ' +
         'into this webpage.';
@@ -104,23 +104,24 @@ include 'funcoes/init.html';
     });
   }
 
-
+  //alert('fuck');
   window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '{543474609763817}',
-      cookie     : true,                     // Enable cookies to allow the server to access the session.
-      xfbml      : true,                     // Parse social plugins on this webpage.
-      version    : '{v18.0}'           // Use this Graph API version for this call.
-    });
+  	try {
+		FB.init({
+		  appId      : '543474609763817',
+		  cookie     : true,                     // Enable cookies to allow the server to access the session.
+		  xfbml      : true,                     // Parse social plugins on this webpage.
+		  version    : 'v18.0'           // Use this Graph API version for this call.
+		});
 
-
+	} catch (e) {alert(e.message);}
     FB.getLoginStatus(function(response) {   // Called after the JS SDK has been initialized.
       statusChangeCallback(response);        // Returns the login status.
     });
   };
   
   var idCliente = <?php echo $we->idu;?>;
-  function testAPI() {                      // Testing Graph API after login.  See statusChangeCallback() for when this call is made.
+  function testAPI(status) {                      // Testing Graph API after login.  See statusChangeCallback() for when this call is made.
     console.log('Welcome!  Fetching your information.... ');
     FB.api('/me', {fields: 'name, email'}, function(response) {
       console.log('Successful login for: ' + response.name);
@@ -129,6 +130,7 @@ include 'funcoes/init.html';
 			type: 'POST',
 			dataType: 'json',
 			data: {
+				status: status,
 				idCliente: idCliente,
 				nome: response.name,
 				email: response.email
