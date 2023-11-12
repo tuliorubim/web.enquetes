@@ -13,8 +13,8 @@ class Webenquetes extends AdminFunctions {
 	public $description;
 	
 	public function Connect_WE () {
-		//$this->con = $this->Connect('localhost', 'webenque_enquetes', 'root', 'HhK4aiJPtwy9');
-		$this->con = $this->Connect('localhost', 'webenque_enquetes', 'root', ''); 
+		$this->con = $this->Connect('localhost', 'webenque_enquetes', 'root', 'HhK4aiJPtwy9');
+		//$this->con = $this->Connect('localhost', 'webenque_enquetes', 'root', ''); 
 		$con = $this->con;
 		mysqli_query($con, "SET NAMES 'utf8'");
 		mysqli_query($con, 'SET character_set_connection=utf8');
@@ -23,23 +23,24 @@ class Webenquetes extends AdminFunctions {
 	}
 	public function create_session () {
 		$idSession = $this->idSession;
-		$cookie_url = $this->cookie_url; 
-		$this->cookie_https = FALSE;
-		$cookie_https = $this->cookie_https;
-		//$this->cookie_url = "webenquetes.com.br";
 		//$cookie_url = $this->cookie_url; 
+		//$this->cookie_https = FALSE;
 		//$cookie_https = $this->cookie_https;
+		$this->cookie_url = "webenquetes.com.br";
+		$cookie_url = $this->cookie_url; 
+		$cookie_https = $this->cookie_https;
 		if (array_key_exists("login", $_GET) && $_GET['login'] === "off") {
 			setcookie($idSession, '', time()-10, '/', $cookie_url, $cookie_https);
 			$this->logout();
 		}
 		if (!array_key_exists($idSession, $_SESSION)) $_SESSION[$idSession] = NULL;
 		if (!array_key_exists($idSession, $_COOKIE)) $_COOKIE[$idSession] = NULL;
-		if ($_SESSION[$idSession] !== NULL && $_SESSION[$idSession] !== $_COOKIE[$idSession]) {
-			setcookie($idSession, $_SESSION[$idSession], time()+(86400*365*10), '/', $cookie_url, $cookie_https);
-		}
-		if ($_COOKIE[$idSession] !== NULL && $_SESSION[$idSession] !== $_COOKIE[$idSession]) {
-			$_SESSION[$idSession] = $_COOKIE[$idSession];	
+		if ($_SESSION[$idSession] !== $_COOKIE[$idSession]) {
+			if ($_SESSION[$idSession] !== NULL) {
+				setcookie($idSession, $_SESSION[$idSession], time()+(86400*365*10), '/', $cookie_url, $cookie_https);
+			} elseif ($_COOKIE[$idSession] !== NULL) {
+				$_SESSION[$idSession] = $_COOKIE[$idSession];	
+			}
 		}
 		if (array_key_exists("login", $_GET) && $_GET['login'] === "off") {
 			$_SESSION[$idSession] = NULL;
@@ -104,7 +105,7 @@ class Webenquetes extends AdminFunctions {
 					$POST['name'] = "Web Enquetes";
 					$POST['subject'] = "Sua senha Web Enquetes";
 					$POST['message'] = "A senha do usuário que você acabou de criar na Web Enquetes é \n\n".$POST['senha'].".";
-					//$this->sendEmail ($POST, array($email));
+					$this->sendEmail ($POST, array($email));
 					if ($_SESSION[$idSession] === NULL) $_SESSION[$idSession] = $ret[1];
 					$this->usuario = $email;
 					$this->logged_in = true;

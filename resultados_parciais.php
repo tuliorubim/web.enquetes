@@ -288,6 +288,11 @@ include "bd.php";
 			$result->createTable($formTabela, 1);
 		?>
 		<div id='novo_comentario'>
+		<?php 
+		if (empty($we->usuario)) {
+		?>
+			<fb:login-button scope="public_profile,email" onlogin="checkLoginState(2);">Entre pelo FB e comente</fb:login-button>
+		<?php } ?>	
 		<br><br>
 		<b>Poste um coment&aacute;rio:</b><br />
 		<form name='novo_comentario' method="post">
@@ -347,6 +352,8 @@ include "bd.php";
 	<script language="javascript">
 	ide = <?php echo $idEnquete;?>;
 	idu = <?php echo $we->idu;?>;
+	usuario = "<?php echo $we->usuario;?>";
+	nome = "<?php echo $we->nome;?>";
 	cds = <?php echo $cd_servico;?>;
 	data_lim = '<?php echo '';//$data_lim;?>';
 	var idr = null;
@@ -411,7 +418,7 @@ include "bd.php";
 				ht_pos = (ht_pos1
 				lnk = comment_aux.substr();
 			}*/
-			if (/*comment.indexOf("'") === -1 && */comment.length > 0 && idu > 0) {
+			if (/*comment.indexOf("'") === -1 && */comment.length > 0 && usuario.length > 0) {
 				$.ajax({
 					url: "comentarios.php",
 					type: "POST",
@@ -419,18 +426,22 @@ include "bd.php";
 					data: {
 						ide: ide,
 						idu: idu,
+						usuario: usuario,
+						nome: nome,
 						comment: comment
 					},
 					success: function (result) {
-						$("#comentarios").prepend(result["comment"]);
-						$("#comentario").val('');
+						if (result.comment !== 'unauthorized') {
+							$("#comentarios").prepend(result["comment"]);
+							$("#comentario").val('');
+						} 
 					},
 					error: function (xhr, s, e) {
 						alert(xhr.responseText);
 					}
 				});
-			} else if (comment.indexOf("'") !== -1) {
-				alert("Aspas simples (') n\u00e3o s\u00e3o permitidas.");
+			} else if (usuario.length === 0) {
+				alert("Fa\u00e7a login para comentar.");
 			}
 		});
 	});

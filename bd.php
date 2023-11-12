@@ -1,7 +1,7 @@
 <?php
 $ips = explode (' ', file_get_contents('ipsss.txt'));
 if (in_array($_SERVER['REMOTE_ADDR'], $ips)) exit();
-//session_save_path("/tmp");
+session_save_path("/tmp");
 session_start();
 //if ($_SERVER['SERVER_PORT'] == 80)
 	//echo "<meta HTTP-EQUIV='Refresh' CONTENT='0;URL=https://www.webenquetes.com.br".$_SERVER['REQUEST_URI']."'>";
@@ -86,25 +86,25 @@ include 'funcoes/init.html';
 ?>
 <script>
 
-  function statusChangeCallback(response) {  // Called with the results from FB.getLoginStatus().
+  function statusChangeCallback(response, started) {  // Called with the results from FB.getLoginStatus().
     console.log('statusChangeCallback');
-    console.log(response);                   // The current login status of the person.
+    console.log(response); 
+	//document.getElementById("status").innerHTML = response.status;                  // The current login status of the person.
     if (response.status === 'connected') {   // Logged into your webpage and Facebook.
-      testAPI(response.status);  
-    } else {                                 // Not logged into your webpage or we are unable to tell.
+      testAPI(started);  
+    } /*else {                                 // Not logged into your webpage or we are unable to tell.
       document.getElementById('status').innerHTML = 'Please log ' +
         'into this webpage.';
-    }
+    }*/
   }
 
 
-  function checkLoginState() {               // Called when a person is finished with the Login Button.
+  function checkLoginState(started) {               // Called when a person is finished with the Login Button.
     FB.getLoginStatus(function(response) {   // See the onlogin handler
-      statusChangeCallback(response);
+      statusChangeCallback(response, started);
     });
   }
 
-  //alert('fuck');
   window.fbAsyncInit = function() {
   	try {
 		FB.init({
@@ -116,12 +116,12 @@ include 'funcoes/init.html';
 
 	} catch (e) {alert(e.message);}
     FB.getLoginStatus(function(response) {   // Called after the JS SDK has been initialized.
-      statusChangeCallback(response);        // Returns the login status.
+      statusChangeCallback(response, false);        // Returns the login status.
     });
   };
   
   var idCliente = <?php echo $we->idu;?>;
-  function testAPI(status) {                      // Testing Graph API after login.  See statusChangeCallback() for when this call is made.
+  function testAPI(started) {                      // Testing Graph API after login.  See statusChangeCallback() for when this call is made.
     console.log('Welcome!  Fetching your information.... ');
     FB.api('/me', {fields: 'name, email'}, function(response) {
       console.log('Successful login for: ' + response.name);
@@ -130,20 +130,31 @@ include 'funcoes/init.html';
 			type: 'POST',
 			dataType: 'json',
 			data: {
-				status: status,
 				idCliente: idCliente,
 				nome: response.name,
 				email: response.email
 			},
 			success: function (result) {
-				alert (result.status);
+				if (result.status === 'justConnected') {
+					switch (started) {
+						case 0: 
+							document.start_survey.button.value = "ENVIAR";
+							document.start_survey.submit();
+							break;
+						case 1:
+							window.location.href = 'criar_enquete.php';
+							break;
+						case 2:
+							window.location.reload();
+							break;
+					}
+				}
 			},
 			error: function (xhr, s, e) {
-				alert(xhr.responseText);
+				//alert(xhr.responseText);
 			}
 		});
-      document.getElementById('status').innerHTML =
-        'Thanks for logging in, ' + response.name + '!';
+	  //document.getElementById('connected').innerHTML = "Ol&aacute;, "+response.name+" <span class='caret'>";
     });
   }
 

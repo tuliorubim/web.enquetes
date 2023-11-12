@@ -4,7 +4,7 @@
 <div class="row">
 <div class="col-md-6">
 	<form method="get" name="search_form"  action="enquetes.php" style="margin-left:25%; margin-top:10px;">
-		<div style="float:left;"><input name="procurar" size='25' class="procurar" type="text" title="PROCURAR NO SITE POR PALAVRA-CHAVE" placeholder="Procurar no site por palavras-chave" ></div>
+		<div style="float:left;"><input name="procurar" size='25' class="procurar" type="text" title="PESQUISAR NO SITE POR PALAVRA-CHAVE" placeholder="Pesquisar no site por palavra-chave" ></div>
 		<input type="hidden" name="ir" />
 		<div><button type="button" id="search" value="Search" class="ir"><span class="glyphicon glyphicon-search"></span></button></div>
 	</form>
@@ -30,8 +30,9 @@ if ($we->logged_in) {
 	if (empty($we->nome)) {
 		$we->nome = substr($we->usuario, 0, strpos($we->usuario, '@'));
 	}
-	echo "<a href='#' class='dropdown-toggle' data-toggle='dropdown'>Ol&aacute;, $we->nome <span class='caret'></span></a>";
 ?>
+	<div class='dropdown'><a href='#' class='dropdown-toggle' data-toggle='dropdown' id='connected'>Ol&aacute;, <?php echo $we->nome;?> <span class='caret'></span></a>
+
 	<ul class="dropdown-menu" id="menu_cliente" role="menu" aria-labelledby="dLabel">
 	  <li><a href="dados.php">Meus Dados</a></li>
 	  <li><a href="minhas_enquetes.php">Minhas Enquetes</a></li>
@@ -45,15 +46,14 @@ if ($we->logged_in) {
 		?>
 			<li role="presentation"><a href="meu_plano.php">Meu Plano</a></li>
 		<?php } ?>
-		<li><a href="index.php?login=off">Sair</a></li>
+		<li><a href="index.php?login=off" onclick="FB.logout()">Sair</a></li>
 	</ul>
+	</div>
 <?php	
 } else {
 ?>
-<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-</fb:login-button>
-
 <a href="#" class="btn btn-primary estilo-modal" id="login" onclick="$('#erro').remove()">LOGIN</a>
+</fb:login-button>
 <?php } ?>
 <script language="javascript">
 $(document).ready(function () {
@@ -153,26 +153,18 @@ $(document).ready(function () {
 		  	<?php
 			if (empty($we->usuario)) {
 			?>
-			<script language="javascript">
-			$(document).ready(function () {
-				$("#login2").click(function () {
-					$("#logar").modal("toggle");
-				});
-			});
-			</script>
+			<li><fb:login-button scope="public_profile,email" onlogin="checkLoginState(1);">Entre pelo FB e CRIE ENQUETE</fb:login-button></li>
 			<?php
-			}
+			} else {
 			?>
-			<li class="active"><a id="login2" <?php
-			if (empty($we->usuario)) {
-				echo "href='#' onclick='$(\"#erro\").remove()'";
-			} else echo "href='criar_enquete.php'";
-			?>>Criar enquete</a></li>
-			<li><a href="premium.php" data-toggle="tooltip" data-placement='bottom' title="Saiba as vantagens de ser um assinante e crie aqui sua assinatura.">Servi&ccedil;os e Assinaturas</a></li>
+			<li class="active"><a id="login2" href='criar_enquete.php'>Criar enquete</a></li>
+			<?php } ?>
+			<li><a href="premium.php" data-toggle="tooltip" data-placement='bottom' title="Saiba as vantagens de ser um assinante e crie aqui sua assinatura.">Servi&ccedil;os</a></li>
 			<li><a href="why_create_poll.php" data-toggle="tooltip" data-placement='bottom' title="Saiba o poder que uma enquete tem de te auxiliar em decis&otilde;es importantes.">Por que criar enquetes?</a></li>
 			<li><a href="divulgar.php" data-toggle="tooltip" data-placement='bottom' title="Saiba aqui formas eficazes de divulgar sua enquete gratuitamente e faz&ecirc;-la ser bem votada.">Obtenha boas respostas<span class="sr-only">(current)</span></a></li>
 			<li><a href="no_seu_site.php" data-toggle="tooltip" data-placement='bottom' title="Saiba aqui sobre como divulgar sua enquete no seu site, fazendo-a aparecer nele para ser votada nele.">No seu site</a></li>
 		  </ul>
+		  
 		</div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->
 	</nav>
