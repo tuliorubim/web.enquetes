@@ -14,12 +14,6 @@ require_once "funcoes/funcoesDesign.php";
         
         <!-- INICIO / AQUI É O ESPAÇO AONDE VOCÊ IRA COLOCAR O CONTÉUDO DAS OUTRAS PAGINAS INTERNAS QUE VAI APARECER NA COLUNA ESQUERDA -->
     <h1>Nossos Servi&ccedil;os</h1>
-	<p><b><font color="red">
-	<?php
-	echo htmlentities("ATENÇÃO: esta página será editada, pois agora todos os serviços da \"Assinatura paga\" abaixo estão disponívels para TODOS, exceto o de excluir anúcios Google. Nossos serviços não são gratuitos, mas o pagamento se dá por meio de doações voluntárias. Avalie sua experiência com nossa plataforma e faça-nos uma doação segundo o valor que você acha que nossos serviços valem. Nossa chave pix para doações é 27981170014 (número de celular brasileiro).", ENT_NOQUOTES, 'ISO-8859-1', true);
-	?>
-	</font> <!--Informe-nos <a href="https://www.facebook.com/WebEnquetesEPesquisas/">aqui</a> sobre a aquisi&ccedil;&atilde;o da sua assinatura e o seu e-mail de cadastro neste site para que possamos fazer sua assinatura entrar em vigor assim que identificarmos o pagamento.--></b>
-	</p>
 	<?php
 	require_once "funcoes/funcoesDesign.php";
 	class Premium extends DesignFunctions {
@@ -55,12 +49,41 @@ require_once "funcoes/funcoesDesign.php";
 			$args[12][2] = "Sob medida<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='left' title='Como assinante, quando voc&ecirc; cria uma enquete de mais de uma pergunta, a vers&atilde;o dela hospedada no seu site exibir&aacute; uma pergunta de cada vez, ocupando pouco espa&ccedil;o nele. Al&eacute;m disso, quando algu&eacute;m termina de responder &agrave; sua enquete no seu site, ela permanece nele, e n&atilde;o h&Aacute; redirecionamento para a Web Enquetes. A marca da Web Enquetes n&atilde;o aparece com a enquete hospedada.'></span>";
 			$args[13][1] = "B&aacute;sico<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='left' title='Em enquetes de mais de uma pergunta, voc&ecirc; s&oacute; pode escolher apenas uma das respostas a qualquer pergunta para saber como as pessoas que escolheram tal resposta responderam &agrave;s outras perguntas.'></span>";
 			$args[13][2] = "Avan&ccedil;ado<span class='glyphicon glyphicon-question-sign qf' data-toggle='tooltip' data-placement='left' title='Em enquetes de mais de uma pergunta, nos resultados parciais, voc&ecirc; pode escolher mais de uma resposta a quaisquer perguntas para ver como as essoas que escolheram tais respostas selecionadas responderam &agrave;s outras perguntas.'></span>";
-			$this->write_table($args, array("header" => $header));
+			//$this->write_table($args, array("header" => $header));
 		}
 	}
 	$design = new Premium();
 	$design->our_services();
 	?>
+	<p>Este &eacute; um site onde voc&ecirc; pode criar question&aacute;rios de enquetes e/ou testes, podendo come&ccedil;&aacute;-lo pelo formul&aacute;rio abaixo (ou ao lado, em caso de computador). Oferecemos v&aacute;rios recursos para enquetes e testes que ser&atilde;o descritos a seguir. Nosso servi&ccedil;o n&atilde;o &eacute; gratuito, mas o pagamento se d&aacute; por meio de doa&ccedil;&otilde;es volunt&aacute;rias. Avalie sua experi&ecirc;ncia com a Web Enquetes e fa&ccedil;a-nos uma doa&ccedil;&atilde;o segundo o valor que voc&ecirc; acha que este servi&ccedil;o vale. Nossa chave pix para doa&ccedil;&otilde;es &eacute; <b>27981170014</b> (n&uacute;mero de celular brasileiro).</p>
+	
+	<div class="services"><ul><li>N&atilde;o h&aacute; limites de respostas que voc&ecirc; pode receber no seu question&aacute;rio, e este pode ter quantas perguntas voc&ecirc; quiser que ele tenha.</li>
+	
+	<li>Este site cont&eacute;m um sistema autom&aacute;tico eficiente que impede que uma pessoa responda mais de uma vez a uma mesma enquete. Quando algu&eacute;m vota de novo, seu voto &eacute; editado, e o novo voto substitui o anterior. Por&eacute;m, se voc&ecirc; tem uma enquete e est&aacute; logado na sua conta, voc&ecirc; pode registrar quantos votos quiser nela usando seu dispositivo, caso voc&ecirc; queira coletar respostas das pessoas entrevistando-as.</li>
+	
+	<li>No caso de testes, voc&ecirc; tamb&eacute;m pode coletar respostas das pessoas para testes que voc&ecirc; criar, estando voc&ecirc; logado na sua conta. Enquanto a pessoa n&atilde;o responder o teste, ela fica impedida de ver os seus resultados parciais para n&atilde;o saber a resposta certa antes de responder. Depois que ela o responde, os resultados parciais ficam dispon&iacute;veis, dizendo se a pessoa acertou ou n&atilde;o, mas o teste n&atilde;o pode mais ser visto por ela, para que ela n&atilde;o mude a resposta do mesmo.</li>
+	
+	<li>Voc&ecirc; pode desativar e reativar sua enquete a qualquer momento. A enquete desativada &eacute; vis&iacute;vel somente para voc&ecirc; e os resultados parciais da mesma s&atilde;o vis&iacute;veis a todos, se voc&ecirc; n&atilde;o os tiver escondido. Este recurso pode ser usado para se estabelecer data de t&eacute;rmino para sua enquete.</li>
+	
+	<li>O suporte ao cliente ocorrer&aacute; por meio do Fale conosco do nosso site, cujo link est&aacute; no rodap&eacute; de todas as p&aacute;ginas do mesmo. As respostas normalmente ser&atilde;o dadas nos dias de semana &agrave; noite e nos fins de semana de dia e de noite. Nunca de madrugada.</li> 
+	
+	<li>O menu do rodap&eacute; deste site cont&eacute;m o item Enquetes Modelo, onde voc&ecirc; ter&aacute; acesso a enquetes bem elaboradas para te dar uma luz sobre como criar uma enquete bem feita, caso voc&ecirc; n&atilde;o saiba como fazer isso.</li>
+	
+	<li>Se voc&ecirc; tem interesse em fazer uma enquete para conhecer a opini&atilde;o das pessoas em geral, em vez de uma enquete para um grupo espec&iacute;fico, como uma cidade ou uma escola, voc&ecirc; pode enviar sua enquete para n&oacute;s por meio do Fale conosco para a analisarmos. Caso seja considerada uma enquete de alta qualidade, n&oacute;s a colocaremos para aparecer na sess&atilde;o "Enquetes para voc&ecirc;", que aparece em todas as p&aacute;ginas deste site, para que ela possa ser vista por todos e votada.</li>
+	
+	<li>Em muitas situa&ccedil;&otilde;es, &eacute; interessante para o criador da enquete esconder o conhecimento revelado nos resultados da mesma, como por exemplo no caso de n&atilde;o se querer que concorrentes tenham acesso a eles. Ent&atilde;o o criador de uma enquete tem a op&ccedil;&atilde;o de esconder seus resultados parciais para que s&oacute; ele o possa ver.</li>
+	
+	<li>O criador de uma enquete pode querer que apenas um grupo restrito de pessoas tenha acesso a ela, como por exemplo no caso em que uma enquete &eacute; direcionada a moradores de um condom&iacute;nio, n&atilde;o podendo pessoas que n&atilde;o residem nele respond&ecirc;-la. Assim, o criador da enquete a torna privada, para que ela n&atilde;o apare&ccedil;a em resultados de busca neste site e para que nem possam ser achadas no Google, e assim ela a divulga somenta para seu p&uacute;blico alvo.</li>
+	
+	<li>Seu an&uacute;ncio dever&aacute; ser uma imagem que voc&ecirc; cadastra ao atualizar seus dados ou ao criar uma enquete.</li>
+	
+	<li>Os relat&oacute;rios dos resultados, parciais ou finais, s&atilde;o baixados no formato PDF e podem ser baixados tamb&eacute;m neste formato resultados enviesados por grupos de pessoas.</li>
+	
+	<li>Voc&ecirc; pode hospedar sua enquete da Web Enquetes no seu site baixando o HTML da mesma   e simplesmente inserindo-a no HTML do seu site ou blog. Quando voc&ecirc; cria uma enquete de mais de uma pergunta, a vers&atilde;o dela hospedada no seu site exibir&aacute; uma pergunta de cada vez, da mesma forma como acontece na Web Enquetes, ocupando pouco espa&ccedil;o nele.</li>
+	
+	<li>Em enquetes de mais de uma pergunta, nos resultados parciais, voc&ecirc; pode escolher mais de uma resposta a quaisquer perguntas para ver como as pessoas que escolheram tais respostas selecionadas responderam &agrave;s outras perguntas.</li></ul></div>
+    <!--<p><b><font color="red">IMPORTANTE:</font> Informe-nos <a href="https://www.facebook.com/WebEnquetesEPesquisas/">aqui</a> sobre a aquisi&ccedil;&atilde;o da sua assinatura e o seu e-mail de cadastro neste site para que possamos fazer sua assinatura entrar em vigor assim que identificarmos o pagamento.</b>
+	</p>-->
 	<script language="javascript">
 	$(document).ready(function(){
 		$('[data-toggle="tooltip"]').tooltip();

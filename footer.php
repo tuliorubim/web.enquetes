@@ -5,7 +5,7 @@
     <div class="col-md-4">
     <ul class="menu-footer">
         <li><a href="index.php">Home</a></li>
-		<li><a href="premium.php">Servi&ccedil;os e pre&ccedil;os</a></li>
+		<li><a href="premium.php">Nossos Servi&ccedil;os</a></li>
 		<li><a href="divulgar.php">Consiga bastantes votos</a></li>
         <li><a href="no_seu_site.php">No seu site</a></li>
         <li><a href="resultados.php">Resultados enviesados</a></li>

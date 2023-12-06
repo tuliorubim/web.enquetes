@@ -20,6 +20,7 @@ td {text-align:center; padding:10px; border:thin; border-style:groove;}
 .planos center {display:table; width:100%;}
 .planos center p {background-color:#666666; color:#FFFFFF; font-weight:800; font-size:16px; border:thin; border-bottom-style:groove; height:120px;  display:table-cell; vertical-align:middle;}
 .planos center p a {color:#FFFF00;}
+.services ul li {margin: 5px; font-size:18px;}
 .qf {float:right; text-align:right; color:#880000; width:10%;}
 .link {background-color: transparent; border: 0; cursor: pointer; display: inline-block; padding: 0;}
 /* Área do login */

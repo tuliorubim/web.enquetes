@@ -166,7 +166,7 @@ $(document).ready(function () {
 				echo "href='#' onclick='$(\"#erro\").remove()'";
 			} else echo "href='criar_enquete.php'";
 			?>>Criar enquete</a></li>
-			<li><a href="premium.php" data-toggle="tooltip" data-placement='bottom' title="Saiba as vantagens de ser um assinante e crie aqui sua assinatura.">Servi&ccedil;os e Assinaturas</a></li>
+			<li><a href="premium.php" data-toggle="tooltip" data-placement='bottom' title="Saiba as vantagens de ser um assinante e crie aqui sua assinatura.">Nossos Servi&ccedil;os</a></li>
 			<li><a href="why_create_poll.php" data-toggle="tooltip" data-placement='bottom' title="Saiba o poder que uma enquete tem de te auxiliar em decis&otilde;es importantes.">Por que criar enquetes?</a></li>
 			<li><a href="divulgar.php" data-toggle="tooltip" data-placement='bottom' title="Saiba aqui formas eficazes de divulgar sua enquete gratuitamente e faz&ecirc;-la ser bem votada.">Obtenha boas respostas<span class="sr-only">(current)</span></a></li>
 			<li><a href="no_seu_site.php" data-toggle="tooltip" data-placement='bottom' title="Saiba aqui sobre como divulgar sua enquete no seu site, fazendo-a aparecer nele para ser votada nele.">No seu site</a></li>
