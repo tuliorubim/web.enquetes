@@ -32,7 +32,7 @@ td {text-align:center; padding:10px; border:thin; border-style:groove;}
 /*Logo*/
 .fundo-head {min-height:136px; bakcground-color:#fff;}
 .logo {background-color:transparent; margin-top:0px; margin-bottom:15px;}
-#menu_cliente{margin-left:62%; font-size:16px;}
+#menu_cliente{margin-left:-10px; font-size:16px;}
 
 /* Navegação */
 .navbar-default {background-color:#FFFFFF; border:0;}

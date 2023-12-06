@@ -34,7 +34,7 @@
 		$num_votos = $service2->get_num_votos();
 		$limit1 = $service2::LIM_VOTES_NO_ADS1;
 		$limit2 = $service2::LIM_VOTES_NO_ADS2;
-		if (!$em_vigor || $gratis || ($period == 1 && $num_votos > $limit1) || ($period == 3 && $num_votos > $limit2)) {
+		if (true || !$em_vigor || $gratis || ($period == 1 && $num_votos > $limit1) || ($period == 3 && $num_votos > $limit2)) {
 	?>
 			<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7212330127162982"
      crossorigin="anonymous"></script>

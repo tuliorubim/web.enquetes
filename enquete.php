@@ -108,9 +108,11 @@ include "bd.php";
 				$this->exibir_imagem($args2[0]['logo'], 700);
 			}
 			echo "<p>Enquete sobre ".$args[0]['categoria']." criada em ".$this->std_date_create($args[0]['dt_criacao'])."</p>";
-			if (empty($service_data) && $cd_usuario == $idu) {
+			if (/*empty($service_data) && */$cd_usuario == $idu) {
 		?>
-			<p><a href="bonus_mensais.php" target="_blank">Experimente assinatura gr&aacute;tis</a></p>
+			<!--<p><a href="bonus_mensais.php" target="_blank">Experimente assinatura gr&aacute;tis</a></p>-->
+			<p style='background-color:#FFFF99; padding:10px; border-radius:5px;'>
+			Nossos servi&ccedil;os n&atilde;o s&atilde;o gratuitos, mas o pagamento se d&aacute; por meio de doa&ccedil;&otilde;es volunt&aacute;rias. Avalie sua experi&ecirc;ncia com nossa plataforma e fa&ccedil;a-nos uma doa&ccedil;&atilde;o segundo o valor que voc&ecirc; acha que nossos servi&ccedil;os valem. Nossa chave pix para doa&ccedil;&otilde;es &eacute; <b>27981170014</b> (n&uacute;mero de celular brasileiro).</p>
 		<?php
 			}
 			if (!$args[0]['hide_results'] || $cd_usuario == $idu) {

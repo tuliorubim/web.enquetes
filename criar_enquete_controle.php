@@ -207,16 +207,13 @@ include "criar_enquete_modelo.php";
 			<p><a href="enquete.php?ide=<?php echo $ide;?>">Ir para a enquete.</a></p>
 			<br>
 			<p><a href="divulgar.php">Conhe&ccedil;a nossas ferramentas para divulgar enquetes.</a></p>
-			<br>
-			<p>Sua enquete &eacute; para qualquer pessoa em qualquer lugar responder? Solicite para ela uma <a href="divulgar_para_todos.php?ide=<?php echo $ide;?>">divulga&ccedil;&atilde;o geral.</a></p>
 		<?php 
-			if (empty($service_data)) {
+			if (true /*empty($service_data)*/) {
+				//echo htmlentities("Você pode adquirir gratuitamente benefícios como exibir um anúncio na sua enquete, esconder resultados parciais, baixar resultados parciais inteiros ou por grupos em PDF, além de outros benefícios. Saiba mais e adquira a assinatura gratuita clicando ", ENT_NOQUOTES, 'ISO-8859-1', true);
 		?>
-				<p style="background-color:#FFFF99; padding:10px; border-radius:5px;">
-		<?php
-				echo htmlentities("Você pode adquirir gratuitamente benefícios como exibir um anúncio na sua enquete, esconder resultados parciais, baixar resultados parciais inteiros ou por grupos em PDF, além de outros benefícios. Saiba mais e adquira a assinatura gratuita clicando ", ENT_NOQUOTES, 'ISO-8859-1', true);
-		?>
-				<a href="bonus_mensais.php" target="_blank">aqui</a>.</p>
+				<p style='background-color:#FFFF99; padding:10px; border-radius:5px;'>
+			Nossos servi&ccedil;os n&atilde;o s&atilde;o gratuitos, mas o pagamento se d&aacute; por meio de doa&ccedil;&otilde;es volunt&aacute;rias. Avalie sua experi&ecirc;ncia com nossa plataforma e fa&ccedil;a-nos uma doa&ccedil;&atilde;o segundo o valor que voc&ecirc; acha que nossos servi&ccedil;os valem. Nossa chave pix para doa&ccedil;&otilde;es &eacute; <b>27981170014</b> (n&uacute;mero de celular brasileiro).</p>
+				<!--<a href="bonus_mensais.php" target="_blank">aqui</a>.</p>-->
 		<?php
 			}
 		}

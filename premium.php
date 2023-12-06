@@ -14,6 +14,12 @@ require_once "funcoes/funcoesDesign.php";
         
         <!-- INICIO / AQUI É O ESPAÇO AONDE VOCÊ IRA COLOCAR O CONTÉUDO DAS OUTRAS PAGINAS INTERNAS QUE VAI APARECER NA COLUNA ESQUERDA -->
     <h1>Nossos Servi&ccedil;os</h1>
+	<p><b><font color="red">
+	<?php
+	echo htmlentities("ATENÇÃO: esta página será editada, pois agora todos os serviços da \"Assinatura paga\" abaixo estão disponívels para TODOS, exceto o de excluir anúcios Google. Nossos serviços não são gratuitos, mas o pagamento se dá por meio de doações voluntárias. Avalie sua experiência com nossa plataforma e faça-nos uma doação segundo o valor que você acha que nossos serviços valem. Nossa chave pix para doações é 27981170014 (número de celular brasileiro).", ENT_NOQUOTES, 'ISO-8859-1', true);
+	?>
+	</font> <!--Informe-nos <a href="https://www.facebook.com/WebEnquetesEPesquisas/">aqui</a> sobre a aquisi&ccedil;&atilde;o da sua assinatura e o seu e-mail de cadastro neste site para que possamos fazer sua assinatura entrar em vigor assim que identificarmos o pagamento.--></b>
+	</p>
 	<?php
 	require_once "funcoes/funcoesDesign.php";
 	class Premium extends DesignFunctions {
@@ -55,8 +61,6 @@ require_once "funcoes/funcoesDesign.php";
 	$design = new Premium();
 	$design->our_services();
 	?>
-    <p><b><font color="red">IMPORTANTE:</font> Informe-nos <a href="https://www.facebook.com/WebEnquetesEPesquisas/">aqui</a> sobre a aquisi&ccedil;&atilde;o da sua assinatura e o seu e-mail de cadastro neste site para que possamos fazer sua assinatura entrar em vigor assim que identificarmos o pagamento.</b>
-	</p>
 	<script language="javascript">
 	$(document).ready(function(){
 		$('[data-toggle="tooltip"]').tooltip();

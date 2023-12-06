@@ -15,7 +15,7 @@ $args = $ed->enquetes_destacadas();
 	?>
 	<div class="col-md-4">
 	<div class="ult-enquetes">
-	<h2><?php echo $args[0][$i][1];?><div class="dropdown"><a href="#" class='dropdown-toggle' data-toggle='dropdown'><span class='glyphicon glyphicon-question-sign qf'></span></a><?php echo $args[1][$i];?></div></h2>
+	<h2><?php echo $args[0][$i][1];?><div class="dropdown"><a href="#" class='dropdown-toggle' data-toggle='dropdown'><span id="question<?php echo ($i+6);?>" class='glyphicon glyphicon-question-sign qf'></span></a><?php echo $args[1][$i];?></div></h2>
 	<a href="enquete.php?ide=<?php echo $args[0][$i][0];?>" class="btn btn-success btn-lg">ENQUETE COMPLETA</a>
 	</div>
 	</div>
@@ -29,11 +29,37 @@ $args = $ed->enquetes_destacadas();
 	?>
 	<div class="col-md-4">
 	<div class="ult-enquetes">
-	<h2><?php echo $args[0][$i][1];?><div class="dropdown"><a href="#" class='dropdown-toggle' data-toggle='dropdown'><span class='glyphicon glyphicon-question-sign qf'></span></a><?php echo $args[1][$i];?></div></h2>
+	<h2><?php echo $args[0][$i][1];?><div class="dropdown"><a href="#" class='dropdown-toggle' data-toggle='dropdown'><span id="question<?php echo ($i+6);?>" class='glyphicon glyphicon-question-sign qf'></span></a><?php echo $args[1][$i];?></div></h2>
 	<a href="enquete.php?ide=<?php echo $args[0][$i][0];?>" class="btn btn-success btn-lg">ENQUETE COMPLETA</a>
 	</div>
 	</div>
     <?php } ?>
+	<script>
+	function fadeOutAndIn (question) {
+		num = question.charAt(8);
+		eval("t = t"+num+";");
+		if (t) {
+			clearTimeout(t);
+		}
+		$('#'+question).fadeTo(2000, 0.2);
+		$('#'+question).fadeTo(2000, 1);
+		t = setTimeout("fadeOutAndIn('"+question+"')", 4000);
+	}
+	$(function () {
+		t6 = null;
+		t7 = null;
+		t8 = null;
+		t9 = null;
+		t10 = null;
+		t11 = null;
+		fadeOutAndIn('question6');
+		setTimeout("fadeOutAndIn('question7')", 500);
+		setTimeout("fadeOutAndIn('question8')", 1000);
+		setTimeout("fadeOutAndIn('question9')", 1500);
+		setTimeout("fadeOutAndIn('question10')", 2000);
+		setTimeout("fadeOutAndIn('question11')", 2500);
+	});
+	</script>
     </div>
     <div class="row">
     <div class="col-md-12">
