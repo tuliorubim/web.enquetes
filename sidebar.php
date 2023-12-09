@@ -11,7 +11,7 @@
 	<?php
 	$e = $ed->enquetes_destacadas();
 	for ($i = 0; $i < 6; $i++)
-		echo "<li><a href='enquete.php?ide=".$e[0][$i][0]."'>".$e[0][$i][1]."</a><div class='dropdown'><a href='#' class='dropdown-toggle' data-toggle='dropdown'><span id='question$i' class='glyphicon glyphicon-question-sign qf'></span></a>".$e[1][$i]."</div></li>";
+		echo "<li id='question$i'><a href='enquete.php?ide=".$e[0][$i][0]."'>".$e[0][$i][1]."</a><div class='dropdown'><a href='#' class='dropdown-toggle' data-toggle='dropdown'><span class='glyphicon glyphicon-question-sign qf'></span></a>".$e[1][$i]."</div></li>";
 	?>
 	<script>
 	function fadeOutAndIn (question) {

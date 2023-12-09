@@ -23,7 +23,7 @@ include "header.php";
 		?>
 		<a href='why_create_poll.php' target="_blank">AQUI</a>
 		<?php		
-		 echo htmlentities(" o poder que enquetes têm de te auxiliar na tomada de decisões importantes. Comece de maneira fácil e rápida sua enquete no formulário ao lado. Se você ainda não é cadastrado, basta você fornecer seu e-mail e sua senha ao lado e você será automaticamente cadastrado, no ato da elaboração da sua enquete. Neste site, você poderá criar pesquisas de mercado, de opinião, de satisfação e outras pesquisas por meio de questionários que seu público alvo responde ao escolher opções de respostas pré-definidas por você.", ENT_NOQUOTES, 'UTF-8', true); 
+		 echo htmlentities(" o poder que enquetes têm de te auxiliar na tomada de decisões importantes. Comece de maneira fácil e rápida sua enquete no formulário abaixo (ou ao lado, no caso de computador). Se você ainda não é cadastrado, basta você fornecer seu e-mail e sua senha ao formulário e você será automaticamente cadastrado, no ato da elaboração da sua enquete. Neste site, você poderá criar pesquisas de mercado, de opinião, de satisfação e outras pesquisas por meio de questionários que seu público alvo responde ao escolher opções de respostas pré-definidas por você.", ENT_NOQUOTES, 'UTF-8', true); 
 		?>
 		</p>
         </div>	
@@ -37,6 +37,8 @@ include "header.php";
     </div>
     </div>
 </div>
+
+<?php include "latest_polls.php"; ?>
 
 <!-- CHAMADA 2 -->
 <div class="bkg-chamada2">
@@ -72,8 +74,6 @@ include "header.php";
     </div>
 </div>
 </div>
-
-<?php include "latest_polls.php"; ?>
 
 <?php include "categorias.php"; ?>
 
