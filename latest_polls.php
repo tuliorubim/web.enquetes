@@ -41,9 +41,9 @@ $args = $ed->enquetes_destacadas();
 		if (t) {
 			clearTimeout(t);
 		}
-		$('#'+question).fadeTo(2000, 0.2);
-		$('#'+question).fadeTo(2000, 1);
-		t = setTimeout("fadeOutAndIn('"+question+"')", 4000);
+		$('#'+question).fadeTo(1000, 0.2);
+		$('#'+question).fadeTo(1000, 1);
+		t = setTimeout("fadeOutAndIn('"+question+"')", 2000);
 	}
 	$(function () {
 		t6 = null;
@@ -53,11 +53,11 @@ $args = $ed->enquetes_destacadas();
 		t10 = null;
 		t11 = null;
 		fadeOutAndIn('question6');
-		setTimeout("fadeOutAndIn('question7')", 500);
-		setTimeout("fadeOutAndIn('question8')", 1000);
-		setTimeout("fadeOutAndIn('question9')", 1500);
-		setTimeout("fadeOutAndIn('question10')", 2000);
-		setTimeout("fadeOutAndIn('question11')", 2500);
+		setTimeout("fadeOutAndIn('question7')", 250);
+		setTimeout("fadeOutAndIn('question8')", 500);
+		setTimeout("fadeOutAndIn('question9')", 750);
+		setTimeout("fadeOutAndIn('question10')", 1000);
+		setTimeout("fadeOutAndIn('question11')", 1250);
 	});
 	</script>
     </div>

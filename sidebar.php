@@ -20,9 +20,9 @@
 		if (t) {
 			clearTimeout(t);
 		}
-		$('#'+question).fadeTo(2000, 0.2);
-		$('#'+question).fadeTo(2000, 1);
-		t = setTimeout("fadeOutAndIn('"+question+"')", 4000);
+		$('#'+question).fadeTo(1000, 0.2);
+		$('#'+question).fadeTo(1000, 1);
+		t = setTimeout("fadeOutAndIn('"+question+"')", 2000);
 	}
 	$(function () {
 		t0 = null;
@@ -32,11 +32,11 @@
 		t4 = null;
 		t5 = null;
 		fadeOutAndIn('question0');
-		setTimeout("fadeOutAndIn('question1')", 500);
-		setTimeout("fadeOutAndIn('question2')", 1000);
-		setTimeout("fadeOutAndIn('question3')", 1500);
-		setTimeout("fadeOutAndIn('question4')", 2000);
-		setTimeout("fadeOutAndIn('question5')", 2500);
+		setTimeout("fadeOutAndIn('question1')", 250);
+		setTimeout("fadeOutAndIn('question2')", 500);
+		setTimeout("fadeOutAndIn('question3')", 750);
+		setTimeout("fadeOutAndIn('question4')", 1000);
+		setTimeout("fadeOutAndIn('question5')", 1250);
 	});
 	</script>
     </ul>
