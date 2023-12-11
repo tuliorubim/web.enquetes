@@ -57,7 +57,7 @@ require_once "funcoes/funcoesDesign.php";
 	?>
 	<p>Este &eacute; um site onde voc&ecirc; pode criar question&aacute;rios de enquetes e/ou testes, podendo come&ccedil;&aacute;-lo pelo formul&aacute;rio abaixo (ou ao lado, em caso de computador). Oferecemos v&aacute;rios recursos para enquetes e testes que ser&atilde;o descritos a seguir. Nosso servi&ccedil;o n&atilde;o &eacute; gratuito, mas o pagamento se d&aacute; por meio de doa&ccedil;&otilde;es volunt&aacute;rias. Avalie sua experi&ecirc;ncia com a Web Enquetes e fa&ccedil;a-nos uma doa&ccedil;&atilde;o segundo o valor que voc&ecirc; acha que este servi&ccedil;o vale. Nossa chave pix para doa&ccedil;&otilde;es &eacute; <b>27981170014</b> (n&uacute;mero de celular brasileiro).</p>
 	
-	<div class="services"><ul><li>N&atilde;o h&aacute; limites de respostas que voc&ecirc; pode receber no seu question&aacute;rio, e este pode ter quantas perguntas voc&ecirc; quiser que ele tenha.</li>
+	<div class="services"><ul><li>N&atilde;o h&aacute; limites de respostas que voc&ecirc; pode receber nos seus question&aacute;rios, e este pode ter quantas perguntas voc&ecirc; quiser que ele tenha.</li>
 	
 	<li>Este site cont&eacute;m um sistema autom&aacute;tico eficiente que impede que uma pessoa responda mais de uma vez a uma mesma enquete. Quando algu&eacute;m vota de novo, seu voto &eacute; editado, e o novo voto substitui o anterior. Por&eacute;m, se voc&ecirc; tem uma enquete e est&aacute; logado na sua conta, voc&ecirc; pode registrar quantos votos quiser nela usando seu dispositivo, caso voc&ecirc; queira coletar respostas das pessoas entrevistando-as.</li>
 	
@@ -75,7 +75,7 @@ require_once "funcoes/funcoesDesign.php";
 	
 	<li>O criador de uma enquete pode querer que apenas um grupo restrito de pessoas tenha acesso a ela, como por exemplo no caso em que uma enquete &eacute; direcionada a moradores de um condom&iacute;nio, n&atilde;o podendo pessoas que n&atilde;o residem nele respond&ecirc;-la. Assim, o criador da enquete a torna privada, para que ela n&atilde;o apare&ccedil;a em resultados de busca neste site e para que nem possam ser achadas no Google, e assim ela a divulga somenta para seu p&uacute;blico alvo.</li>
 	
-	<li>Seu an&uacute;ncio dever&aacute; ser uma imagem que voc&ecirc; cadastra ao atualizar seus dados ou ao criar uma enquete.</li>
+	<li>Seu an&uacute;ncio dever&aacute; ser uma imagem que voc&ecirc; cadastra ao atualizar seus dados ou ao criar uma enquete. Ent&atilde;o voc&ecirc; pode selecionar suas enquetes junto &agrave;s quais ele dever&aacute; aparecer. Neste caso, o an&uacute;ncio ser&aacute; exibido junto aos resultados parciais tamb&eacute;m.</li>
 	
 	<li>Os relat&oacute;rios dos resultados, parciais ou finais, s&atilde;o baixados no formato PDF e podem ser baixados tamb&eacute;m neste formato resultados enviesados por grupos de pessoas.</li>
 	
