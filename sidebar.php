@@ -11,7 +11,7 @@
 	<?php
 	$e = $ed->enquetes_destacadas();
 	for ($i = 0; $i < 6; $i++)
-		echo "<li id='question$i'><a href='enquete.php?ide=".$e[0][$i][0]."'>".$e[0][$i][1]."</a><div class='dropdown'><a href='#' class='dropdown-toggle' data-toggle='dropdown'><span class='glyphicon glyphicon-question-sign qf'></span></a>".$e[1][$i]."</div></li>";
+		echo "<li><a href='enquete.php?ide=".$e[0][$i][0]."'>".$e[0][$i][1]."</a><div class='dropdown'><a href='#' class='dropdown-toggle' data-toggle='dropdown'><span id='question$i' class='glyphicon glyphicon-question-sign qf'></span></a>".$e[1][$i]."</div></li>";
 	?>
 	<script>
 	function fadeOutAndIn (question) {
@@ -43,7 +43,7 @@
     </div>
 	<div class="box1">
     <h2>Sua enquete em seu site!</h2>
-    <p>Agora voc&ecirc; pode criar sua enquete aqui e baixar o c&oacute;digo HTML da mesma para inclu&iacute;-lo no seu site gratuitamente, e os visitantes do seu site a responder&atilde;o.</p>
+    <p>Aqui voc&ecirc; pode criar sua enquete e baixar o c&oacute;digo HTML da mesma para inclu&iacute;-lo no seu site, e os visitantes do seu site a responder&atilde;o nele.</p>
     <a href="no_seu_site.php" class="btn btn-success btn-lg bt-box">SAIBA MAIS</a>
     </div>
     

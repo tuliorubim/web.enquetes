@@ -49,7 +49,7 @@ include "header.php";
 	  <div class="panel-body">
 	    <h2>Sua Enquete no SEU SITE!</h2>
 		<img src="img/enquete.png" alt="Resultados Parciais">
-		<a href="no_seu_site.php"><p>Agora voc&ecirc; pode criar sua enquete aqui e baixar o c&oacute;digo HTML da mesma para inclu&iacute;-lo no seu site gratuitamente, e os visitantes do seu site a responder&atilde;o.</p></a>	
+		<a href="no_seu_site.php"><p>Aqui voc&ecirc; pode criar sua enquete e baixar o c&oacute;digo HTML da mesma para inclu&iacute;-lo no seu site, e os visitantes do seu site a responder&atilde;o nele.</p></a>	
 	  </div>
 	</div>
     </div>
