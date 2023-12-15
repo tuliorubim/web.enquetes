@@ -172,7 +172,7 @@ include "header.php";
 			$select[0] = "select p.*, r.* from pergunta p left join resposta r on p.idPergunta = r.cd_pergunta where p.cd_enquete = $idEnquete and p.idPergunta = $indEdit order by r.idResposta";
 			$args = $this->select("select count(dt_voto) as dez from voto where cd_enquete = $idEnquete");
 			$excluir = true;
-			if ($args[0]['dez'] >= 10 && $cd_servico == 0) {
+			if ($args[0]['dez'] >= 10) {
 				$excluir = false;
 				$this->formTabela4[9] = 'readonly';
 			}
@@ -501,6 +501,7 @@ $(document).ready(function () {
 		document.getElementById("download").click();
 		document.getElementById("close").click();
 	});
+	$("input[value='Delete']").css("display", "none");
 	$("input[type='checkbox']").click(function () {
 		field = '';
 		if ($(this).attr("name") == "hide_results2") {
