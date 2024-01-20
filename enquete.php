@@ -162,11 +162,11 @@ include "bd.php";
 				
 				$formTabela1 = array($variaveis, $tipos, $labels, $inputs, $enderecos, $tabela, $maxlengths, $properties);
 				
-				$variaveis2 = array("idResposta", "cd_pergunta", "letra", "resposta");
-				$tipos2 = array("integer", "integer", "char", "varchar");
+				$variaveis2 = array("idResposta", "cd_pergunta", "letra", "resposta", "imagem");
+				$tipos2 = array("integer", "integer", "char", "varchar", "blob");
 				$labels2 = array();
-				$inputs2 = array("hidden", "hidden", "hidden", "radio");
-				$maxlengths2 = array("", "", "1", "1024");
+				$inputs2 = array("hidden", "hidden", "hidden", "radio", "html");
+				$maxlengths2 = array("", "", "1", "1024", "512");
 				$tabela2 = "resposta";
 				$enderecos2 = array();
 				
@@ -188,7 +188,7 @@ include "bd.php";
 					$crc = $args[$i]["cd_resposta_certa"];
 					if ($this->show_question ($idp, $crc)) {
 						$num_questions++;
-						$select[0] = "select p.*, r.idResposta, r.cd_pergunta, concat(r.letra, ')'), r.resposta from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta where idPergunta = $idp order by r.idResposta";
+						$select[0] = "select p.*, r.idResposta, r.cd_pergunta, concat(r.letra, ')'), r.resposta, r.imagem from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta where idPergunta = $idp order by r.idResposta";
 						$formTabela1[8] =  $num_questions;
 						$crc = $args[$i]["cd_resposta_certa"];
 						if ($crc > 0) {

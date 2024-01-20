@@ -121,7 +121,16 @@ include "criar_enquete_modelo.php";
 			unset(self::$formTabela4[0][6]);
 			
 			$this->adminPage ($POST, $_FILES, $_SESSION, self::$formTabela3, self::$formTabela4, array());
-			
+			if (array_key_exists("imagem0", $_FILES) && strlen($_FILES["imagem0"]["name"]) > 4) {
+				$file = $_FILES["imagem0"];
+				$addr = self::$formTabela4[4][0].'/'.$file["name"];
+				$this->Thumb($file, $addr, $addr, 180);
+			}
+			for ($i = 1; strlen($_FILES["imagem$i"]["name"]) > 4; $i++) {
+				$file = $_FILES["imagem$i"];
+				$addr = self::$formTabela4[4][0].'/'.$file["name"];
+				$this->Thumb($file, $addr, $addr, 180);
+			}
 			if ($POST['enquete_ou_teste'] == '1') {
 				if (isset($POST['cd_resposta'])) {
 					if ($POST['idPergunta'] == NULL) {
