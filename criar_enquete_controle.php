@@ -119,7 +119,7 @@ include "criar_enquete_modelo.php";
 				$POST["multipla_resposta"] = 0;
 			}
 			unset(self::$formTabela4[0][6]);
-			
+			self::$formTabela4[4][0] .= "/$ide";
 			$this->adminPage ($POST, $_FILES, $_SESSION, self::$formTabela3, self::$formTabela4, array());
 			if (array_key_exists("imagem0", $_FILES) && strlen($_FILES["imagem0"]["name"]) > 4) {
 				$file = $_FILES["imagem0"];
