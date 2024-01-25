@@ -126,7 +126,7 @@ include "bd.php";
 			$idEnquete = $this->idEnquete;
 			$html = $this->html;
 			$idu = (!isset($_SESSION['user2'])) ? $this->idu : $_SESSION['user2'];
-			$sql = "select p.idPergunta, p.pergunta, p.multipla_resposta, p.valor, p.cd_resposta_certa, r.idResposta, r.resposta, count(v.dt_voto) as votos from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta left join voto v on r.idResposta = v.cd_resposta where p.cd_enquete = $idEnquete group by r.idResposta order by p.idPergunta, count(v.dt_voto) desc, r.idResposta";
+			$sql = "select p.idPergunta, p.pergunta, p.multipla_resposta, p.valor, p.cd_resposta_certa, r.idResposta, r.resposta, r.imagem, count(v.dt_voto) as votos from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta left join voto v on r.idResposta = v.cd_resposta where p.cd_enquete = $idEnquete group by r.idResposta order by p.idPergunta, count(v.dt_voto) desc, r.idResposta";
 			$args = $this->select($sql);
 			$args1 = $this->select("select count(idPergunta) as num_quest from pergunta where cd_enquete = $idEnquete");
 			$idP = 0;
@@ -178,7 +178,9 @@ include "bd.php";
 						$porcentagem_acertos = 100*$args4[0]['certas']/$args4[0]['total'];
 						
 					}
-					$html .= "<span id='votos$i' style='font-weight:600;'>$votos_resposta votos, $porcentagem %</span></p>";
+					$html .= "<span id='votos$i' style='font-weight:600;'>$votos_resposta votos, $porcentagem %</span>";
+					if ($this->is_image($args[$i]['imagem'])) $html .= "<br><img src='".$args[$i]['imagem']."' border>";
+					$html .= "</p>";
 					if (!array_key_exists($i+1, $args) || $idP != $args[$i+1]["idPergunta"]) {
 						$html .= "<p><span class='resposta' id='vp$j' style='font-weight:600;'>Total de votos: $votos_pergunta";
 						if ($cd_resposta_certa > 0) $html .= ", Pontua&ccedil;&atilde;o m&eacute;dia das pessoas: ".round($media_pontos, 2).", Porcentagem de acertos: ".round($porcentagem_acertos, 1)." %</span></p>";
