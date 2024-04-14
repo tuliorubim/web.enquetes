@@ -3,7 +3,7 @@ require_once "funcoesBD.php";
 require_once "funcoesCelulas.php";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-//require 'vendor/autoload.php';
+require 'vendor/autoload.php';
 class AdminFunctions extends DBFunctions {
 	//const STAR = "<font color=red>*</font>";
 	
@@ -47,7 +47,7 @@ class AdminFunctions extends DBFunctions {
 		$cont = $row['count(codigo)'];	
 		echo "Visitantes desde $dataInicio: $cont"; 
 	}
-	public function sendEmail ($POST, $recipients, $auth=array("tfrubim@gmail.com", "qmtzykjowtxlkola"), $names=array('email', 'name', 'subject', 'message'), $host='smtp.gmail.com') {  
+	public function sendEmail ($POST, $recipients, $isHTML=false, $auth=array("tfrubim@gmail.com", "qmtzykjowtxlkola"), $names=array('email', 'name', 'subject', 'message'), $host='smtp.gmail.com') {  
 		global $status;
 		$mail = new PHPMailer();
 		$mail->IsSMTP(); //ENVIAR VIA SMTP    fsource_PHPMailer__
@@ -69,7 +69,7 @@ class AdminFunctions extends DBFunctions {
 		
 		//$mail->AddReplyTo("tfrubim@yahoo.com.br"," Suporte Hostsys "); //UTILIZE PARA DEFINIR OUTRO EMAIL DE RESPOSTA (opcional)
 		$mail->WordWrap = 50; // ATIVAR QUEBRA DE LINHA
-		$mail->IsHTML(true); //ATIVA MENSAGEM NO FORMATO HTML
+		$mail->IsHTML($isHTML); //ATIVA MENSAGEM NO FORMATO HTML
 		$mail->Subject = $POST[$subject]; //ASSUNTO DA MENSAGEM
 		$mail->Body = $POST[$body]; //MENSAGEM NO FORMATO HTML
 		//$mail->AltBody = "Teste de envio via PHP"; //MENSAGEM NO FORMATO TXT
@@ -412,27 +412,6 @@ class AdminFunctions extends DBFunctions {
 	6 - Tamanhos máximos dos campos e inputs
 	*/
 	
-	public function codeGenerator() {
-		$code = '';
-		$c = '';
-		for ($i = 0; $i < 12; $i++) {
-			$Aa0 = rand(0, 2);
-			switch ($Aa0) {
-				case 0:
-					$c = chr(rand(65, 90));
-					break;
-				case 1:
-					$c = chr(rand(97, 122));
-					break;
-				case 2:
-					$c = chr(rand(48, 57));
-					break;
-			}
-			$code .= $c;
-		}
-		return $code;
-	}
-	
 	public function validateForm ($POST, $conditions) {
 		$status = '';
 		$keys = array_keys($POST);
@@ -441,7 +420,7 @@ class AdminFunctions extends DBFunctions {
 			$k = $keys[$i];
 			$value = $POST[$k];
 			$value = addslashes($value);
-			$cond = $conditions[$k];
+			$cond = (!array_key_exists($k, $conditions)) ? NULL : $conditions[$k];
 			$notRegExp = array("dd/mm/yyyy", "hh:mm");
 			if (!empty($cond)) {
 				if (!in_array($cond, $notRegExp)) {
@@ -526,19 +505,19 @@ class AdminFunctions extends DBFunctions {
 		$code = 0;
 		$i = 0;
 		//The 5th element of the array $formTableN is the name of the table N.
-		$table2 = $formTable2[5]; 
-		$table3 = $formTable3[5];
+		$table2 = (!array_key_exists(5, $formTable2)) ? '' : $formTable2[5]; 
+		$table3 = (!array_key_exists(5, $formTable3)) ? '' : $formTable3[5];
 		
 		/*The function adminPage can be used more than once to create a form and its relation to a database. If we have the inputs of $formTable1 repeated in the form for N times, which means that adminPage() will be called N times on the page, then there must be an index that is related to the current instance of these inputs, and this index is the 8th element of the array $formTable1, and the varable $indTab1 will receibe this value.*/
-		$indTab1 = $formTable1[8];
+		$indTab1 = (!array_key_exists(8, $formTable1)) ? '' : $formTable1[8];
 		if (empty($indTab1) || $indTab1 == 0) {$indTab1 = '';}
 		$datetime_exists1 = false;
 		
-		while ($args[$i] != NULL) {
+		while (array_key_exists($i, $args)) {
 			eval("global \$".$args[$i].";"); //The values contained in $args will be transformed into PHP global variables to be used for the form. 
 			$s = $args[$i].$indTab1;
 			//The code snippet below fills $values with the values acquired from the submitted form and relative only to the table 1.
-			if ($POST[$s] !== NULL || $FILES[$s] !== NULL) {
+			if (array_key_exists($s, $POST) || array_key_exists($s, $FILES)) {
 				if ($formTable1[3][$i] != 'file') {
 					$values[0][$i] = $POST[$s];
 				} else {
@@ -548,17 +527,16 @@ class AdminFunctions extends DBFunctions {
 			$i++;
 		}
 		$values2 = array(); /*$values2 gets only the data relative to the table 2. This variable is necessary for saving operation in table 2. The variable $values also gets the data that belong to table 2, and all its values are used to fill the form again after it is submitted for a database operation. */
-		$args2 = $formTable2[0]; 
+		$args2 = (empty($formTable2)) ? '' : $formTable2[0]; 
 		$secondTablePK = $i; //This variable will be used as an index that refers to the primary key of the second table in the array $values.
 		$k = $i;
 		/*If there is a second table, which will be linked to the first one by a foreign key, the code snippet below feeds $values2 with the values of that second table, coming from the submitted form, which can receive multiple data records, as shown below. Note that the $values variable also receives the values of table 2, filling the columns that were not filled with values. Also note that the $k offset, which causes $values to be filled in unfilled places, is added with the value of $auxK variable. This is because each recorded image generates a thumbnail of itself, which is why $auxK needed to be incremented every time an image was detected in the previous code snippet. The usefulness of this will be better understood later on. The variables $values and $values2 will receive values related to the table 2 from the submitted form only if they won't receive values from the database. This happens if $POST['butPres'] equalt to "Select". 
 		*/
 		$datetime_exists2 = false;
-		$amountTable2 = $formTable2[8]; /* This is the number of times the inputs of table two are repeated on the page in order to create multiple records of it associated with one record of table 1.*/
-		if (empty($amountTable2)) $amountTable2 = 0;
+		$amountTable2 = (!array_key_exists(8, $formTable2) || empty($formTable2[8])) ? 0 : $formTable2[8]; /* This is the number of times the inputs of table two are repeated on the page in order to create multiple records of it associated with one record of table 1.*/
 		if ($args2 != NULL) {
 			$i = 0;
-			while ($args2[$i] != NULL) {
+			while (array_key_exists($i, $args2)) {
 				eval("global \$".$args2[$i].";"); //The values contained in $args2 will be transformed into PHP global variables to be used for the form.
 				$s = $args2[$i];
 				$j = 0;
@@ -568,14 +546,14 @@ class AdminFunctions extends DBFunctions {
 					$s .= "_";
 				} 
 				/*The indexes of $POST related to the table 2 are ended by a number. The index $s.'0' won't be NULL only if the values coming from the form were taken from a database to fill it up. If $POST[$s.'0'] is NULL, it's because the input whose name attribute is equal to $s.'0' does not extist.*/
-				if ($POST[$s.'0'] === NULL && $FILES[$s.'0'] === NULL) {
+				if (!array_key_exists($s.'0', $POST) && !array_key_exists($s.'0', $FILES)) {
 					$j = 1;
 				}
 				/*Now if the table 2 is repeated for N times, the arrays $values and $values2 get the values of each instance of the current form input.*/
 				if ($formTable2[3][$i] !== 'file') {
 					if ($formTable2[3][$i] !== "radio") {
 						while ($j <= $amountTable2) {
-							if (!empty($POST[$s.$j])) {
+							if (!empty($POST[$s.$j]) || $POST[$s.$j] === '0') {
 								$values[$j][$i+$k] = $POST[$s.$j];
 								$values2[$j][$i] = $POST[$s.$j];
 							}
@@ -631,7 +609,7 @@ class AdminFunctions extends DBFunctions {
 			if ($POST[$button] == 'Save' && ($Ses || $public)) {
 				$willSave = $this->willSave;
 				/*When we have to save a new password through the form, we have to type it twice. The 'for' structure below tests if the new password and the confirmation password match. If not, a message of error is issued.*/
-				for ($j = 0; $formTable1[3][$j] != NULL; $j++) {
+				for ($j = 0; array_key_exists($j, $formTable1[3]); $j++) {
 					if ($formTable1[3][$j] == "password") {
 						if ($values[0][$j] != $values[0][$j+1]) {
 							echo "ERRO: Sua senha e sua senha de confirma&ccedil;&atilde;o s&atilde;o diferentes.";
@@ -709,7 +687,7 @@ class AdminFunctions extends DBFunctions {
 							$field = $values2[$i][$q];
 							/* Below, the data taken from the form and related to table 2 will be stored in the database only when the table 2 main visible value ($field) is not empty.*/
 							while ($i <= $amountTable2) {
-								if (!empty($field)) {
+								if (!empty($field) || $field === '0') {
 									$edit2 = $this->save($table2, $fields2, $types2, $values2[$i], $addresses2); //as seen previously, $values2 is used for saving operation in table 2.
 									$values2[$i][0] = $edit2[1];	
 									$code2 = $values2[$i][0]; //$code2 is the primary key of the table 2, which will always have only one auto-increment PK.
@@ -737,7 +715,7 @@ class AdminFunctions extends DBFunctions {
 									}
 								}
 								$i++;  
-								$field = $values2[$i][$q]; 
+								$field = (!array_key_exists($i, $values2)) ? NULL : $values2[$i][$q]; 
 								/* If there is no table 3, the relation between tables 1 and 2 will be 1 X n, and the columns of $values and $values2 that contain the foreign key of table 2 must be filled with the value of the current table 1 primary key, so that the records of table 2 can be correctly stored.*/
 								if (empty($table3)) {
 									$values2[$i][1] = $code;
@@ -812,16 +790,18 @@ class AdminFunctions extends DBFunctions {
 		} //end buttons
 		
 		/*When a table 2 exists, as has been said, the form can repeat its fields several times to make multiple records in this table. The structure below serves to delete a single record from table 2 through a Delete button associated with each of these records. Now the $secondTablePK variable is used to index the primary key of this table in the resultset below. The value of this primary key will be assigned to $code and the name of each of these Delete buttons will be 'delete'.$code. The code snippet below identifies which of them was pressed, if this happened.*/
-		if (!empty($table2)) {
+		if (!empty($table2) && !empty($values)) {
 			$i = 0;
-			while ($values[$i][$k] !== NULL) {
+			while (array_key_exists($i, $values)) {
 				try {
-					$code = $values[$i][$k];    
-					if ($POST['delete'.$code] != NULL) {
-						$this->delete ($table2, $formTable2[0][0], $formTable2[1][0], $code);
-						//mysqli_query($con, "delete from ".$formTable2[5]." where ".$formTable2[0][0]." = $code");
-						$status = "Registro de $table2 foi exclu&iacute;do com sucesso.";
-						break;
+					if (array_key_exists($k, $values[$i])) {
+						$code = $values[$i][$k];    
+						if (array_key_exists('delete'.$code, $POST) && $POST['delete'.$code] != NULL) {
+							$this->delete ($table2, $formTable2[0][0], $formTable2[1][0], $code);
+							//mysqli_query($con, "delete from ".$formTable2[5]." where ".$formTable2[0][0]." = $code");
+							$status = "Registro de $table2 foi exclu&iacute;do com sucesso.";
+							break;
+						}
 					}
 				} catch (Exception $e) {
 					$status = $e->getMessage();

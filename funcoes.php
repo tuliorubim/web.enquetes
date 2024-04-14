@@ -1,5 +1,4 @@
-<?php
-	
+<?php	
 	
 	
 	/*FUNÇÕES GERAIS*/
@@ -295,15 +294,17 @@ trait Functions {
 	}
 	
 	public function transposed_matrix($matriz) {
-		$return = array();
-		$j = 0;
-		for ($i = 0; $matriz[$i][$j] !== NULL; $i++) {
-			for ($j = 0; $matriz[$i][$j] !== NULL; $j++) {
-				$return[$j][$i] = $matriz[$i][$j];	
-			}
+		if (is_array($matriz)) {
+			$return = array();
 			$j = 0;
+			for ($i = 0; array_key_exists($i, $matriz); $i++) {
+				for ($j = 0; array_key_exists($j, $matriz[$i]); $j++) {
+					$return[$j][$i] = $matriz[$i][$j];	
+				}
+				$j = 0;
+			}
+			return $return;
 		}
-		return $return;
 	}
 	
 	public function tab($str, $tamanho, $direct) {
@@ -319,5 +320,32 @@ trait Functions {
 		echo strlen($str).', ';
 		return $str;
 	}
+	public function array_keys_assign($keys, $array) {
+		foreach ($keys as $key) {
+			if (!array_key_exists($key, $array)) $array[$key] = NULL;
+		}
+		return $array;
+	}
+	public function codeGenerator() {
+		$code = '';
+		$c = '';
+		for ($i = 0; $i < 12; $i++) {
+			$Aa0 = rand(0, 2);
+			switch ($Aa0) {
+				case 0:
+					$c = chr(rand(65, 90));
+					break;
+				case 1:
+					$c = chr(rand(97, 122));
+					break;
+				case 2:
+					$c = chr(rand(48, 57));
+					break;
+			}
+			$code .= $c;
+		}
+		return $code;
+	}
+	
 }
 ?>

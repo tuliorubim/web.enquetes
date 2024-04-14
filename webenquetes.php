@@ -35,12 +35,11 @@ class Webenquetes extends AdminFunctions {
 		}
 		if (!array_key_exists($idSession, $_SESSION)) $_SESSION[$idSession] = NULL;
 		if (!array_key_exists($idSession, $_COOKIE)) $_COOKIE[$idSession] = NULL;
-		if ($_SESSION[$idSession] !== $_COOKIE[$idSession]) {
-			if ($_SESSION[$idSession] !== NULL) {
-				setcookie($idSession, $_SESSION[$idSession], time()+(86400*365*10), '/', $cookie_url, $cookie_https);
-			} elseif ($_COOKIE[$idSession] !== NULL) {
-				$_SESSION[$idSession] = $_COOKIE[$idSession];	
-			}
+		if ($_SESSION[$idSession] !== NULL && $_SESSION[$idSession] !== $_COOKIE[$idSession]) {
+			setcookie($idSession, $_SESSION[$idSession], time()+(86400*365*10), '/', $cookie_url, $cookie_https);
+		}
+		if ($_COOKIE[$idSession] !== NULL && $_SESSION[$idSession] !== $_COOKIE[$idSession]) {
+			$_SESSION[$idSession] = $_COOKIE[$idSession];	
 		}
 		if (array_key_exists("login", $_GET) && $_GET['login'] === "off") {
 			$_SESSION[$idSession] = NULL;
@@ -198,6 +197,9 @@ class Webenquetes extends AdminFunctions {
 			$dest = 'ipsss.txt';
 			$IPs = $this->open_file($dest);
 			$IPs2 = $this->select("select ip from cliente where ip <> '' group by ip having count(idCliente) > 50 order by max(data_cadastro) desc");
+			if (count($IPs2) > 10) {
+				mysqli_query($this->con, "delete from cliente where usuario = '' and idCliente not in (select cd_cliente from comentario) and idCliente not in (select cd_usuario from enquete) and idCliente not in (select cd_usuario from voto)");
+			}
 			$content = '';
 			for ($i = 0; array_key_exists($i, $IPs2); $i++) {
 				$content .= " ".$IPs2[$i]['ip'];
@@ -227,10 +229,9 @@ class Webenquetes extends AdminFunctions {
 				<div class="modal fade enter_email" tabIndex=-1 role="dialog" aria-labelledby="mySmallModalLabel">
 						
 					<button type="button" class="close" id="close1" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<form name="enter_email" method="post">
-						<input type="hidden" name="butPres">
-						<input type="hidden" name="idEnquete" id="idEnquete">
-						<p><?php echo $this->html_encode("Considere criar enquetes para esse fim. Deixe conoso seu e-mail se você gostaria de receber notícias sobre nossos serviços para enquetes:");?>
+					<form name="enter_email" method="get" action="criar_enquete.php">
+						<p><?php echo $this->html_encode("Considere criar enquetes para esse fim. Deixe conosco seu e-mail se você gostaria de receber notícias sobre nossos serviços para enquetes:");?>
+						<input type="hidden" name="news">
 						<input type="text" name="email" placeholder="Seu email" size="35" maxlength="128" />
 						</p>
 						<p><input type="button" class="btn btn-primary estilo-modal" name="enviar1" id="enviar1" value="Enviar"></p>
@@ -253,6 +254,16 @@ class Webenquetes extends AdminFunctions {
 		<script language="javascript">
 		//document.getElementById("target-public").style.marginTop = window.document.body.clientHeight-280;
 		setTimeout(function () {$("#target-public").fadeIn(1000);}, 4000);
+		var conditions = [];
+		conditions['email'] = 'email';
+		cdu = <?php echo (isset($this->idu)) ? $this->idu : 0;?>;
+		$("#enviar1").click(function () {
+			valid = validateForm(document.enter_email, conditions);
+			if (valid) {
+				document.enter_email.news.value = 'NEWS';
+				document.enter_email.submit();
+			}
+		});
 		$("button").click(function () {
 			answer = ['answer0', 'answer1'];
 			isto = $(this);
@@ -280,8 +291,7 @@ class Webenquetes extends AdminFunctions {
 				});
 			}
 		});
-		cdu = <?php echo (isset($this->idu)) ? $this->idu : 0;?>;
-		$("#enviar1").click(function () {
+		/*$("#enviar1").click(function () {
 			$.ajax({
 				url: "criar_usuario.php",
 				type: "POST",
@@ -297,10 +307,10 @@ class Webenquetes extends AdminFunctions {
 					}
 				},
 				error: function (xhr, s, e) {
-					alert(xhr.responseText);
+					alert(e);
 				}
 			});
-		});
+		});*/
 		</script>
 <?php 
 		} 

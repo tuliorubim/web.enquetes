@@ -44,6 +44,22 @@ include "header.php";
 			self::$formTabela4 = $ft4;
 			self::$formTabela5 = $ft5;
 		}
+		public function criar_usuario() {
+			global $status;
+			global $we;
+			$idu = $this->idu;
+			$email = $_GET['email'];
+			$senha = $this->codeGenerator();
+			$dateformat = "d/m/Y";
+			$timeformat = "H:i:s";
+			$data = date("$dateformat $timeformat");
+			$this->save('cliente', array('idCliente', 'usuario', 'senha', 'data_cadastro', 'permitir_email'), array('integer', 'varchar', 'varchar', 'datetime', 'boolean'), array($idu, $email, $senha, $data, 1));
+			$we->sendEmail (array('email' => 'tfrubim@gmail.com', 'name' => 'Web Enquetes', 'subject' => 'Sua senha Web Enquetes', 'message' => "Sua senha para sua area restrita neste site: $senha"), array($email));
+			if (!mysqli_error($this->con) && strpos($status, "corretamente")) {
+				$status = $this->html_encode("Você acaba de cadastrar seu email e uma senha foi gerada e enviada para este email para que você tenha acesso à área restrita deste site.");
+				$this->write_status();
+			}
+		}
 		public function form_categorias () {
 			$sql = "select * from categoria order by categoria";
 			$select = array($sql, "select");
@@ -280,6 +296,8 @@ include "header.php";
 	$design = new CriarEnquete($idEnquete, $idc, $we->idu, $we->con, $ft1, $ft2, $ft3, $ft4, $ft5);
 	$design->select("select cd_usuario from enquete where idEnquete = ".((isset($idEnquete)) ? $idEnquete : 0), array("cdu"));
 	if ($idEnquete === NULL || $cdu == $design->idu) {
+		if ($_GET['news'] === 'NEWS')
+			$design->criar_usuario();
 		$inds = $design->form_categorias();
 		$inds = $design->form_enquete($inds);
 		$inds = $design->upload_ad($inds, $cd_servico);
