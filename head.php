@@ -1,10 +1,19 @@
-<head>
+<head><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-948860159"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-948860159');
+</script>
     <meta charset="iso-8859-1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title><?php echo $we->title;?></title>
 	<meta name="keywords" content="<?php echo $we->description;?>">
+	<link rel="shortcut icon" href="favicon.ico">
     <!-- Bootstrap -->
 	
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -39,16 +48,7 @@
 			<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7212330127162982"
      crossorigin="anonymous"></script>
 	<?php }} ?>
-	<!-- Global site tag (gtag.js) - Google Ads: 948860159 
-	<script async src="https://www.googletagmanager.com/gtag/js?id=AW-948860159"></script>
-	<script>
-	 /* window.dataLayer = window.dataLayer || [];
-	  function gtag(){dataLayer.push(arguments);}
-	  gtag('set', 'allow_ad_personalization_signals', false);
-	  gtag('js', new Date());
 	
-	  gtag('config', 'AW-948860159');*/
-	</script>-->
 
 </head>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

@@ -13,8 +13,8 @@ class Webenquetes extends AdminFunctions {
 	public $description;
 	
 	public function Connect_WE () {
-		$this->con = $this->Connect('localhost', 'webenque_enquetes', 'root', 'HhK4aiJPtwy9');
-		//$this->con = $this->Connect('localhost', 'webenque_enquetes', 'root', ''); 
+		//$this->con = $this->Connect('localhost', 'webenque_enquetes', 'root', 'HhK4aiJPtwy9');
+		$this->con = $this->Connect('localhost', 'webenque_enquetes', 'root', 'root'); 
 		$con = $this->con;
 		mysqli_query($con, "SET NAMES 'utf8'");
 		mysqli_query($con, 'SET character_set_connection=utf8');
@@ -23,23 +23,24 @@ class Webenquetes extends AdminFunctions {
 	}
 	public function create_session () {
 		$idSession = $this->idSession;
-		//$cookie_url = $this->cookie_url; 
-		//$this->cookie_https = FALSE;
-		//$cookie_https = $this->cookie_https;
-		$this->cookie_url = "webenquetes.com.br";
 		$cookie_url = $this->cookie_url; 
+		$this->cookie_https = FALSE;
 		$cookie_https = $this->cookie_https;
+		//$this->cookie_url = "webenquetes.com.br";
+		//$cookie_url = $this->cookie_url; 
+		//$cookie_https = $this->cookie_https;
 		if (array_key_exists("login", $_GET) && $_GET['login'] === "off") {
 			setcookie($idSession, '', time()-10, '/', $cookie_url, $cookie_https);
 			$this->logout();
 		}
 		if (!array_key_exists($idSession, $_SESSION)) $_SESSION[$idSession] = NULL;
 		if (!array_key_exists($idSession, $_COOKIE)) $_COOKIE[$idSession] = NULL;
-		if ($_SESSION[$idSession] !== NULL && $_SESSION[$idSession] !== $_COOKIE[$idSession]) {
-			setcookie($idSession, $_SESSION[$idSession], time()+(86400*365*10), '/', $cookie_url, $cookie_https);
-		}
-		if ($_COOKIE[$idSession] !== NULL && $_SESSION[$idSession] !== $_COOKIE[$idSession]) {
-			$_SESSION[$idSession] = $_COOKIE[$idSession];	
+		if ($_SESSION[$idSession] !== $_COOKIE[$idSession]) {
+			if ($_SESSION[$idSession] !== NULL) {
+				setcookie($idSession, $_SESSION[$idSession], time()+(86400*365*10), '/', $cookie_url, $cookie_https);
+			} elseif ($_COOKIE[$idSession] !== NULL) {
+				$_SESSION[$idSession] = $_COOKIE[$idSession];	
+			}
 		}
 		if (array_key_exists("login", $_GET) && $_GET['login'] === "off") {
 			$_SESSION[$idSession] = NULL;
@@ -104,7 +105,7 @@ class Webenquetes extends AdminFunctions {
 					$POST['name'] = "Web Enquetes";
 					$POST['subject'] = "Sua senha Web Enquetes";
 					$POST['message'] = "A senha do usuário que você acabou de criar na Web Enquetes é \n\n".$POST['senha'].".";
-					$this->sendEmail ($POST, array($email));
+					//$this->sendEmail ($POST, array($email));
 					if ($_SESSION[$idSession] === NULL) $_SESSION[$idSession] = $ret[1];
 					$this->usuario = $email;
 					$this->logged_in = true;
@@ -161,8 +162,8 @@ class Webenquetes extends AdminFunctions {
 		return $result;
 	}
 	public function set_title_and_keywords() {
-		$title = htmlentities("Adquira o CONHECIMENTO que você deseja criando e divulgando enquetes de maneira FÁCIL e RÁPIDA agora mesmo!", ENT_NOQUOTES, 'ISO-8859-1', true);
-		$description = htmlentities("criar, fazer, elaborar, modelo, site, pergunta, perguntas, formulário, questionário, inquérito, enquete, pesquisa, mercado, satisfação, opinião, política, esportes, religião, atualidades, ciência, economia, entretenimento, filmes, jogos, livros, música, televisão, internet, informática, cliente, funcionário, interno", ENT_NOQUOTES, 'ISO-8859-1', true);
+		$title = htmlentities("Crie sua pesquisa online por meio de enquetes, formulários e questionários de perguntas para conhecer seu público alvo.", ENT_NOQUOTES, 'ISO-8859-1', true);
+		$description = htmlentities("criar enquete, formulario online, pesquisar, enquete, formulários on line, a pesquisa, site de perguntas online, questionario online, pesquisa de satisfação, questionário, exemplos de perguntas, responder pesquisas, como fazer uma pesquisa eleitoral, inquerito, como pesquisar, perguntas online, modelo de pesquisa eleitoral, criar questionário online, questionário online gratuito, pesquisa sobre pesquisa, avaliação de desempenho do professor, como fazer formulario, site para criar votação, perguntas para as pessoas, enquete enquete, votação virtual, como fazer, criar, responder, site, exemplos, modelo,  enquete, formulario, pesquisa, inquerito, enquete,  perguntas, questionario,  votação, avaliação, desempenho, satisfação, online, eleitoral, on line, gratuito, pessoas, virtual", ENT_NOQUOTES, 'ISO-8859-1', true);
 		if (array_key_exists('ide', $_GET) && $_GET['ide'] !== NULL) {
 			$ide = $_GET['ide'];
 			$description = $this->poll_keywords($ide);
@@ -237,7 +238,7 @@ class Webenquetes extends AdminFunctions {
 						<p><input type="button" class="btn btn-primary estilo-modal" name="enviar1" id="enviar1" value="Enviar"></p>
 					</form>
 				</div>
-				<div style="position:fixed; z-index:1; bottom:0%; color:#FFFFFF; background-color:#000000; opacity:80%; font-size:18px; padding:10px; display:none;" id="target-public"><button type="button" class="close" aria-label="Close" onclick="document.getElementById('target-public').style.display='none'"><span aria-hidden="true">&times;</span></button>
+				<div style="position:fixed; z-index:1; top:5%; color:#FFFFFF; background-color:#000000; opacity:80%; font-size:18px; padding:10px; display:none;" id="target-public"><button type="button" class="close" aria-label="Close" onclick="document.getElementById('target-public').style.display='none'"><span aria-hidden="true">&times;</span></button>
 				<?php
 				$mypoll = $this->select("select p.idPergunta, p.pergunta, r.idResposta, r.resposta from pergunta p inner join resposta r on p.idPergunta = r.cd_pergunta where p.cd_enquete = $idMypoll");
 				echo "<input type='hidden' name='idPergunta' value='".$mypoll[0][0]."'>";
